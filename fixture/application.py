@@ -16,13 +16,6 @@ class Application:
         wd.get("https://betav10.ci.dental-pro.online/")
         wd.set_window_size(1920, 1080)
 
-    def login(self, username, password):
-        wd = self.wd
-        self.open_homepage()
-        wd.find_element(By.ID, "form_user_loginhtml_input_0_login").send_keys(username)
-        wd.find_element(By.ID, "form_user_loginhtml_password_0_password").send_keys(password)
-        wd.find_element(By.ID, "form_user_loginhtml_button_1_button").click()
-
     def open_cbase(self):
         wd = self.wd
         element = WebDriverWait(wd, 20).until(
