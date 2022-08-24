@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from group import Group
 
 
 class TestAddNewPatient(unittest.TestCase):
@@ -19,8 +20,8 @@ class TestAddNewPatient(unittest.TestCase):
         self.open_cbase()
         self.open_form_newclient()
         self.add_key()
-        self.fill_newclient_form(surname="ФамилияАвтоТест", name="Имя", secondname="Отчество",
-                                 datapicker="10102010", phone="79278889966", fromwhere="2ГИС")
+        self.fill_newclient_form(Group(surname="ФамилияАвтоТест", name="Имя", secondname="Отчество",
+                                 datapicker="10102010", phone="79278889966", fromwhere="2ГИС"))
         self.submit_newpatient_creation()
 
     def test_empty_clientdata(self):
@@ -29,8 +30,8 @@ class TestAddNewPatient(unittest.TestCase):
         self.open_cbase()
         self.open_form_newclient()
         self.add_key()
-        self.fill_newclient_form(surname="", name="", secondname="",
-                                 datapicker="", phone="", fromwhere="")
+        self.fill_newclient_form(Group(surname="", name="", secondname="",
+                                 datapicker="", phone="", fromwhere=""))
         self.submit_newpatient_creation()
 
     def open_homepage(self):
@@ -57,17 +58,17 @@ class TestAddNewPatient(unittest.TestCase):
             EC.element_to_be_clickable((By.XPATH, "//*[@id='main-container']/div[1]/div/a[4]")))
         self.driver.find_element(By.XPATH, "//*[@id='main-container']/div[1]/div/a[4]").click()
 
-    def fill_newclient_form(self, surname, name, secondname, datapicker, phone, fromwhere):
-        self.driver.find_element(By.XPATH, "//*[@id='js-newrec-surname']").send_keys(surname)
-        self.driver.find_element(By.XPATH, "//*[@id='js-newrec-name']").send_keys(name)
+    def fill_newclient_form(self, group):
+        self.driver.find_element(By.XPATH, "//*[@id='js-newrec-surname']").send_keys(group.surname)
+        self.driver.find_element(By.XPATH, "//*[@id='js-newrec-name']").send_keys(group.name)
         self.driver.find_element(By.XPATH,
                                  "//*[@id='form_cbase_admin_newClient_input_0_wizard[data][second_name]']").send_keys(
-            secondname)
+            group.secondname)
         self.driver.find_element(By.XPATH, "//*[@id='form_cbase_admin_newClient_date_0__visible']").send_keys(
-            datapicker)
-        self.driver.find_element(By.XPATH, "//*[@id='js-newrec-phone']").send_keys(phone)
+            group.datapicker)
+        self.driver.find_element(By.XPATH, "//*[@id='js-newrec-phone']").send_keys(group.phone)
         self.driver.find_element(By.XPATH, "//*[@id='select2-chosen-9']").click()
-        self.driver.find_element(By.XPATH, "//*[@id='s2id_autogen9_search']").send_keys(fromwhere)
+        self.driver.find_element(By.XPATH, "//*[@id='s2id_autogen9_search']").send_keys(group.fromwhere)
         self.driver.find_element(By.XPATH, "//*[@id='s2id_autogen9_search']").send_keys(Keys.ENTER)
 
     def submit_newpatient_creation(self):
