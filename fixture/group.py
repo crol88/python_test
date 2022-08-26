@@ -30,7 +30,7 @@ class GroupHelper:
 
     def fill_newclient_form(self, group):
         wd = self.app.wd
-        # Заполнить обязательные поля ввода
+        # Заполнить обязательные поля ввода валидными данными
         wd.find_element(By.XPATH, "//*[@id='js-newrec-surname']").send_keys(group.surname)
         wd.find_element(By.XPATH, "//*[@id='js-newrec-name']").send_keys(group.name)
         wd.find_element(By.XPATH,
@@ -59,7 +59,6 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
-
 
     def submit_newpatient_creation(self):
         wd = self.app.wd
