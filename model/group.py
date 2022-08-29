@@ -1,5 +1,5 @@
 class Group:
-    def __init__(self, surname, name, secondname, datapicker, phone, fromwhere):
+    def __init__(self, surname=None, name=None, secondname=None, datapicker=None, phone=None, fromwhere=None):
         self.name = name
         self.surname = surname
         self.secondname = secondname

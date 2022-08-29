@@ -13,7 +13,7 @@ def test_add_and_delete_patient(app):
 
 def test_search_patient(app):
     app.session.login(username="Директор1", password="123456")
-    app.group.search_patient(search_name="Гагарин")
+    app.group.edit_patient_data(search_name="ФамилияАвтоТест")
     app.session.logout()
 
 
