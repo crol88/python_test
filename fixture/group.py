@@ -67,13 +67,10 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-done-step']").click()
         time.sleep(3)
 
-    def delete_new_patient(self):
+    def delete_new_patient(self, search_name):
         wd = self.app.wd
         # Поиск пациента
-        wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys("АТЕСТ")
-        time.sleep(3)
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        self.search_patient(search_name)
         # Опции
         wd.find_element(By.XPATH, "//*[@class='col-md-8 text-right pageActions']/div[2]/div[1]").click()
         # Удалить пациента
@@ -82,3 +79,16 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
+
+    def modify_patient_data(self, new_patient_data, search_name):
+        wd = self.app.wd
+        self.search_patient(search_name)
+        wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+
+    def search_patient(self, search_name):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
+        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        time.sleep(2)
