@@ -13,7 +13,7 @@ class GroupHelper:
         # Открыть список пациентов
         wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
         wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
-        wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']").click()
+        self.push_button_newClient()
 
     def change_filial(self, filial):
         wd = self.app.wd
@@ -26,6 +26,10 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(3)
         # Добавить нового пациента
+        self.push_button_newClient()
+
+    def push_button_newClient(self):
+        wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']").click()
 
     def fill_newclient_form(self, group):
@@ -80,25 +84,29 @@ class GroupHelper:
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
 
-    def edit_patient_data(self, group):
+    def edit_patient_data(self, group):  # create
         wd = self.app.wd
         # Редактировать фамилию
-        wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@class='form-control']").clear()
-        wd.find_element(By.XPATH, "//*[@class='form-control']").send_keys(group.surname)
-        wd.find_element(By.XPATH, "//*[@id='surname']/descendant::span[@class='input-group-btn']").click()
+        if group.surname is not None:
+            wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+            wd.find_element(By.XPATH, "//*[@class='form-control']").clear()
+            wd.find_element(By.XPATH, "//*[@class='form-control']").send_keys(group.surname)
+            wd.find_element(By.XPATH, "//*[@id='surname']/descendant::span[@class='input-group-btn']").click()
         # Редактировать имя
-        wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='name']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='name']//input").send_keys(group.name)
-        wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-group-btn']").click()
+        if group.name is not None:
+            wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
+            wd.find_element(By.XPATH, "//*[@id='name']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='name']//input").send_keys(group.name)
+            wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-group-btn']").click()
         # Редактировать отчество
-        wd.find_element(By.XPATH, "//*[@data-key='second_name'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='second_name']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='second_name']//input").send_keys(group.secondname)
-        wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-group-btn']").click()
+        if group.secondname is not None:
+            wd.find_element(By.XPATH, "//*[@data-key='second_name'][@type='button']").click()
+            wd.find_element(By.XPATH, "//*[@id='second_name']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='second_name']//input").send_keys(group.secondname)
+            wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-group-btn']").click()
 
     def search_patient(self, search_name):
+
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
