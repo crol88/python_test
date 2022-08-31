@@ -2,21 +2,20 @@ from model.group import Group
 
 
 def test_add_new_patient(app):
-    app.session.login(username="Директор1", password="123456")
     app.group.change_filial(filial="Филиал 2")
-    app.group.fill_newclient_form(Group(surname="Петров-Тест", name="Имя", secondname="Отчество",
+    app.group.fill_newclient_form(Group(surname="Петров-Тест", name="Пётр", secondname="Петрович",
                                         datapicker="10102010", phone="79278889966", fromwhere="2ГИС"))
     app.group.submit_newpatient_creation()
     app.group.push_button_newClient()
-    app.group.fill_newclient_form(Group(surname="Иванов-Тест", name="Имя", secondname="Отчество",
+    app.group.fill_newclient_form(Group(surname="Иванов-Тест", name="Иван", secondname="Иванович",
                                         datapicker="05061998", phone="79278815766", fromwhere="2ГИС"))
     app.group.submit_newpatient_creation()
     app.group.push_button_newClient()
-    app.group.fill_newclient_form(Group(surname="Сидоров-Тест", name="Имя", secondname="Отчество",
+    app.group.fill_newclient_form(Group(surname="Сидоров-Тест", name="Сидр", secondname="Сидорович",
                                         datapicker="02102005", phone="79273145866", fromwhere="2ГИС"))
     app.group.submit_newpatient_creation()
     app.group.push_button_newClient()
-    app.group.fill_newclient_form(Group(surname="Кузнецов-Тест", name="Имя", secondname="Отчество",
+    app.group.fill_newclient_form(Group(surname="Кузнецов-Тест", name="Кузнец", secondname="Кузнецович",
                                         datapicker="12111990", phone="79278881237", fromwhere="2ГИС"))
     app.group.submit_newpatient_creation()
     app.group.push_button_newClient()
@@ -47,4 +46,3 @@ def test_add_new_patient(app):
     app.group.fill_newclient_form(Group(surname="Абелин-Тест", name="Имя", secondname="Отчество",
                                         datapicker="16051998", phone="79277563668", fromwhere="2ГИС"))
     app.group.submit_newpatient_creation()
-    app.session.logout()

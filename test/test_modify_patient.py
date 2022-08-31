@@ -16,7 +16,5 @@ def test_edit_patient_surname(app):
 
 
 def test_edit_patient_secondname(app):
-    app.session.login(username="Директор1", password="123456")
     app.group.search_patient(search_name="АБАРШЕВ-ТЕСТ")
     app.group.edit_patient_data(Group(secondname="Ред-Отчество"))
-    app.session.logout()
