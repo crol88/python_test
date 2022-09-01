@@ -2,7 +2,7 @@ from model.group import Group
 
 
 def test_add_new_patient(app):
-    app.group.change_filial(filial="Филиал 2")
+    app.group.change_filial(Group(filial="Филиал 1"))
     app.group.fill_newclient_form(Group(surname="Петров-Тест", name="Пётр", secondname="Петрович",
                                         datapicker="10102010", phone="79278889966", fromwhere="2ГИС"))
     app.group.submit_newpatient_creation()

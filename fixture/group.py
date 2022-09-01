@@ -15,6 +15,10 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
         self.push_button_newClient()
 
+    def check_exists_by_xpath(self):
+        wd = self.app.wd
+        return len(wd.find_elements(By.XPATH, "//*[@href='/cbase/admin/newClient']")) > 0
+
     def change_filial(self, group):
         wd = self.app.wd
         # Открыть список пациентов
@@ -137,11 +141,3 @@ class GroupHelper:
         self.push_button_newClient()
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
-
-
-
-
-
-
-
-
