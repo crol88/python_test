@@ -23,7 +23,7 @@ def test_patient_for_search(app):
 
 def test_delete_patient(app):
     if app.group.count() == 0:
-        app.group.add_patient_for_del(Group(surname="Бтест", name="Добавить", secondname="Удалить",
+        app.group.add_patient_for_del(Group(surname="Утест", name="Добавить", secondname="Удалить",
                                             datapicker="12081980", phone="79058889556", fromwhere="2ГИС",
                                             filial="Филиал 1"))
-    app.group.delete_new_patient(search_name="Бтест")
+    app.group.delete_new_patient(search_name="Утест")

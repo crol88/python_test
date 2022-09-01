@@ -22,8 +22,9 @@ class GroupHelper:
     def change_filial(self, group):
         wd = self.app.wd
         # Открыть список пациентов
-        wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
-        wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+        if len(wd.find_elements(By.LINK_TEXT, "Добавить")) == 0:
+            wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+            wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
         # Изменить филиал
         if group.filial is not None:
             wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
@@ -120,15 +121,20 @@ class GroupHelper:
         time.sleep(2)
 
     def add_patient(self, group):
-        self.change_filial(group)
+        wd = self.app.wd
+        if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
+            wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+            wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+        self.push_button_newClient()
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
 
     def count(self):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
-        wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
-        return len(wd.find_elements(By.LINK_TEXT, "БТЕСТ"))
+        if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
+            wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+            wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+        return len(wd.find_elements(By.LINK_TEXT, "УТЕСТ"))
 
     def add_patient_for_del(self, group):
         wd = self.app.wd
