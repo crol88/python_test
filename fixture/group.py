@@ -15,15 +15,16 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
         self.push_button_newClient()
 
-    def change_filial(self, filial):
+    def change_filial(self, group):
         wd = self.app.wd
         # Открыть список пациентов
         wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
         wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
         # Изменить филиал
-        wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(filial)
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        if group.filial is not None:
+            wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
+            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.filial)
+            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(3)
         # Добавить нового пациента
         self.push_button_newClient()
@@ -113,3 +114,34 @@ class GroupHelper:
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(2)
+
+    def add_patient(self, group):
+        self.change_filial(group)
+        self.fill_newclient_form(group)
+        self.submit_newpatient_creation()
+
+    def count(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+        wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+        return len(wd.find_elements(By.LINK_TEXT, "БТЕСТ"))
+
+    def add_patient_for_del(self, group):
+        wd = self.app.wd
+        if group.filial is not None:
+            wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
+            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.filial)
+            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        time.sleep(3)
+        # Добавить нового пациента
+        self.push_button_newClient()
+        self.fill_newclient_form(group)
+        self.submit_newpatient_creation()
+
+
+
+
+
+
+
+

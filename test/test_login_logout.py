@@ -3,7 +3,7 @@ from model.group import Group
 
 
 def test_login_logout(app):
-    app.session.login(username="Директор1", password="123456")
+    app.session.login()
     app.session.logout()
 
 
