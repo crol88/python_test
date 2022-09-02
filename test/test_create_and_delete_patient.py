@@ -2,11 +2,14 @@ from model.group import Group
 
 
 def test_add_and_delete_patient(app):
+    old_groups = app.group.get_group_list()
     app.group.change_filial(Group(filial="Филиал 1"))
-    app.group.fill_newclient_form(Group(surname="Бтест", name="Добавить", secondname="Удалить",
+    app.group.fill_newclient_form(Group(surname="Пациент", name="Для", secondname="Удаления",
                                         datapicker="12081980", phone="79058889556", fromwhere="2ГИС"))
     app.group.submit_newpatient_creation()
-    app.group.delete_new_patient(search_name="Бтест")
+    app.group.delete_new_patient(search_name="Пациент")
+    new_groups = app.group.get_group_list()
+    assert len(old_groups) == len(new_groups)
 
 
 def test_add_patient(app):
@@ -30,3 +33,10 @@ def test_delete_patient(app):
                                             datapicker="12081980", phone="79058889556", fromwhere="2ГИС",
                                             filial="Филиал 1"))
     app.group.delete_new_patient(search_name="Утест")
+
+
+def test_del_patient(app):
+    old_groups = app.group.get_group_list()
+    app.group.delete_new_patient(search_name="Бтест")
+    new_groups = app.group.get_group_list()
+    assert len(old_groups) - 1 == len(new_groups)
