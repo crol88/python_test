@@ -1,6 +1,7 @@
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from model.group import Group
 
 
 class GroupHelper:
@@ -9,11 +10,15 @@ class GroupHelper:
         self.app = app
 
     def open_form_newclient(self):
-        wd = self.app.wd
         # Открыть список пациентов
-        wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
-        wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+        self.open_cbase()
         self.push_button_newClient()
+
+    def open_cbase(self):
+        wd = self.app.wd
+        if len(wd.find_elements(By.LINK_TEXT, "Добавить")) == 0:
+            wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+            wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
 
     def check_exists_by_xpath(self):
         wd = self.app.wd
@@ -22,9 +27,7 @@ class GroupHelper:
     def change_filial(self, group):
         wd = self.app.wd
         # Открыть список пациентов
-        if len(wd.find_elements(By.LINK_TEXT, "Добавить")) == 0:
-            wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
-            wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+        self.open_cbase()
         # Изменить филиал
         if group.filial is not None:
             wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
@@ -147,3 +150,15 @@ class GroupHelper:
         self.push_button_newClient()
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
+
+    def get_group_list(self):
+        # Проверка списка пациентов
+        wd = self.app.wd
+        self.open_cbase()
+        cbase_groups = []
+        for element in wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"):
+            # text = element.text()
+            cbase_id = element.find_element(By.XPATH, "//*[@class='js-client-checkbox']")\
+                .get_attribute("data-client-id")
+            cbase_groups.append(Group(cbase_id=cbase_id))
+        return cbase_groups

@@ -10,8 +10,11 @@ def test_add_and_delete_patient(app):
 
 
 def test_add_patient(app):
-    app.group.add_patient(Group(surname="Бтест", name="Добавить", secondname="Удалить",
-                                datapicker="12081980", phone="79058889556", fromwhere="2ГИС", filial="Филиал 1"))
+    old_groups = app.group.get_group_list()
+    app.group.add_patient(Group(surname="Проверка", name="Таблица", secondname="Ааа",
+                                datapicker="12081980", phone="79058889556", fromwhere="2ГИС", filial="Филиал 2"))
+    new_groups = app.group.get_group_list()
+    assert len(old_groups) + 1 == len(new_groups)
 
 
 def test_patient_for_search(app):

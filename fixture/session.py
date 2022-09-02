@@ -17,4 +17,3 @@ class SessionHelper:
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@class='userHeading']").click()
         wd.find_element(By.XPATH, "//*[@onclick='user.logout();']").click()
-
