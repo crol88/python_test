@@ -157,7 +157,8 @@ class GroupHelper:
         self.open_cbase()
         cbase_groups = []
         for element in wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"):
+            text = element.find_element(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr/td[2]").text
             cbase_id = element.find_element(By.XPATH, "//*[@class='js-client-checkbox']")\
                 .get_attribute("data-client-id")
-            cbase_groups.append(Group(cbase_id=cbase_id))
+            cbase_groups.append(Group(name=text, cbase_id=cbase_id))
         return cbase_groups

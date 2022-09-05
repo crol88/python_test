@@ -11,4 +11,7 @@ class Group:
         self.cbase_id = cbase_id
 
     def __repr__(self):
-        return f"{self.__class__}: {self.cbase_id}"
+        return f"{self.__class__}: {self.cbase_id, self.name}"
+
+    def __eq__(self, other):
+        return self.cbase_id == other.cbase_id and self.name == other.name
