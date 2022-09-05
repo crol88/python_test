@@ -9,3 +9,6 @@ class Group:
         self.fromwhere = fromwhere
         self.filial = filial
         self.cbase_id = cbase_id
+
+    def __repr__(self):
+        return f"{self.__class__}: {self.cbase_id}"
