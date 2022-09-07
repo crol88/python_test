@@ -78,7 +78,8 @@ class GroupHelper:
         # Подтвердить ввод данных
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']").click()
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-done-step']").click()
-        time.sleep(3)
+        time.sleep(2)
+        self.group_cache = None
 
     def delete_new_patient(self, search_name):
         wd = self.app.wd
@@ -92,6 +93,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
+        self.group_cache = None
 
     def edit_patient_data(self, group):  # create
         wd = self.app.wd
@@ -113,6 +115,7 @@ class GroupHelper:
             wd.find_element(By.XPATH, "//*[@id='second_name']//input").clear()
             wd.find_element(By.XPATH, "//*[@id='second_name']//input").send_keys(group.secondname)
             wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-group-btn']").click()
+        self.group_cache = None
 
     def search_patient(self, search_name):
 
@@ -151,14 +154,61 @@ class GroupHelper:
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
 
+    group_cache = None
+
     def get_group_list(self):
         # Проверка списка пациентов
+        if self.group_cache is None:
+            wd = self.app.wd
+            self.open_cbase()
+            self.group_cache = []
+            for element in wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"):
+                text = element.find_element(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr/td[2]").text
+                cbaseid = element.find_element(By.XPATH, "//*[@class='js-client-checkbox']") \
+                    .get_attribute("data-client-id")
+                self.group_cache.append(Group(name=text, cbaseid=cbaseid))
+        return list(self.group_cache)
+
+    def get_basic_patient_info_after_edit(self):
         wd = self.app.wd
-        self.open_cbase()
-        cbase_groups = []
-        for element in wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"):
-            text = element.find_element(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr/td[2]").text
-            cbase_id = element.find_element(By.XPATH, "//*[@class='js-client-checkbox']")\
-                .get_attribute("data-client-id")
-            cbase_groups.append(Group(name=text, cbase_id=cbase_id))
-        return cbase_groups
+        self.search_patient(search_name="")
+        self.open_field_basic_patient_info()
+        surname = wd.find_element(By.XPATH, "//*[@id='surname']//input").get_attribute("value")
+        name = wd.find_element(By.XPATH, "//*[@id='name']//input").get_attribute("value")
+        secondname = wd.find_element(By.XPATH, "//*[@id='second_name']//input").get_attribute("value")
+        birthday = wd.find_element(By.XPATH, "//*[@id='birthday']//input").get_attribute("value")
+        return Group(surname=surname, name=name, secondname=secondname, birthday=birthday)
+
+    def get_basic_patient_birthday(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='birthday'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='birthday']//input").get_attribute("value")
+
+    def open_field_basic_patient_info(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='second_name'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@data-key='birthday'][@type='button']").click()
+
+    def get_basic_patient_secondname(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='second_name'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='second_name']//input").get_attribute("value")
+
+    def get_basic_patient_name(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='name']//input").get_attribute("value")
+
+    def get_basic_patient_surname(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='surname']//input").get_attribute("value")
+
+    def get_basic_patient_info(self):
+        wd = self.app.wd
+        self.search_patient(search_name="")
+        self.open_field_basic_patient_info()
+        for row in wd.find_element(By.XPATH, )
+
