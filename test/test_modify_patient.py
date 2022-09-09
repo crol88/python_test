@@ -32,5 +32,5 @@ def test_edit_basic_patient_info(app):
     assert basic_patient_info.surname == edit_basic_patient_info.surname
     assert basic_patient_info.name == edit_basic_patient_info.name
     assert basic_patient_info.secondname == edit_basic_patient_info.secondname
-    assert basic_patient_info.datapicker == edit_basic_patient_info.datapicker
+    assert basic_patient_info.b == edit_basic_patient_info.datapicker
 

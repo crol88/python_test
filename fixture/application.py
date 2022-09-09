@@ -1,6 +1,7 @@
 from selenium import webdriver
 from fixture.session import SessionHelper
 from fixture.group import GroupHelper
+from fixture.basic import BasicHelper
 
 
 class Application:
@@ -9,10 +10,12 @@ class Application:
         self.wd.implicitly_wait(10)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
+        self.basic = BasicHelper(self)
 
     def open_homepage(self):
         wd = self.wd
-        wd.get("https://betav10.ci.dental-pro.online/")
+        wd.get("https://stablev10.ci.dental-pro.online/")
+        # wd.get("https://betav10.ci.dental-pro.online/")
         wd.set_window_size(1920, 1080)
 
     def destroy(self):

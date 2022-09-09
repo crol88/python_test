@@ -50,7 +50,7 @@ class GroupHelper:
                         "//*[@id='form_cbase_admin_newClient_input_0_wizard[data][second_name]']").send_keys(
             group.secondname)
         wd.find_element(By.XPATH, "//*[@id='form_cbase_admin_newClient_date_0__visible']").send_keys(
-            group.datapicker)
+            group.birthday)
         wd.find_element(By.XPATH, "//*[@id='js-newrec-phone']").send_keys(group.phone)
         wd.find_element(By.XPATH, "//*[text()='Откуда о нас узнали']").click()
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.fromwhere)
@@ -65,7 +65,7 @@ class GroupHelper:
                         "//*[@id='form_cbase_admin_newClient_input_0_wizard[data][second_name]']").send_keys(
             group.secondname)
         wd.find_element(By.XPATH, "//*[@id='form_cbase_admin_newClient_date_0__visible']").send_keys(
-            group.datapicker)
+            group.birthday)
         wd.find_element(By.XPATH, "//*[@id='js-newrec-phone']").send_keys(group.phone)
         wd.find_element(By.XPATH, "//*[text()='Откуда о нас узнали']").click()
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.fromwhere)
@@ -76,6 +76,9 @@ class GroupHelper:
     def submit_newpatient_creation(self):
         wd = self.app.wd
         # Подтвердить ввод данных
+        if wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']") == 0:
+            wd.send_keys(Keys.PAGE_DOWN)
+            time.sleep(1)
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']").click()
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-done-step']").click()
         time.sleep(2)
@@ -95,7 +98,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
         self.group_cache = None
 
-    def edit_patient_data(self, group):  # create
+    def edit_patient_data(self, group):
         wd = self.app.wd
         # Редактировать фамилию
         if group.surname is not None:
@@ -135,12 +138,12 @@ class GroupHelper:
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
 
-    def count(self):
+    def count(self, check_patient):
         wd = self.app.wd
         if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
             wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
             wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
-        return len(wd.find_elements(By.LINK_TEXT, "УТЕСТ"))
+        return len(wd.find_elements(By.LINK_TEXT, check_patient))
 
     def add_patient_for_del(self, group):
         wd = self.app.wd
@@ -207,8 +210,58 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='surname']//input").get_attribute("value")
 
     def get_basic_patient_info(self):
-        wd = self.app.wd
-        self.search_patient(search_name="")
-        self.open_field_basic_patient_info()
-        for row in wd.find_element(By.XPATH, )
+        if self.group_cache is None:
+            wd = self.app.wd
+            self.search_patient(search_name="")
+            self.open_field_basic_patient_info()
+            self.group_cache = []
+            for row in wd.find_element(By.XPATH, "//*[@id='collapseOne']"):
+                cells = row.find_element(By.TAG_NAME, "p")
+                surname = cells[0].text
+                name = cells[1].text
+                secondname = cells[2].text
+                birthday = cells[3].text
+                self.group_cache.append(Group())
 
+    def edit_patient_surname(self, group, text):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='surname']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='surname']//input").send_keys(group.surname)
+        wd.find_element(By.XPATH, "//*[@id='surname']/descendant::span[@class='input-group-btn']").click()
+        surname = wd.find_element(By.XPATH, "//*[@id='surname']/p")
+        assert text == surname.text
+
+    def edit_patient_surname_fill(self, text):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='surname']/descendant::span[@class='input-group-btn']").click()
+        surname = wd.find_element(By.XPATH, "//*[@id='surname']/p")
+        assert text == surname.text
+
+    def edit_patient_name(self, group, text):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='name']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='name']//input").send_keys(group.name)
+        wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-group-btn']").click()
+        surname = wd.find_element(By.XPATH, "//*[@id='name']/p")
+        assert text == surname.text
+
+    def edit_patient_secondname(self, group, text):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='second_name'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='second_name']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='second_name']//input").send_keys(group.secondname)
+        wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-group-btn']").click()
+        secondname = wd.find_element(By.XPATH, "//*[@id='second_name']/p")
+        assert text == secondname.text
+
+    def edit_patient_birthday(self, group, text):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='birthday'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='birthday']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='birthday']//input").send_keys(group.birthday)
+        wd.find_element(By.XPATH, "//*[@id='birthday']//span[@class='input-group-btn']").click()
+        birthday = wd.find_element(By.XPATH, "//*[@id='birthday']/p")
+        assert text == birthday.text
