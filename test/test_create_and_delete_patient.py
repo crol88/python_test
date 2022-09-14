@@ -52,3 +52,4 @@ def test_del_patient(app):
     assert len(old_groups) - 1 == len(new_groups)
     old_groups[0:1] = []
     assert old_groups == new_groups
+

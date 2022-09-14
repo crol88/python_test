@@ -2,6 +2,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from model.group import Group
+from selenium.webdriver.support.ui import Select
 
 
 class GroupHelper:
@@ -239,6 +240,13 @@ class GroupHelper:
         surname = wd.find_element(By.XPATH, "//*[@id='surname']/p")
         assert text == surname.text
 
+    def edit_patient_name_fill(self, text):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-group-btn']").click()
+        name = wd.find_element(By.XPATH, "//*[@id='name']/p")
+        assert text == name.text
+
     def edit_patient_name(self, group, text):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
@@ -263,5 +271,22 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='birthday']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='birthday']//input").send_keys(group.birthday)
         wd.find_element(By.XPATH, "//*[@id='birthday']//span[@class='input-group-btn']").click()
-        birthday = wd.find_element(By.XPATH, "//*[@id='birthday']/p")
-        assert text == birthday.text
+        birthday = wd.find_element(By.XPATH, "//*[@id='birthday']/p").text
+        # assert text == birthday.text
+        assert text in birthday
+
+    def edit_patient_sex(self, sex):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='sex'][@type='button']").click()
+        select = Select(wd.find_element(By.XPATH, "//*[@id='sex']/div/select"))
+        select.select_by_visible_text(sex)
+        wd.find_element(By.XPATH, "//*[@id='sex']//span[@class='input-group-btn']").click()
+        sex_edit = wd.find_element(By.XPATH, "//*[@id='sex']/p[@data-key='sex']").text
+        assert sex_edit == sex
+
+    def edit_patient_inn(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='inn'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='inn']//input").send_keys("781633333333")
+        wd.find_element(By.XPATH, "//*[@id='inn']//span[@class='input-group-btn']").click()
+        # inn_edit = wd.find_element(By.XPATH, "//*[@id='inn']/p").text

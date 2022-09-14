@@ -14,20 +14,15 @@ from model.group import Group
 def test_edit_patient_surname(app):
     if app.group.count(check_patient="SURNAME") == 0:
         app.group.add_patient_for_del(
-            Group(surname="Surname-create", name="Артур", secondname="Артурович", birthday="12081980",
+            Group(surname="SURNAME", name="Артур", secondname="Артурович", birthday="12081980",
                   phone="79058889556",
                   fromwhere="2ГИС", filial="Филиал 1"))
-    app.group.search_patient(search_name="Surname-create")
+    app.group.search_patient(search_name="SURNAME")
     app.group.edit_patient_surname(Group(surname="SURNAME-EDIT"), text="SURNAME-EDIT")
 
 
-def test_open_close_edit_patient_surname(app):
+def test_edit_patient_surname_without_changes(app):
     # Активировать поле фамилия и сохранить без изменений
-    if app.group.count(check_patient="SURNAME-EDIT") == 0:
-        app.group.add_patient_for_del(
-            Group(surname="DРед-Фамилия", name="Добавить", secondname="Удалить", birthday="16101982",
-                  phone="79067426332",
-                  fromwhere="2ГИС", filial="Филиал 1"))
     app.group.search_patient(search_name="SURNAME-EDIT")
     app.group.edit_patient_surname_fill(text="SURNAME-EDIT")
 
@@ -40,6 +35,11 @@ def test_edit_patient_name(app):
                   fromwhere="2ГИС", filial="Филиал 1"))
     app.group.search_patient(search_name="surname-edit")
     app.group.edit_patient_name(Group(name="NAME-EDIT"), text="NAME-EDIT")
+
+
+def test_edit_patient_name_without_changes(app):
+    app.group.search_patient(search_name="SURNAME-EDIT")
+    app.group.edit_patient_name_fill(text="NAME-EDIT")
 
 
 def test_edit_patient_secondname(app):
@@ -61,3 +61,27 @@ def test_edit_patient_birthday(app):
     app.group.search_patient(search_name="SURNAME")
     app.group.edit_patient_birthday(Group(birthday="21.12.1999"), text="21.12.1999")
 
+
+def test_edit_patient_sex_male(app):
+    if app.group.count(check_patient="SEX-MALE") == 0:
+        app.group.add_patient_for_del(
+            Group(surname="SEX-MALE", name="ПОЛ", secondname="МУЖСКОЙ", birthday="21101984",
+                  phone="79051593692",
+                  fromwhere="2ГИС", filial="Филиал 1"))
+    app.group.search_patient(search_name="SEX-MALE")
+    app.group.edit_patient_sex(sex="Мужской")
+
+
+def test_edit_patient_sex_female(app):
+    if app.group.count(check_patient="SEX-FEMALE") == 0:
+        app.group.add_patient_for_del(
+            Group(surname="SEX-FEMALE", name="ПОЛ", secondname="МУЖСКОЙ", birthday="23101985",
+                  phone="79051158692",
+                  fromwhere="2ГИС", filial="Филиал 1"))
+    app.group.search_patient(search_name="SEX-FEMALE")
+    app.group.edit_patient_sex(sex="Женский")
+
+
+def test_edit_patient_inn(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_inn()
