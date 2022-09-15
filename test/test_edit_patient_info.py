@@ -67,7 +67,7 @@ def test_edit_patient_sex_male(app):
     app.group.edit_patient_sex(sex="Мужской")
 
 
-def test_edit_patient_sex_male_fill(app):
+def test_edit_patient_sex_male_without_changes(app):
     app.group.search_patient(search_name="SEX-MALE")
     app.group.edit_patient_sex_male_fill()
 
@@ -107,6 +107,59 @@ def test_edit_patient_postcode(app):
     app.group.edit_patient_postcode(postcode="432001")
 
 
+def test_edit_patient_postcode_without_changes(app):
+    app.group.edit_patient_postcode_none()
+
+
+def test_edit_patient_state(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_state(state="State")
+
+
+def test_edit_patient_state_without_changes(app):
+    app.group.edit_patient_state_none()
+
+
+def test_edit_patient_city(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_city(city="city")
+
+
+def test_edit_patient_city_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_city_without_changes()
+
+
 def test_edit_patient_last_data(app):
     app.group.search_patient(search_name="SURNAME")
     app.group.edit_patient_last_data(data="10.10.2022")
+
+
+def test_edit_patient_street(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_street(street="street")
+
+
+def test_edit_patient_street_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_street_none()
+
+
+def test_edit_patient_building(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_building(building="54")
+
+
+def test_edit_patient_building_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.test_edit_patient_building_none()
+
+
+def test_edit_patient_apartment(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_apartment()
+
+
+def test_edit_patient_apartment_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_apartment_none()

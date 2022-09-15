@@ -1,3 +1,4 @@
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 
@@ -15,5 +16,6 @@ class SessionHelper:
 
     def logout(self):
         wd = self.app.wd
+        wd.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.HOME)
         wd.find_element(By.XPATH, "//*[@class='userHeading']").click()
         wd.find_element(By.XPATH, "//*[@onclick='user.logout();']").click()
