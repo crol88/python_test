@@ -1,4 +1,6 @@
 import time
+
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from model.group import Group
@@ -240,12 +242,20 @@ class GroupHelper:
         surname = wd.find_element(By.XPATH, "//*[@id='surname']/p")
         assert text == surname.text
 
-    def edit_patient_name_fill(self, text):
+    def edit_patient_name_fill(self):
         wd = self.app.wd
+        name = wd.find_element(By.XPATH, "//*[@id='name']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-group-btn']").click()
-        name = wd.find_element(By.XPATH, "//*[@id='name']/p")
-        assert text == name.text
+        name_after = wd.find_element(By.XPATH, "//*[@id='name']/p").text
+        assert name == name_after
+
+    def edit_patient_secondname_fill(self, text):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='second_name'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-group-btn']").click()
+        secondname = wd.find_element(By.XPATH, "//*[@id='second_name']/p")
+        assert text == secondname.text
 
     def edit_patient_name(self, group, text):
         wd = self.app.wd
@@ -275,6 +285,14 @@ class GroupHelper:
         # assert text == birthday.text
         assert text in birthday
 
+    def edit_patient_birthday_fill(self):
+        wd = self.app.wd
+        birthday = wd.find_element(By.XPATH, "//*[@id='birthday']/p").text
+        wd.find_element(By.XPATH, "//*[@data-key='birthday'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='birthday']//span[@class='input-group-btn']").click()
+        birthday_after = wd.find_element(By.XPATH, "//*[@id='birthday']/p").text
+        assert birthday_after in birthday
+
     def edit_patient_sex(self, sex):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@data-key='sex'][@type='button']").click()
@@ -284,9 +302,70 @@ class GroupHelper:
         sex_edit = wd.find_element(By.XPATH, "//*[@id='sex']/p[@data-key='sex']").text
         assert sex_edit == sex
 
-    def edit_patient_inn(self):
+    def edit_patient_sex_male_fill(self):
+        wd = self.app.wd
+        sex = wd.find_element(By.XPATH, "//*[@id='sex']/p[@data-key='sex']").text
+        wd.find_element(By.XPATH, "//*[@data-key='sex'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='sex']//span[@class='input-group-btn']").click()
+        sex_after = wd.find_element(By.XPATH, "//*[@id='sex']/p[@data-key='sex']").text
+        assert sex == sex_after
+
+    def edit_patient_inn(self, inn):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@data-key='inn'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='inn']//input").send_keys("781633333333")
+        wd.find_element(By.XPATH, "//*[@id='inn']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='inn']//input").send_keys(inn)
         wd.find_element(By.XPATH, "//*[@id='inn']//span[@class='input-group-btn']").click()
-        # inn_edit = wd.find_element(By.XPATH, "//*[@id='inn']/p").text
+        inn_edit = wd.find_element(By.XPATH, "//*[@id='inn']/p").text
+        assert inn_edit == inn
+
+    def edit_patient_inn_fill(self):
+        wd = self.app.wd
+        inn_edit = wd.find_element(By.XPATH, "//*[@id='inn']/p").text
+        wd.find_element(By.XPATH, "//*[@data-key='inn'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='inn']//span[@class='input-group-btn']").click()
+        inn_edit_after = wd.find_element(By.XPATH, "//*[@id='inn']/p").text
+        assert inn_edit == inn_edit_after
+
+    def edit_patient_country(self, country):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@data-key='country'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='country']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='country']//input").send_keys(country)
+        wd.find_element(By.XPATH, "//*[@id='country']//span[@class='input-group-btn']").click()
+        country_edit = wd.find_element(By.XPATH, "//*[@id='country']/p").text
+        assert country_edit == country
+
+    # def basic_info(self):
+    #     wd = self.app.wd
+    #     wd.find_elements(By.XPATH, "//*[contains(text(), 'SURNAME-EDIT')]")
+
+    def edit_patient_country_fill(self):
+        wd = self.app.wd
+        country = wd.find_element(By.XPATH, "//*[@id='country']/p").text
+        wd.find_element(By.XPATH, "//*[@data-key='country'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='country']//span[@class='input-group-btn']").click()
+        country_after = wd.find_element(By.XPATH, "//*[@id='country']/p").text
+        assert country == country_after
+
+    def edit_patient_postcode(self, postcode):
+        wd = self.app.wd
+        self.scroll_to_element()
+        wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='postcode']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='postcode']//input").send_keys(postcode)
+        wd.find_element(By.XPATH, "//*[@id='postcode']//span[@class='input-group-btn']").click()
+        postcode_edit = wd.find_element(By.XPATH, "//*[@id='postcode']/p").text
+        assert postcode == postcode_edit
+
+    def scroll_to_element(self):
+        wd = self.app.wd
+        wd.execute_script("window.scrollTo(0, 2000);")
+
+    def edit_patient_last_data(self, data):
+        wd = self.app.wd
+        self.scroll_to_element()
+        wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").send_keys(data)
+        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
