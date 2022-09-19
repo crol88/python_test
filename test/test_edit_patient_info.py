@@ -108,6 +108,7 @@ def test_edit_patient_postcode(app):
 
 
 def test_edit_patient_postcode_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
     app.group.edit_patient_postcode_none()
 
 
@@ -117,6 +118,7 @@ def test_edit_patient_state(app):
 
 
 def test_edit_patient_state_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
     app.group.edit_patient_state_none()
 
 
@@ -128,11 +130,6 @@ def test_edit_patient_city(app):
 def test_edit_patient_city_without_changes(app):
     app.group.search_patient(search_name="SURNAME")
     app.group.edit_patient_city_without_changes()
-
-
-def test_edit_patient_last_data(app):
-    app.group.search_patient(search_name="SURNAME")
-    app.group.edit_patient_last_data(data="10.10.2022")
 
 
 def test_edit_patient_street(app):
@@ -147,19 +144,49 @@ def test_edit_patient_street_without_changes(app):
 
 def test_edit_patient_building(app):
     app.group.search_patient(search_name="SURNAME")
-    app.group.edit_patient_building(building="54")
+    app.group.edit_patient_building(building="4")
 
 
 def test_edit_patient_building_without_changes(app):
     app.group.search_patient(search_name="SURNAME")
-    app.group.test_edit_patient_building_none()
+    app.group.edit_patient_building_none()
 
 
 def test_edit_patient_apartment(app):
     app.group.search_patient(search_name="SURNAME")
-    app.group.edit_patient_apartment()
+    app.group.edit_patient_apartment(apt="56")
 
 
 def test_edit_patient_apartment_without_changes(app):
     app.group.search_patient(search_name="SURNAME")
     app.group.edit_patient_apartment_none()
+
+
+def test_edit_patient_address(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_address(address="test address")
+
+
+def test_edit_patient_address_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_address_none()
+
+
+def test_edit_patient_first_data(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_first_data(data="31.12.2021")
+
+
+def test_edit_patient_first_data_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_first_data_none()
+
+
+def test_edit_patient_last_data(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_last_data(data="10.10.2021")
+
+
+def test_edit_patient_last_data_without_changes(app):
+    app.group.search_patient(search_name="SURNAME")
+    app.group.edit_patient_last_data_none()

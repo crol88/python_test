@@ -1,5 +1,4 @@
 import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from model.group import Group
@@ -132,6 +131,11 @@ class GroupHelper:
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(2)
+
+    def check_basic_info(self):
+        wd = self.app.wd
+        if len(wd.find_elements(By.LINK_TEXT, "Основная информация")) == 0:
+            return
 
     def add_patient(self, group):
         wd = self.app.wd
@@ -351,7 +355,9 @@ class GroupHelper:
 
     def edit_patient_postcode(self, postcode):
         wd = self.app.wd
-        self.scroll_to_element()
+        # self.scroll_to_element()
+        element = wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']")
+        wd.execute_script("arguments[0].scrollIntoView(true);", element)
         wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='postcode']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='postcode']//input").send_keys(postcode)
@@ -361,7 +367,9 @@ class GroupHelper:
 
     def edit_patient_postcode_none(self):
         wd = self.app.wd
-        self.scroll_to_element()
+        # self.scroll_to_element()
+        element = wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']")
+        wd.execute_script("arguments[0].scrollIntoView(true);", element)
         postcode = wd.find_element(By.XPATH, "//*[@id='postcode']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='postcode']//span[@class='input-group-btn']").click()
@@ -372,17 +380,6 @@ class GroupHelper:
         wd = self.app.wd
         wd.execute_script("window.scrollTo(0, 1000);")
         time.sleep(1)
-
-    def edit_patient_last_data(self, data):
-        wd = self.app.wd
-        self.scroll_to_element()
-        time.sleep(1)
-        wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").send_keys(data)
-        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
-        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
-        assert data_edit == data
 
     def edit_patient_state(self, state):
         wd = self.app.wd
@@ -466,5 +463,72 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='apt'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='apt']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='apt']//input").send_keys(apt)
-        wd.find_element(By.XPATH, "")
+        wd.find_element(By.XPATH, "//*[@id='apt']//span[@class='input-group-btn']").click()
+        apt_edit = wd.find_element(By.XPATH, "//*[@id='apt']/p").text
+        assert apt == apt_edit
 
+    def edit_patient_apartment_none(self):
+        wd = self.app.wd
+        self.scroll_to_element()
+        apt = wd.find_element(By.XPATH, "//*[@id='apt']/p").text
+        wd.find_element(By.XPATH, "//*[@data-key='apt'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='apt']//span[@class='input-group-btn']").click()
+        apt_edit = wd.find_element(By.XPATH, "//*[@id='apt']/p").text
+        assert apt == apt_edit
+
+    def edit_patient_address(self, address):
+        wd = self.app.wd
+        self.scroll_to_element()
+        wd.find_element(By.XPATH, "//*[@data-key='address'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='address']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='address']//input").send_keys(address)
+        wd.find_element(By.XPATH, "//*[@id='address']//span[@class='input-group-btn']").click()
+        address_edit = wd.find_element(By.XPATH, "//*[@id='address']/p").text
+        assert address == address_edit
+
+    def edit_patient_address_none(self):
+        wd = self.app.wd
+        self.scroll_to_element()
+        address = wd.find_element(By.XPATH, "//*[@id='address']/p").text
+        wd.find_element(By.XPATH, "//*[@data-key='address'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='address']//span[@class='input-group-btn']").click()
+        address_edit = wd.find_element(By.XPATH, "//*[@id='address']/p").text
+        assert address == address_edit
+
+    def edit_patient_first_data(self, data):
+        wd = self.app.wd
+        self.scroll_to_element()
+        wd.find_element(By.XPATH, "//*[@data-key='date_of_first_appointment'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//input").send_keys(data)
+        wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//span[@class='input-group-btn']").click()
+        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
+        assert data == data_edit
+
+    def edit_patient_first_data_none(self):
+        wd = self.app.wd
+        self.scroll_to_element()
+        data = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
+        wd.find_element(By.XPATH, "//*[@data-key='date_of_first_appointment'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//span[@class='input-group-btn']").click()
+        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
+        assert data == data_edit
+
+    def edit_patient_last_data(self, data):
+        wd = self.app.wd
+        self.scroll_to_element()
+        wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").send_keys(data)
+        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
+        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
+        assert data_edit == data
+
+    def edit_patient_last_data_none(self):
+        wd = self.app.wd
+        self.scroll_to_element()
+        data = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
+        wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
+        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
+        assert data_edit == data
