@@ -532,3 +532,4 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
         data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
         assert data_edit == data
+

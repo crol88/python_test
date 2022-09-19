@@ -2,6 +2,7 @@ from selenium import webdriver
 from fixture.session import SessionHelper
 from fixture.group import GroupHelper
 from fixture.basic import BasicHelper
+from fixture.client_info.contact import ContactHelper
 
 
 class Application:
@@ -11,11 +12,13 @@ class Application:
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
         self.basic = BasicHelper(self)
+        self.contact = ContactHelper(self)
 
     def open_homepage(self):
         wd = self.wd
         # wd.get("https://stablev10.ci.dental-pro.online/")
         wd.get("https://betav10.ci.dental-pro.online/")
+        # wd.get("https://stndnextlite.dm.dental-pro.online/dashboard/widgets/index")
         wd.set_window_size(1920, 1080)
 
     def destroy(self):
