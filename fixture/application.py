@@ -3,6 +3,7 @@ from fixture.session import SessionHelper
 from fixture.group import GroupHelper
 from fixture.basic import BasicHelper
 from fixture.client_info.contact import ContactHelper
+from fixture.client_info.passport import PassportHelper
 
 
 class Application:
@@ -13,6 +14,7 @@ class Application:
         self.group = GroupHelper(self)
         self.basic = BasicHelper(self)
         self.contact = ContactHelper(self)
+        self.passport = PassportHelper(self)
 
     def open_homepage(self):
         wd = self.wd
@@ -31,4 +33,3 @@ class Application:
             return True
         except:
             return False
-

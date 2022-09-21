@@ -164,7 +164,7 @@ def test_edit_patient_apartment_without_changes(app):
 
 def test_edit_patient_address(app):
     app.group.search_patient(search_name="SURNAME")
-    app.group.edit_patient_address(address="test address")
+    app.group.edit_patient_address(address="testaddress")
 
 
 def test_edit_patient_address_without_changes(app):

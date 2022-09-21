@@ -237,15 +237,17 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='surname']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='surname']//input").send_keys(group.surname)
         wd.find_element(By.XPATH, "//*[@id='surname']/descendant::span[@class='input-group-btn']").click()
-        surname = wd.find_element(By.XPATH, "//*[@id='surname']/p")
-        assert text == surname.text
+        surname = wd.find_element(By.XPATH, "//*[@id='surname']/p").text
+        print("enter_data =", text, ";", "save_data =", surname)
+        assert text == surname
 
     def edit_patient_surname_fill(self, text):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='surname']/descendant::span[@class='input-group-btn']").click()
-        surname = wd.find_element(By.XPATH, "//*[@id='surname']/p")
-        assert text == surname.text
+        surname = wd.find_element(By.XPATH, "//*[@id='surname']/p").text
+        print("enter_data =", text, ";", "save_data =", surname)
+        assert text == surname
 
     def edit_patient_name_fill(self):
         wd = self.app.wd
@@ -253,14 +255,16 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-group-btn']").click()
         name_after = wd.find_element(By.XPATH, "//*[@id='name']/p").text
+        print("enter_data =", name, ";", "save_data =", name_after)
         assert name == name_after
 
     def edit_patient_secondname_fill(self, text):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@data-key='second_name'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-group-btn']").click()
-        secondname = wd.find_element(By.XPATH, "//*[@id='second_name']/p")
-        assert text == secondname.text
+        secondname = wd.find_element(By.XPATH, "//*[@id='second_name']/p").text
+        print("enter_data =", text, ";", "save_data =", secondname)
+        assert text == secondname
 
     def edit_patient_name(self, group, text):
         wd = self.app.wd
@@ -268,8 +272,9 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='name']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='name']//input").send_keys(group.name)
         wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-group-btn']").click()
-        surname = wd.find_element(By.XPATH, "//*[@id='name']/p")
-        assert text == surname.text
+        surname = wd.find_element(By.XPATH, "//*[@id='name']/p").text
+        print("enter_data =", text, ";", "save_data =", surname)
+        assert text == surname
 
     def edit_patient_secondname(self, group, text):
         wd = self.app.wd
@@ -277,8 +282,9 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='second_name']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='second_name']//input").send_keys(group.secondname)
         wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-group-btn']").click()
-        secondname = wd.find_element(By.XPATH, "//*[@id='second_name']/p")
-        assert text == secondname.text
+        secondname = wd.find_element(By.XPATH, "//*[@id='second_name']/p").text
+        print("enter_data =", text, ";", "save_data =", secondname)
+        assert text == secondname
 
     def edit_patient_birthday(self, group, text):
         wd = self.app.wd
@@ -287,7 +293,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='birthday']//input").send_keys(group.birthday)
         wd.find_element(By.XPATH, "//*[@id='birthday']//span[@class='input-group-btn']").click()
         birthday = wd.find_element(By.XPATH, "//*[@id='birthday']/p").text
-        # assert text == birthday.text
+        print("enter_data =", text, ";", "save_data =", birthday)
         assert text in birthday
 
     def edit_patient_birthday_fill(self):
@@ -296,6 +302,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='birthday'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='birthday']//span[@class='input-group-btn']").click()
         birthday_after = wd.find_element(By.XPATH, "//*[@id='birthday']/p").text
+        print("enter_data =", birthday_after, ";", "save_data =", birthday)
         assert birthday_after in birthday
 
     def edit_patient_sex(self, sex):
@@ -305,6 +312,7 @@ class GroupHelper:
         select.select_by_visible_text(sex)
         wd.find_element(By.XPATH, "//*[@id='sex']//span[@class='input-group-btn']").click()
         sex_edit = wd.find_element(By.XPATH, "//*[@id='sex']/p[@data-key='sex']").text
+        print("enter_data =", sex_edit, ";", "save_data =", sex)
         assert sex_edit == sex
 
     def edit_patient_sex_male_fill(self):
@@ -313,6 +321,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='sex'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='sex']//span[@class='input-group-btn']").click()
         sex_after = wd.find_element(By.XPATH, "//*[@id='sex']/p[@data-key='sex']").text
+        print("enter_data =", sex, ";", "save_data =", sex_after)
         assert sex == sex_after
 
     def edit_patient_inn(self, inn):
@@ -322,6 +331,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='inn']//input").send_keys(inn)
         wd.find_element(By.XPATH, "//*[@id='inn']//span[@class='input-group-btn']").click()
         inn_edit = wd.find_element(By.XPATH, "//*[@id='inn']/p").text
+        print("enter_data =", inn_edit, ";", "save_data =", inn)
         assert inn_edit == inn
 
     def edit_patient_inn_fill(self):
@@ -330,6 +340,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='inn'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='inn']//span[@class='input-group-btn']").click()
         inn_edit_after = wd.find_element(By.XPATH, "//*[@id='inn']/p").text
+        print("enter_data =", inn_edit, ";", "save_data =", inn_edit_after)
         assert inn_edit == inn_edit_after
 
     def edit_patient_country(self, country):
@@ -339,6 +350,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='country']//input").send_keys(country)
         wd.find_element(By.XPATH, "//*[@id='country']//span[@class='input-group-btn']").click()
         country_edit = wd.find_element(By.XPATH, "//*[@id='country']/p").text
+        print("enter_data =", country_edit, ";", "save_data =", country)
         assert country_edit == country
 
     # def basic_info(self):
@@ -351,6 +363,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='country'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='country']//span[@class='input-group-btn']").click()
         country_after = wd.find_element(By.XPATH, "//*[@id='country']/p").text
+        print("enter_data =", country, ";", "save_data =", country_after)
         assert country == country_after
 
     def edit_patient_postcode(self, postcode):
@@ -363,6 +376,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='postcode']//input").send_keys(postcode)
         wd.find_element(By.XPATH, "//*[@id='postcode']//span[@class='input-group-btn']").click()
         postcode_edit = wd.find_element(By.XPATH, "//*[@id='postcode']/p").text
+        print("enter_data =", postcode, ";", "save_data =", postcode_edit)
         assert postcode == postcode_edit
 
     def edit_patient_postcode_none(self):
@@ -374,6 +388,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='postcode']//span[@class='input-group-btn']").click()
         postcode_edit = wd.find_element(By.XPATH, "//*[@id='postcode']/p").text
+        print("enter_data =", postcode, ";", "save_data =", postcode_edit)
         assert postcode == postcode_edit
 
     def scroll_to_element(self):
@@ -389,6 +404,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='state']//input").send_keys(state)
         wd.find_element(By.XPATH, "//*[@id='state']//span[@class='input-group-btn']").click()
         state_edit = wd.find_element(By.XPATH, "//*[@id='state']/p").text
+        print("enter_data =", state, ";", "save_data =", state_edit)
         assert state == state_edit
 
     def edit_patient_state_none(self):
@@ -398,6 +414,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='state'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='state']//span[@class='input-group-btn']").click()
         state_edit = wd.find_element(By.XPATH, "//*[@id='state']/p").text
+        print("enter_data =", state, ";", "save_data =", state_edit)
         assert state == state_edit
 
     def edit_patient_city(self, city):
@@ -408,6 +425,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='city']//input").send_keys(city)
         wd.find_element(By.XPATH, "//*[@id='city']//span[@class='input-group-btn']").click()
         city_edit = wd.find_element(By.XPATH, "//*[@id='city']/p").text
+        print("enter_data =", city_edit, ";", "save_data =", city)
         assert city_edit == city
 
     def edit_patient_city_without_changes(self):
@@ -417,6 +435,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='city'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='city']//span[@class='input-group-btn']").click()
         city_edit = wd.find_element(By.XPATH, "//*[@id='city']/p").text
+        print("enter_data =", city, ";", "save_data =", city_edit)
         assert city == city_edit
 
     def edit_patient_street(self, street):
@@ -427,6 +446,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='street']//input").send_keys(street)
         wd.find_element(By.XPATH, "//*[@id='street']//span[@class='input-group-btn']").click()
         street_edit = wd.find_element(By.XPATH, "//*[@id='street']/p").text
+        print("enter_data =", street, ";", "save_data =", street_edit)
         assert street == street_edit
 
     def edit_patient_street_none(self):
@@ -436,6 +456,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='street'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='street']//span[@class='input-group-btn']").click()
         street_edit = wd.find_element(By.XPATH, "//*[@id='street']/p").text
+        print("enter_data =", street, ";", "save_data =", street_edit)
         assert street == street_edit
 
     def edit_patient_building(self, building):
@@ -446,6 +467,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='building']//input").send_keys(building)
         wd.find_element(By.XPATH, "//*[@id='building']//span[@class='input-group-btn']").click()
         building_edit = wd.find_element(By.XPATH, "//*[@id='building']/p").text
+        print("enter_data =", building, ";", "save_data =", building_edit)
         assert building == building_edit
 
     def edit_patient_building_none(self):
@@ -455,6 +477,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='building'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='building']//span[@class='input-group-btn']").click()
         building_edit = wd.find_element(By.XPATH, "//*[@id='building']/p").text
+        print("enter_data =", building, ";", "save_data =", building_edit)
         assert building == building_edit
 
     def edit_patient_apartment(self, apt):
@@ -465,6 +488,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='apt']//input").send_keys(apt)
         wd.find_element(By.XPATH, "//*[@id='apt']//span[@class='input-group-btn']").click()
         apt_edit = wd.find_element(By.XPATH, "//*[@id='apt']/p").text
+        print("enter_data =", apt, ";", "save_data =", apt_edit)
         assert apt == apt_edit
 
     def edit_patient_apartment_none(self):
@@ -474,6 +498,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='apt'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='apt']//span[@class='input-group-btn']").click()
         apt_edit = wd.find_element(By.XPATH, "//*[@id='apt']/p").text
+        print("enter_data =", apt, ";", "save_data =", apt_edit)
         assert apt == apt_edit
 
     def edit_patient_address(self, address):
@@ -484,6 +509,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='address']//input").send_keys(address)
         wd.find_element(By.XPATH, "//*[@id='address']//span[@class='input-group-btn']").click()
         address_edit = wd.find_element(By.XPATH, "//*[@id='address']/p").text
+        print("enter_data =", address, ";", "save_data =", address_edit)
         assert address == address_edit
 
     def edit_patient_address_none(self):
@@ -493,6 +519,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='address'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='address']//span[@class='input-group-btn']").click()
         address_edit = wd.find_element(By.XPATH, "//*[@id='address']/p").text
+        print("enter_data =", address, ";", "save_data =", address_edit)
         assert address == address_edit
 
     def edit_patient_first_data(self, data):
@@ -503,6 +530,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//input").send_keys(data)
         wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//span[@class='input-group-btn']").click()
         data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
+        print("enter_data =", data, ";", "save_data =", data_edit)
         assert data == data_edit
 
     def edit_patient_first_data_none(self):
@@ -512,6 +540,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='date_of_first_appointment'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//span[@class='input-group-btn']").click()
         data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
+        print("enter_data =", data, ";", "save_data =", data_edit)
         assert data == data_edit
 
     def edit_patient_last_data(self, data):
@@ -522,6 +551,7 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").send_keys(data)
         wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
         data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
+        print("enter_data =", data, ";", "save_data =", data_edit)
         assert data_edit == data
 
     def edit_patient_last_data_none(self):
@@ -531,5 +561,6 @@ class GroupHelper:
         wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
         data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
+        print("enter_data =", data, ";", "save_data =", data_edit)
         assert data_edit == data
 
