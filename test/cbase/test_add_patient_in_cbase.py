@@ -55,3 +55,4 @@ def test_add_new_patient(app):
     app.group.submit_newpatient_creation()
     new_groups = app.group.get_group_list()
     assert len(old_groups) + 10 == len(new_groups)
+

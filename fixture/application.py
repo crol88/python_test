@@ -4,6 +4,7 @@ from fixture.group import GroupHelper
 from fixture.basic import BasicHelper
 from fixture.client_info.contact import ContactHelper
 from fixture.client_info.passport import PassportHelper
+from fixture.client_info.parent import ParentHelper
 
 
 class Application:
@@ -15,6 +16,7 @@ class Application:
         self.basic = BasicHelper(self)
         self.contact = ContactHelper(self)
         self.passport = PassportHelper(self)
+        self.parent = ParentHelper(self)
 
     def open_homepage(self):
         wd = self.wd
