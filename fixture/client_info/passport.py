@@ -167,4 +167,3 @@ class PassportHelper:
         who_edit = wd.find_element(By.XPATH, "//*[@id='passport_who']/p").text
         print("enter_data =", who, ";", "save_data =", who_edit)
         assert who == who_edit
-
