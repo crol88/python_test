@@ -563,4 +563,3 @@ class GroupHelper:
         data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
         print("enter_data =", data, ";", "save_data =", data_edit)
         assert data_edit == data
-
