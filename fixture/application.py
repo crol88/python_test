@@ -22,9 +22,10 @@ class Application:
 
     def open_homepage(self):
         wd = self.wd
-        wd.get("https://stablev10.ci.dental-pro.online/")
+        # wd.get("https://stablev10.ci.dental-pro.online/")
         # wd.get("https://betav10.ci.dental-pro.online/")
         # wd.get("https://stndnextlite.dm.dental-pro.online/dashboard/widgets/index")
+        wd.get("https://stablev10.dm.dental-pro.online/")
         wd.set_window_size(1920, 1080)
 
     def destroy(self):
