@@ -32,6 +32,7 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//*[@id='city_phone']//input").send_keys(phone)
         wd.find_element(By.XPATH, "//*[@id='city_phone']//span[@class='input-group-btn']").click()
         phone_edit = wd.find_element(By.XPATH, "//*[@id='city_phone']/p").text
+        print("phone =", phone, ";", "phone_edit =", phone_edit)
         assert phone == phone_edit
 
     def edit_city_phone_none(self):
@@ -42,6 +43,7 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//*[@data-key='city_phone'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='city_phone']//span[@class='input-group-btn']").click()
         phone_after = wd.find_element(By.XPATH, "//*[@id='city_phone']/p").text
+        print("phone_before =", phone_before, ";", "phone_after =", phone_after)
         assert phone_before == phone_after
 
     def edit_email(self, mail):
@@ -52,6 +54,7 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//*[@id='email']//input").send_keys(mail)
         wd.find_element(By.XPATH, "//*[@id='email']//span[@class='input-group-btn']").click()
         mail_edit = wd.find_element(By.XPATH, "//*[@id='email']/p").text
+        print("mail =", mail, ";", "mail_edit =", mail_edit)
         assert mail == mail_edit
 
     def edit_email_none(self):
@@ -63,6 +66,7 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//*[@id='email']//span[@class='input-group-btn']").click()
         time.sleep(1)
         new_email = wd.find_element(By.XPATH, "//*[@id='email']/p").text
+        print("old_email =", old_email, ";", "new_email =", new_email)
         assert old_email == new_email
 
     def edit_mobile_phone(self, mobile):
@@ -73,6 +77,7 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//*[@id='mobile_phone']//input").send_keys(mobile)
         wd.find_element(By.XPATH, "//*[@id='mobile_phone']//span[@class='input-group-btn']").click()
         mobile_edit = wd.find_element(By.XPATH, "//*[@id='mobile_phone']/p").text
+        print("mobile =", mobile, ";", "mobile_edit =", mobile_edit)
         assert mobile == mobile_edit
 
     def edit_mobile_phone_none(self):
@@ -83,6 +88,7 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//*[@data-key='mobile_phone'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='mobile_phone']//span[@class='input-group-btn']").click()
         mobile_after = wd.find_element(By.XPATH, "//*[@id='mobile_phone']/p").text
+        print("mobile_before =", mobile_before, ";", "mobile_after =", mobile_after)
         assert mobile_before == mobile_after
 
     def edit_phone(self, phone):
@@ -93,6 +99,7 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//*[@id='phone']//input").send_keys(phone)
         wd.find_element(By.XPATH, "//*[@id='phone']//span[@class='input-group-btn']").click()
         phone_edit = wd.find_element(By.XPATH, "//*[@id='phone']/p").text
+        print("phone =", phone, ";", "phone_edit =", phone_edit)
         assert phone == phone_edit
 
     def edit_phone_none(self):
@@ -104,4 +111,5 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//*[@id='phone']//span[@class='input-group-btn']").click()
         time.sleep(1)
         phone_new = wd.find_element(By.XPATH, "//*[@id='phone']/p").text
+        print("phone_old =", phone_old, ";", "phone_new =", phone_new)
         assert phone_old == phone_new
