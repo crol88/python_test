@@ -6,6 +6,7 @@ from fixture.client_info.passport import PassportHelper
 from fixture.client_info.parent import ParentHelper
 from fixture.client_info.address import AddressHelper
 from fixture.client_info.information import InformationHelper
+from fixture.add_newclient.cbase import CbaseHelper
 
 
 class Application:
@@ -19,6 +20,7 @@ class Application:
         self.parent = ParentHelper(self)
         self.address = AddressHelper(self)
         self.information = InformationHelper(self)
+        self.cbase = CbaseHelper(self)
 
     def open_homepage(self):
         wd = self.wd

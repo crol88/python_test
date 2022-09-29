@@ -1,4 +1,6 @@
 import time
+
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from model.group import Group
@@ -350,9 +352,10 @@ class GroupHelper:
 
     def edit_patient_postcode(self, postcode):
         wd = self.app.wd
-        # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="postcode")
-        wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']").click()
+        button = wd.find_element(By.XPATH, "//*[@id='postcode']")
+        ActionChains(wd).double_click(button).perform()
+        # wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='postcode']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='postcode']//input").send_keys(postcode)
         wd.find_element(By.XPATH, "//*[@id='postcode']//span[@class='input-group-btn']").click()
@@ -365,7 +368,9 @@ class GroupHelper:
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="postcode")
         postcode = wd.find_element(By.XPATH, "//*[@id='postcode']/p").text
-        wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']").click()
+        button = wd.find_element(By.XPATH, "//*[@id='postcode']")
+        ActionChains(wd).double_click(button).perform()
+        # wd.find_element(By.XPATH, "//*[@data-key='postcode'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='postcode']//span[@class='input-group-btn']").click()
         postcode_edit = wd.find_element(By.XPATH, "//*[@id='postcode']/p").text
         print("enter_data =", postcode, ";", "save_data =", postcode_edit)
