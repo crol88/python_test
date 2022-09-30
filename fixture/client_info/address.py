@@ -59,6 +59,7 @@ class AddressHelper:
     def edit_house_none(self):
         wd = self.app.wd
         self.open_address_info()
+        time.sleep(1)
         building = wd.find_element(By.XPATH, "//*[@id='fact_building']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='fact_building'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='fact_building']//span[@class='input-group-btn']").click()

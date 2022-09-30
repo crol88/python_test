@@ -1,6 +1,6 @@
 from selenium import webdriver
 from fixture.session import SessionHelper
-from fixture.client_info.group import GroupHelper
+from fixture.client_info.basic_info import BasicInfoHelper
 from fixture.client_info.contact import ContactHelper
 from fixture.client_info.passport import PassportHelper
 from fixture.client_info.parent import ParentHelper
@@ -14,7 +14,7 @@ class Application:
         self.wd = webdriver.Chrome()
         self.wd.implicitly_wait(10)
         self.session = SessionHelper(self)
-        self.group = GroupHelper(self)
+        self.basic_info = BasicInfoHelper(self)
         self.contact = ContactHelper(self)
         self.passport = PassportHelper(self)
         self.parent = ParentHelper(self)

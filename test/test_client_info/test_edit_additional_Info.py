@@ -50,14 +50,14 @@ def test_edit_fromwhere_none(app):
 
 
 def test_sms_status_no(app):
-    app.information.change_filial(selected_filial="Филиал 1")
     app.information.search_patient(search_name="SURNAME")
+    app.information.change_filial(selected_filial="Филиал 1")
     app.information.edit_sms_status_no()
 
 
 def test_sms_status_yes(app):
-    app.information.change_filial(selected_filial="Филиал 1")
     app.information.search_patient(search_name="SURNAME")
+    app.information.change_filial(selected_filial="Филиал 1")
     app.information.edit_sms_status_yes()
 
 

@@ -105,19 +105,19 @@ class CbaseHelper:
             wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
             wd.find_element(By.XPATH, "//*[@class='form-control']").clear()
             wd.find_element(By.XPATH, "//*[@class='form-control']").send_keys(group.surname)
-            wd.find_element(By.XPATH, "//*[@id='surname']/descendant::span[@class='input-group-btn']").click()
+            wd.find_element(By.XPATH, "//*[@id='surname']/descendant::span[@class='input-basic_info-btn']").click()
         # Редактировать имя
         if group.name is not None:
             wd.find_element(By.XPATH, "//*[@data-key='name'][@type='button']").click()
             wd.find_element(By.XPATH, "//*[@id='name']//input").clear()
             wd.find_element(By.XPATH, "//*[@id='name']//input").send_keys(group.name)
-            wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-group-btn']").click()
+            wd.find_element(By.XPATH, "//*[@id='name']//span[@class='input-basic_info-btn']").click()
         # Редактировать отчество
         if group.secondname is not None:
             wd.find_element(By.XPATH, "//*[@data-key='second_name'][@type='button']").click()
             wd.find_element(By.XPATH, "//*[@id='second_name']//input").clear()
             wd.find_element(By.XPATH, "//*[@id='second_name']//input").send_keys(group.secondname)
-            wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-group-btn']").click()
+            wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-basic_info-btn']").click()
         self.group_cache = None
 
     def search_patient(self, search_name):
@@ -152,7 +152,7 @@ class CbaseHelper:
             wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
         return len(wd.find_elements(By.LINK_TEXT, check_patient))
 
-    def add_patient_for_del(self, group):
+    def add_patient_for(self, group):
         wd = self.app.wd
         if group.filial is not None:
             wd.find_element(By.XPATH, "//*[@title='Филиал']").click()

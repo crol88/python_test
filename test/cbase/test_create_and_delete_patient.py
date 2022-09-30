@@ -35,7 +35,7 @@ def test_patient_for_search(app):
 
 def test_delete_patient(app):
     if app.cbase.count("DРед-Фамилия") == 0:
-        app.cbase.add_patient_for_del(
+        app.cbase.add_patient_for(
             Group(surname="Утест", name="Добавить", secondname="Удалить", birthday="12081980", phone="79058889556",
                   fromwhere="2ГИС", filial="Филиал 1"))
     old_groups = app.cbase.get_group_list()
@@ -53,7 +53,3 @@ def test_del_patient(app):
     assert len(old_groups) - 1 == len(new_groups)
     old_groups[0:1] = []
     assert old_groups == new_groups
-
-
-
-
