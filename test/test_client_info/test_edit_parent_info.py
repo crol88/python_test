@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # def test_open_parent_info(app):
 #     app.parent.search_patient(search_name="SURNAME")
 #     app.parent.open_parent_info()

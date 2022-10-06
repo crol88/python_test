@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 def test_edit_city_phone(app):
     app.contact.search_patient(search_name="SURNAME")

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Group:
     def __init__(self, surname=None, name=None, secondname=None, birthday=None, phone=None, fromwhere=None,
                  filial=None, cbaseid=None, value=None):

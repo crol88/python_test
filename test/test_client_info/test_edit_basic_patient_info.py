@@ -1,10 +1,13 @@
+# -*- coding: utf-8 -*-
 from model.group import Group
-
+import testit
 
 # def test(app):
-#     app.basic_info.open_random_patient()
+# app.basic_info.open_random_patient()
 
 
+@testit.displayName('edit_patient_surname')
+@testit.externalID('001')
 def test_edit_patient_surname(app):
     if app.basic_info.count(check_patient="SURNAME") == 0:
         app.basic_info.add_patient_for(

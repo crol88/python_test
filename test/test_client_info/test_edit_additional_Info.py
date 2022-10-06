@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 def test_edit_comments(app):
     app.information.change_filial(selected_filial="Филиал 1")

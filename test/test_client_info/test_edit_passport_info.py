@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # def test(app):
 #     app.passport.search_patient(search_name="SURNAME")
 #     app.passport.open_passport_info()

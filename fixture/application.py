@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from selenium import webdriver
 from fixture.session import SessionHelper
 from fixture.client_info.basic_info import BasicInfoHelper

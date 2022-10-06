@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 def test_edit_fact_apartment(app):
     app.address.search_patient(search_name="SURNAME")
     app.address.edit_apartment(apt="8")
