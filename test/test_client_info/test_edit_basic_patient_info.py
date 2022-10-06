@@ -6,6 +6,7 @@ import testit
 # app.basic_info.open_random_patient()
 
 
+@testit.workItemID(261)
 @testit.displayName('edit_patient_surname')
 @testit.externalID('001')
 def test_edit_patient_surname(app):
