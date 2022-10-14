@@ -469,3 +469,16 @@ class BasicInfoHelper:
         element = wd.find_element(By.ID, id_locator)
         wd.execute_script("arguments[0].scrollIntoView();", element)
         time.sleep(1)
+
+    def add_mark(self, mark):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//*[@class='btn btn-sm btn-default dropdown-toggle btn-block']")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//*[@class='btn btn-sm btn-default dropdown-toggle btn-block']").click()
+        wd.find_element(By.XPATH, "//*[@class='dropdown-menu']/li/a[text()='%s']" % mark).click()
+        wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+        time.sleep(1)
+        status = wd.find_element(By.XPATH, "//*[@class='list-group-item_flex']").text
+        print("status=", status, ";", "mark=", mark)
+        assert status == mark
