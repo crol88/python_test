@@ -1,4 +1,3 @@
-import time
 
 from model.group import Group
 
@@ -31,4 +30,22 @@ def test_add_client_without_filial(app):
             Group(surname="CLIENT", name="WITHOUT", secondname="FILIAL", birthday="22041989", phone="79051271596",
                   fromwhere="2ГИС", filial=""))
     app.cbase.search_patient(search_name="CLIENT WITHOUT FILIAL")
-    app.infocard_mainpage.check_filial()
+    app.infocard_mainpage.check_without_filial()
+
+
+def test_add_with_filial(app):
+    if app.cbase.count("WITH-ONE") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="WITH-ONE", name="FILIAL", secondname="ONE", birthday="18111996", phone="79051138596",
+                  fromwhere="2ГИС", filial="Филиал 1"))
+    app.cbase.search_patient(search_name="WITH-ONE FILIAL ONE")
+    app.infocard_mainpage.check_filial(enter_filial="Филиал 1")
+
+
+def test_add_note(app):
+    if app.cbase.count("NOTE") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="NOTE", name="ADD", secondname="TEST", birthday="19111994", phone="79051139796",
+                  fromwhere="2ГИС", filial="Филиал 1"))
+    app.cbase.search_patient(search_name="NOTE ADD TEST")
+    app.infocard_mainpage.add_note(enter_text="test add note")

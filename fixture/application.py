@@ -34,6 +34,7 @@ class Application:
         # wd.get("https://stndnextlite.dm.dental-pro.online/dashboard/widgets/index")
         wd.get("https://stablev10.dm.dental-pro.online/")
         # wd.get("https://betav10.dm.dental-pro.online/")
+        # wd.get("https://regress.dm.dental-pro.online/")
         wd.set_window_size(1920, 1080)
 
     def destroy(self):
