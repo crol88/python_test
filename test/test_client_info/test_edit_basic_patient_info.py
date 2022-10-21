@@ -6,9 +6,9 @@ import testit
 # app.basic_info.open_random_patient()
 
 
-@testit.workItemIds(261)
-@testit.displayName('edit_patient_surname')
-@testit.externalId('001')
+# @testit.workItemIds(261)
+# @testit.displayName('edit_patient_surname')
+# @testit.externalId('001')
 def test_edit_patient_surname(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(

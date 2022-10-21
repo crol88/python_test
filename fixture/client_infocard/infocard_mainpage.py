@@ -120,3 +120,6 @@ class InfoCardHelper:
         select_manager = Select(wd.find_element(By.XPATH, "//*[@id='form_cbase_addManager_select_1_']"))
         select_manager.select_by_visible_text(manager)
         wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
+        check_m = wd.find_element(By.XPATH, "//*[ @class ='list-group']")
+        print(check_m.text)
+        assert manager == check_m.text
