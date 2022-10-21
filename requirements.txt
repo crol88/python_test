@@ -1,3 +1,4 @@
+virtualenv
 pytest
 selenium
 testit-adapter-pytest
