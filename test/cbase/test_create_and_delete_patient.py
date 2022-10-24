@@ -3,20 +3,24 @@ import testit
 from model.group import Group
 
 
+@testit.workItemIds(5)
 @testit.displayName('Добавление нового пациента')
-@testit.externalID('test_add_patient')
+@testit.externalId('test_add_patient')
 def test_add_patient(app):
-    old_list = app.cbase.get_patient_list()
-    group = Group(surname="АТЕСТ-Добавить", name="Таблицы", secondname="БББ", birthday="12081980", phone="79058889556",
-                  fromwhere="2ГИС", filial="Филиал 2")
-    app.cbase.add_patient(group)
-    new_list = app.cbase.get_group_list()
-    assert len(old_list) + 1 == len(new_list)
+    with testit.step('Given a group list'):
+        old_list = app.cbase.get_patient_list()
+    with testit.step('Add new patient'):
+        group = Group(surname="New", name="Patient", secondname="Test", birthday="12081996",
+                      phone="79058128556", fromwhere="2ГИС", filial="")
+    with testit.step('Submit patient creation'):
+        app.cbase.add_patient(group)
+    with testit.step('Given a new group list'):
+        new_list = app.cbase.get_group_list()
+    with testit.step('Сompare lists'):
+        assert len(old_list) + 1 == len(new_list)
     print("old_list =", len(old_list) + 1, ";", "new_list =", len(new_list))
 
 
-@testit.displayName('test_add_and_delete_patient')
-@testit.externalID('test_add_patient')
 def test_add_and_delete_patient(app):
     old_groups = app.cbase.get_group_list()
     app.cbase.change_filial(Group(filial="Филиал 1"))
@@ -38,19 +42,26 @@ def test_patient_for_search(app):
         app.cbase.submit_newpatient_creation()
 
 
-@testit.externalID('Simple_autotest2_{name}')
-@testit.displayName('Simple autotest 2 - {name}')
+@testit.displayName('Удаление пациента')
+@testit.externalId('test_add_patient')
 def test_delete_patient(app):
-    if app.cbase.count("DРед-Фамилия") == 0:
-        app.cbase.add_patient_for(
-            Group(surname="Утест", name="Добавить", secondname="Удалить", birthday="12081980", phone="79058889556",
-                  fromwhere="2ГИС", filial="Филиал 1"))
-    old_groups = app.cbase.get_group_list()
-    app.cbase.delete_new_patient(search_name="Утест")
-    new_groups = app.cbase.get_group_list()
-    assert len(old_groups) - 1 == len(new_groups)
-    old_groups[0:1] = []
-    assert old_groups == new_groups
+    with testit.step('Проверка наличия пациента в cbase'):
+        if app.cbase.count("NEW") == 0:
+            with testit.step('Если пациент отсутствует, добавляем'):
+                app.cbase.add_patient_for(
+                    Group(surname="New", name="Patient", secondname="Test", birthday="12081980",
+                          phone="79058889556",
+                          fromwhere="2ГИС", filial=""))
+    with testit.step('Сохранить старый список'):
+        old_groups = app.cbase.get_group_list()
+    with testit.step('Удалить пациента'):
+        app.cbase.delete_new_patient(search_name="NEW")
+    with testit.step('Сохранить новый список'):
+        new_groups = app.cbase.get_group_list()
+    with testit.step('Проверка списков на удаление пациента'):
+        assert len(old_groups) - 1 == len(new_groups)
+        old_groups[0:1] = []
+        assert old_groups == new_groups
 
 
 def test_del_patient(app):
@@ -60,6 +71,3 @@ def test_del_patient(app):
     assert len(old_groups) - 1 == len(new_groups)
     old_groups[0:1] = []
     assert old_groups == new_groups
-
-
-

@@ -1,5 +1,3 @@
-virtualenv
 pytest
-selenium
 testit-adapter-pytest
 testit-api-client

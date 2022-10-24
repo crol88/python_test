@@ -3,6 +3,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from model.group import Group
+import testit
 
 
 class CbaseHelper:
@@ -180,6 +181,7 @@ class CbaseHelper:
                 self.group_cache.append(Group(name=text, cbaseid=cbaseid))
         return list(self.group_cache)
 
+    @testit.step
     def get_patient_list(self):
         wd = self.app.wd
         self.open_cbase()
