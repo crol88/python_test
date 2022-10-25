@@ -1,3 +1,4 @@
 pytest
-testit-adapter-pytest
-testit-api-client
+selenium
+
+

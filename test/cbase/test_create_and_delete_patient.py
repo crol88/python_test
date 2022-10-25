@@ -43,7 +43,7 @@ def test_patient_for_search(app):
 
 
 @testit.displayName('Удаление пациента')
-@testit.externalId('test_add_patient')
+@testit.externalId('test_delete_patient')
 def test_delete_patient(app):
     with testit.step('Проверка наличия пациента в cbase'):
         if app.cbase.count("NEW") == 0:
@@ -54,7 +54,7 @@ def test_delete_patient(app):
                           fromwhere="2ГИС", filial=""))
     with testit.step('Сохранить старый список'):
         old_groups = app.cbase.get_group_list()
-    with testit.step('Удалить пациента'):
+    with testit.step('Найти и удалить пациента'):
         app.cbase.delete_new_patient(search_name="NEW")
     with testit.step('Сохранить новый список'):
         new_groups = app.cbase.get_group_list()

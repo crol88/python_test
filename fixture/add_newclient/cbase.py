@@ -86,15 +86,16 @@ class CbaseHelper:
         time.sleep(2)
         self.group_cache = None
 
+    @testit.step('Удалить пациента')
     def delete_new_patient(self, search_name):
         wd = self.app.wd
-        # Поиск пациента
-        self.search_patient(search_name)
-        # Опции
-        wd.find_element(By.XPATH, "//*[@class='col-md-8 text-right pageActions']/div[2]/div[1]").click()
-        # Удалить пациента
-        wd.find_element(By.XPATH, "//*[@class='js-client_delete']").click()
-        time.sleep(2)
+        with testit.step('Найти пациента через глобальный поиск'):
+            self.search_patient(search_name)
+        with testit.step('Нажать Опции'):
+            wd.find_element(By.XPATH, "//*[@class='col-md-8 text-right pageActions']/div[2]/div[1]").click()
+        with testit.step('Нажать Удалить'):
+            wd.find_element(By.XPATH, "//*[@class='js-client_delete']").click()
+            time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
@@ -168,6 +169,7 @@ class CbaseHelper:
 
     group_cache = None
 
+    @testit.step('Получить список пациентов')
     def get_group_list(self):
         # Проверка списка пациентов
         if self.group_cache is None:
@@ -181,7 +183,7 @@ class CbaseHelper:
                 self.group_cache.append(Group(name=text, cbaseid=cbaseid))
         return list(self.group_cache)
 
-    @testit.step
+    @testit.step('Получить список пациентов')
     def get_patient_list(self):
         wd = self.app.wd
         self.open_cbase()
