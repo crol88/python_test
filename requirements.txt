@@ -1,5 +1,6 @@
 pytest
 pytest_bdd
+testit-adapter-pytest
 selenium
 jsonpickle
 pony
