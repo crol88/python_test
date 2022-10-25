@@ -3,6 +3,7 @@ import random
 from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+import testit
 
 
 class BasicInfoHelper:
@@ -33,6 +34,7 @@ class BasicInfoHelper:
             wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
             wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
 
+    @testit.step('Добавление пациента')
     def add_patient_for(self, group):
         wd = self.app.wd
         if group.filial is not None:
@@ -45,10 +47,12 @@ class BasicInfoHelper:
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
 
+    @testit.step('Нажать Добавить')
     def push_button_newClient(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']").click()
 
+    @testit.step('Заполнить форму создания нового пациента')
     def fill_newclient_form(self, group):
         wd = self.app.wd
         # Заполнить обязательные поля ввода валидными данными
@@ -64,6 +68,7 @@ class BasicInfoHelper:
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.fromwhere)
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
 
+    @testit.step('Нажать Далее')
     def submit_newpatient_creation(self):
         wd = self.app.wd
         # Подтвердить ввод данных
@@ -112,9 +117,11 @@ class BasicInfoHelper:
         wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='surname']//input").get_attribute("value")
 
+    @testit.step('Редактирование фамилии и проверка результата')
     def edit_patient_surname(self, group, text):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+        with testit.step('Активировать поле Фамилия'):
+            wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='surname']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='surname']//input").send_keys(group.surname)
         wd.find_element(By.XPATH, "//*[@id='surname']//span[@class='input-group-btn']").click()
