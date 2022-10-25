@@ -11,12 +11,14 @@ class BasicInfoHelper:
     def __init__(self, app):
         self.app = app
 
+    @testit.step('Открыть список пациентов')
     def count(self, check_patient):
         wd = self.app.wd
-        if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
-            wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
-            wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
-        return len(wd.find_elements(By.LINK_TEXT, check_patient))
+        with testit.step('Проверить присутствие пациента, если пациент присутствует, вернуться к списку'):
+            if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
+                wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+                wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+            return len(wd.find_elements(By.LINK_TEXT, check_patient))
 
     def search_patient(self, search_name):
         wd = self.app.wd
@@ -122,12 +124,15 @@ class BasicInfoHelper:
         wd = self.app.wd
         with testit.step('Активировать поле Фамилия'):
             wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='surname']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='surname']//input").send_keys(group.surname)
-        wd.find_element(By.XPATH, "//*[@id='surname']//span[@class='input-group-btn']").click()
-        surname = wd.find_element(By.XPATH, "//*[@id='surname']/p").text
-        print("enter_data =", text, ";", "save_data =", surname)
-        assert text == surname
+        with testit.step('Очистить поле ввода и ввести новую Фамилию'):
+            wd.find_element(By.XPATH, "//*[@id='surname']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='surname']//input").send_keys(group.surname)
+        with testit.step('Сохранить данные'):
+            wd.find_element(By.XPATH, "//*[@id='surname']//span[@class='input-group-btn']").click()
+        with testit.step('Проверить ожидаемый и фактический результат'):
+            surname = wd.find_element(By.XPATH, "//*[@id='surname']/p").text
+            print("enter_data =", text, ";", "save_data =", surname)
+            assert text == surname
 
     def edit_patient_surname_fill(self, text):
         wd = self.app.wd
