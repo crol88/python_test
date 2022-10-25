@@ -127,7 +127,7 @@ class BasicInfoHelper:
     def edit_patient_surname(self, group, text):
         wd = self.app.wd
         with testit.step('Активировать поле Фамилия'):
-            wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+            wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='utton']").click()
         with testit.step('Очистить поле ввода и ввести новую Фамилию'):
             wd.find_element(By.XPATH, "//*[@id='surname']//input").clear()
             wd.find_element(By.XPATH, "//*[@id='surname']//input").send_keys(group.surname)
