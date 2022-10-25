@@ -1,0 +1,39 @@
+<ns0:test-suite xmlns:ns0="urn:model.allure.qatools.yandex.ru" start="1666697836781" stop="1666697934939">
+  <name>test_allure</name>
+  <labels/>
+  <test-cases>
+    <test-case start="1666697836781" status="passed" stop="1666697934939">
+      <name>test_edit_patient_surname</name>
+      <attachments>
+        <attachment source="c7b06c93-2c11-4740-b063-3d20f4aade03-attachment.txt" title="Captured stdout call" type="text/plain"/>
+      </attachments>
+      <labels>
+        <label name="severity" value="normal"/>
+        <label name="thread" value="10192-MainThread"/>
+        <label name="host" value="DESKTOP-HN8Q56M"/>
+        <label name="framework" value="pytest"/>
+        <label name="language" value="cpython3"/>
+      </labels>
+      <steps>
+        <step start="1666697858073" status="passed" stop="1666697926030">
+          <name>Открыть список пациентов и проверить наличие пациента</name>
+          <title>Открыть список пациентов и проверить наличие пациента</title>
+          <attachments/>
+          <steps/>
+        </step>
+        <step start="1666697926079" status="passed" stop="1666697933215">
+          <name>Найти пациента через поиск</name>
+          <title>Найти пациента через поиск</title>
+          <attachments/>
+          <steps/>
+        </step>
+        <step start="1666697933261" status="passed" stop="1666697934916">
+          <name>Редактировать фамилию пациента и проверить результат</name>
+          <title>Редактировать фамилию пациента и проверить результат</title>
+          <attachments/>
+          <steps/>
+        </step>
+      </steps>
+    </test-case>
+  </test-cases>
+</ns0:test-suite>

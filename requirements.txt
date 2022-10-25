@@ -1,11 +1,11 @@
 pytest
-pytest_bdd
 testit-adapter-pytest
 selenium
 jsonpickle
 pony
 pymysql
 lxml-4.9.0-cp310-cp310-win_amd64.whl
-pytest-allure-adaptor
+allure-pytest
+pytest-allure-adaptor2
 
 
