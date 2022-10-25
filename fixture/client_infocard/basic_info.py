@@ -20,14 +20,18 @@ class BasicInfoHelper:
                 wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
             return len(wd.find_elements(By.LINK_TEXT, check_patient))
 
+    @testit.step('Найти пациента через глобальный поиск')
     def search_patient(self, search_name):
         wd = self.app.wd
         wd.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.HOME)
         time.sleep(2)
-        wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
+        with testit.step('Нажать Поиск по пациентам'):
+            wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
+        with testit.step('Ввести фамилию пациента'):
+            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
         time.sleep(2)
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        with testit.step('Подтвердить результат поиска'):
+            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(2)
 
     def open_cbase(self):
@@ -36,7 +40,7 @@ class BasicInfoHelper:
             wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
             wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
 
-    @testit.step('Добавление пациента')
+    @testit.step('Если пациент отсутствует, добавляем')
     def add_patient_for(self, group):
         wd = self.app.wd
         if group.filial is not None:
@@ -45,16 +49,17 @@ class BasicInfoHelper:
             wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(3)
         # Добавить нового пациента
-        self.push_button_newClient()
-        self.fill_newclient_form(group)
-        self.submit_newpatient_creation()
+        with testit.step('Нажать Добавить'):
+            self.push_button_newClient()
+        with testit.step('Заполнить форму добавления нового пациента'):
+            self.fill_newclient_form(group)
+        with testit.step('Подтвердить ввод данных'):
+            self.submit_newpatient_creation()
 
-    @testit.step('Нажать Добавить')
     def push_button_newClient(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']").click()
 
-    @testit.step('Заполнить форму создания нового пациента')
     def fill_newclient_form(self, group):
         wd = self.app.wd
         # Заполнить обязательные поля ввода валидными данными
@@ -70,7 +75,6 @@ class BasicInfoHelper:
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.fromwhere)
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
 
-    @testit.step('Нажать Далее')
     def submit_newpatient_creation(self):
         wd = self.app.wd
         # Подтвердить ввод данных
