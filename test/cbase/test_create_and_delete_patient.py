@@ -45,20 +45,20 @@ def test_patient_for_search(app):
 @testit.displayName('Удаление пациента')
 @testit.externalId('test_delete_patient')
 def test_delete_patient(app):
-    with testit.step('Проверка наличия пациента в cbase'):
+    with testit.step('Открыть список пациентов и проверить наличие пациента'):
         if app.cbase.count("NEW") == 0:
             with testit.step('Если пациент отсутствует, добавляем'):
                 app.cbase.add_patient_for(
                     Group(surname="New", name="Patient", secondname="Test", birthday="12081980",
                           phone="79058889556",
                           fromwhere="2ГИС", filial=""))
-    with testit.step('Сохранить старый список'):
+    with testit.step('Сохранить список пациентов до удаления'):
         old_groups = app.cbase.get_group_list()
     with testit.step('Найти и удалить пациента'):
         app.cbase.delete_new_patient(search_name="NEW")
-    with testit.step('Сохранить новый список'):
+    with testit.step('Сохранить список пациентов после удаления'):
         new_groups = app.cbase.get_group_list()
-    with testit.step('Проверка списков на удаление пациента'):
+    with testit.step('Сравнить списки, убедиться, что пациент удален'):
         assert len(old_groups) - 1 == len(new_groups)
         old_groups[0:1] = []
         assert old_groups == new_groups
