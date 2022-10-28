@@ -1,8 +1,11 @@
+import re
 import time
 
 from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
+import random
+import os
 
 
 class InfoCardHelper:
@@ -102,6 +105,8 @@ class InfoCardHelper:
         wd = self.app.wd
         old_photo = wd.find_element(By.XPATH, "//*[@class='thumbnail photo_sub_wrapper']/img").get_attribute("src")
         wd.find_element(By.XPATH, "//*[@class='btn btn-info js-tooltip photo_sub_upload']").click()
+        filename = "patient_photo.JPG"
+        print(os.path.exists(os.path.join(os.path.dirname(__file__), filename)))
         upload = wd.find_element(By.XPATH, "//input[@type='file']")
         upload.send_keys("C:/Devel/python_test/files/patient_photo.JPG")
         success = wd.find_element(By.XPATH, "//*[@class='text-success form_cbase_photo_upload_0__toShowAfterSuccess']")
@@ -123,3 +128,21 @@ class InfoCardHelper:
         check_m = wd.find_element(By.XPATH, "//*[ @class ='list-group']")
         print(check_m.text)
         assert manager == check_m.text
+
+    def select_doctor(self):
+        wd = self.app.wd
+        time.sleep(1)
+        wd.execute_script("window.scrollTo(0,2000)")
+        time.sleep(1)
+        wd.find_element(By.LINK_TEXT, "Выбор лечащего врача").click()
+        doctor_list = wd.find_elements(By.XPATH, "//*[@id='form_cbase_addDoctor_doctor_0_']//option")
+        names = [e.text for e in doctor_list]
+        names.remove("Выберите врача")
+        random_doctor = random.choice(names)
+        select = Select(wd.find_element(By.XPATH, "//*[@id='form_cbase_addDoctor_doctor_0_']"))
+        select.select_by_visible_text(random_doctor)
+        wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
+        doc_info = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[11]").text
+        result = re.search(random_doctor, doc_info)
+        print("Выбранный врач:", random_doctor, ";", "Сохраненный врач в инфокарте:", (result.group(0)))
+        assert random_doctor == (result.group(0))

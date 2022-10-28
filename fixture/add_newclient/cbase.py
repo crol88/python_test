@@ -2,8 +2,11 @@
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+
 from model.group import Group
 import testit
+import random
 
 
 class CbaseHelper:
@@ -38,6 +41,13 @@ class CbaseHelper:
         time.sleep(3)
         # Добавить нового пациента
         self.push_button_newClient()
+
+    def select_filial(self, group):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
+        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.filial)
+        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        time.sleep(2)
 
     def push_button_newClient(self):
         wd = self.app.wd
@@ -193,3 +203,17 @@ class CbaseHelper:
         return list(patient_list)
         # names = [e.text for e in patient_list]
         # print(names)
+
+    def select_any_patient(self):
+        wd = self.app.wd
+        patient_list = wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']//tr/td[2]/a")
+        names = [e.text for e in patient_list]
+        random_name = random.choice(names)
+        element = wd.find_element(By.LINK_TEXT, random_name)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        time.sleep(2)
+
+
+
+
