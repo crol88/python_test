@@ -10,6 +10,7 @@ from fixture.client_infocard.information import InformationHelper
 from fixture.add_newclient.cbase import CbaseHelper
 from fixture.cbase_filter.cbase_filter import CbaseFilterHelper
 from fixture.client_infocard.infocard_mainpage import InfoCardHelper
+from fixture.add_newclient.cbase_config import CbaseConfigHelper
 
 
 class Application:
@@ -26,6 +27,7 @@ class Application:
         self.cbase = CbaseHelper(self)
         self.cbase_filter = CbaseFilterHelper(self)
         self.infocard_mainpage = InfoCardHelper(self)
+        self.cbase_config = CbaseConfigHelper(self)
 
     def open_homepage(self):
         wd = self.wd

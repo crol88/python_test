@@ -5,20 +5,26 @@ from model.group import Group
 
 @testit.workItemIds(5)
 @testit.displayName('Добавление нового пациента')
-@testit.externalId('test_add_patient')
+@testit.externalId('1-001')
 def test_add_patient(app):
-    with testit.step('Given a group list'):
+    with testit.step('Сохранить список пациентов до действий пользователя'):
         old_list = app.cbase.get_patient_list()
-    with testit.step('Add new patient'):
-        group = Group(surname="New", name="Patient", secondname="Test", birthday="12081996",
-                      phone="79058128556", fromwhere="2ГИС", filial="")
-    with testit.step('Submit patient creation'):
-        app.cbase.add_patient(group)
-    with testit.step('Given a new group list'):
+    group = Group(surname="New", name="Patient", secondname="Test", birthday="12081996",
+                  phone="79058128556", fromwhere="2ГИС", filial="")
+    app.cbase.add_patient(group)
+    with testit.step('Сохранить список пациентов после действий пользователя'):
         new_list = app.cbase.get_group_list()
-    with testit.step('Сompare lists'):
+    with testit.step('Проверить, что пациент добавлен в список'):
         assert len(old_list) + 1 == len(new_list)
-    print("old_list =", len(old_list) + 1, ";", "new_list =", len(new_list))
+        print("old_list =", len(old_list) + 1, ";", "new_list =", len(new_list))
+
+
+def test_add_patient_without_filial_plugin_off(app):
+    app.cbase_config.open_cbase_config()
+    app.cbase_config.client_branch_activate(status="Отключено")
+    # app.cbase.fill_newclient_form(
+    #     Group(surname="Пациент", name="Для", secondname="Удаления", birthday="12081980", phone="79058889556",
+    #           fromwhere="2ГИС"))
 
 
 def test_add_and_delete_patient(app):
