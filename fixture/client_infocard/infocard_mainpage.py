@@ -148,7 +148,26 @@ class InfoCardHelper:
         with testit.step('Подтвердить выбор'):
             wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
         with testit.step('Проверить, что выбранный врач добавлен в инфокарту пациента'):
-            doc_info = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[11]").text
+            doc_info = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[10]").text
             result = re.search(random_doctor, doc_info)
             print("Выбранный врач:", random_doctor, ";", "Сохраненный врач в инфокарте:", (result.group(0)))
             assert random_doctor == (result.group(0))
+
+    def personal_discount(self, discount):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//*[@class='input-group']/input")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        time.sleep(2)
+        ActionChains(wd).double_click(element).perform()
+        discount_field = wd.find_element(By.XPATH,
+                                         "//*[.='Индивидуальная скидка пациента']/following-sibling::div/input")
+        discount_field.clear()
+        time.sleep(1)
+        ActionChains(wd).double_click(element).perform()
+        discount_field.send_keys(discount)
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//*[.='Индивидуальная скидка пациента']").click()
+        saved_discount = discount_field.get_attribute("value")
+        print("Вводимое значение:", discount, ";", "Сохраненное значение:", saved_discount)
+        assert discount == saved_discount
+

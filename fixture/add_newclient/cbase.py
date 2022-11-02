@@ -43,12 +43,20 @@ class CbaseHelper:
         # Добавить нового пациента
         self.push_button_newClient()
 
-    def select_filial(self, group):
+    def select_all_filial(self, filial):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.filial)
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
-        time.sleep(2)
+        select = Select(wd.find_element(By.XPATH, "//*[@class='company-switch-wrapper']/select"))
+        select.select_by_visible_text(filial)
+        selected = wd.find_element(By.XPATH, "//*[@class='company-switch-wrapper']//*[@class='select2-chosen']").text
+        print(selected)
+        assert filial == selected
+
+    # def select_filial(self, group):
+    #     wd = self.app.wd
+    #     wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
+    #     wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.filial)
+    #     wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+    #     time.sleep(2)
 
     @testit.step('Нажать Добавить')
     def push_button_newClient(self):
@@ -105,7 +113,6 @@ class CbaseHelper:
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']").click()
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-done-step']").click()
         time.sleep(2)
-        self.group_cache = None
 
     @testit.step('Удалить пациента')
     def delete_new_patient(self, search_name):
@@ -232,6 +239,10 @@ class CbaseHelper:
         element.click()
         time.sleep(2)
 
-
+    def check_filial_info(self):
+        wd = self.app.wd
+        filial = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[3]/*[@class='panel-body']")
+        print(filial.text)
+        assert filial.text == "Пациент обслуживается: не прикреплен к филиалам"
 
 

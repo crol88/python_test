@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 from fixture.session import SessionHelper
 from fixture.client_infocard.basic_info import BasicInfoHelper
 from fixture.client_infocard.contact import ContactHelper
@@ -31,14 +33,12 @@ class Application:
 
     def open_homepage(self):
         wd = self.wd
-        # wd.get("https://stablev10.ci.dental-pro.online/")
-        # wd.get("https://betav10.ci.dental-pro.online/")
-        # wd.get("https://stndnextlite.dm.dental-pro.online/dashboard/widgets/index")
         # wd.get("https://stablev10.dm.dental-pro.online/")
         # wd.get("https://betav10.dm.dental-pro.online/")
-        wd.get("https://regress.dm.dental-pro.online/")
-        # wd.fullscreen_window()
-        wd.set_window_size(1920, 1080)
+        # wd.get("https://regress.dm.dental-pro.online/")
+        wd.get("https://betav11.dm.dental-pro.online/")
+        wd.maximize_window()
+        # wd.set_window_size(1920, 1080)
 
     def destroy(self):
         wd = self.wd

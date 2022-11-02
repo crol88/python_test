@@ -97,7 +97,7 @@ def test_add_with_filial(app):
     if app.cbase.count("WITH-ONE") == 0:
         app.cbase.add_patient_for(
             Group(surname="WITH-ONE", name="FILIAL", secondname="ONE", birthday="18111996", phone="79051138596",
-                  fromwhere="2ГИС", filial="Филиал 1"))
+                  fromwhere="2ГИС", filial=""))
     app.cbase.search_patient(search_name="WITH-ONE FILIAL ONE")
     app.infocard_mainpage.check_filial(enter_filial="Филиал 1")
 
@@ -106,7 +106,7 @@ def test_add_note(app):
     if app.cbase.count("NOTE") == 0:
         app.cbase.add_patient_for(
             Group(surname="NOTE", name="ADD", secondname="TEST", birthday="19111994", phone="79051139796",
-                  fromwhere="2ГИС", filial="Филиал 1"))
+                  fromwhere="2ГИС", filial=""))
     app.cbase.search_patient(search_name="NOTE ADD TEST")
     app.infocard_mainpage.add_note(enter_text="test add note")
 
@@ -126,6 +126,16 @@ def test_choice_doctor(app):
     if app.cbase.count("ADD-VIP") == 0:
         app.cbase.add_patient_for(
             Group(surname="ADD-VIP", name="name", secondname="secondname", birthday="12081980", phone="79058889556",
-                  fromwhere="2ГИС", filial="Филиал 1"))
+                  fromwhere="2ГИС", filial=""))
     app.cbase.search_patient(search_name="ADD-VIP")
     app.infocard_mainpage.select_doctor()
+
+
+def test_add_personal_discount(app):
+    if app.cbase.count("ADD-VIP") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="ADD-VIP", name="name", secondname="secondname", birthday="12081980", phone="79058889556",
+                  fromwhere="2ГИС", filial=""))
+    app.cbase.search_patient(search_name="ADD-VIP")
+    app.infocard_mainpage.personal_discount(discount="15")
+

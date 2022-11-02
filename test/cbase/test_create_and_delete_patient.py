@@ -21,15 +21,33 @@ def test_add_patient(app):
 
 def test_add_patient_without_filial_plugin_off(app):
     app.cbase_config.open_cbase_config()
-    app.cbase_config.client_branch_activate(status="Отключено")
-    # app.cbase.fill_newclient_form(
-    #     Group(surname="Пациент", name="Для", secondname="Удаления", birthday="12081980", phone="79058889556",
-    #           fromwhere="2ГИС"))
+    app.cbase_config.client_branch_status(status="Отключено")
+    app.cbase.select_all_filial(filial="Все филиалы")
+    app.cbase.open_cbase()
+    if app.cbase.count("PLUGIN-OFF") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="Plugin-off", name="Client", secondname="Branch", birthday="19071997",
+                  phone="79058547856", fromwhere="2ГИС"))
+    app.cbase.search_patient(search_name="PLUGIN-OFF")
+    app.cbase.check_filial_info()
+
+
+def test_add_patient_without_filial_plugin_on(app):
+    app.cbase_config.open_cbase_config()
+    app.cbase_config.client_branch_status(status="Включено")
+    app.cbase.select_all_filial(filial="Все филиалы")
+    app.cbase.open_cbase()
+    if app.cbase.count("PLUGIN-ON") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="Plugin-on", name="Client", secondname="Branch", birthday="19071997",
+                  phone="79058547856", fromwhere="2ГИС"))
+    app.cbase.search_patient(search_name="PLUGIN-ON")
+    app.cbase.check_filial_info()
 
 
 def test_add_and_delete_patient(app):
     old_groups = app.cbase.get_group_list()
-    app.cbase.change_filial(Group(filial="Филиал 1"))
+    app.cbase.change_filial(Group(filial=""))
     app.cbase.fill_newclient_form(
         Group(surname="Пациент", name="Для", secondname="Удаления", birthday="12081980", phone="79058889556",
               fromwhere="2ГИС"))
@@ -41,7 +59,7 @@ def test_add_and_delete_patient(app):
 
 def test_patient_for_search(app):
     if app.cbase.count("АТЕСТ-Добавить") == 0:
-        app.cbase.change_filial(Group())
+        # app.cbase.change_filial(Group())
         app.cbase.fill_newclient_form(
             Group(surname="Утест", name="Добавить", secondname="Удалить", birthday="12081980", phone="79058889556",
                   fromwhere="2ГИС"))

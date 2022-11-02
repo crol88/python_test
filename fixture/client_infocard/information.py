@@ -33,6 +33,10 @@ class InformationHelper:
         wd.find_element(By.XPATH, "//*[@id='comments']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='comments']//input").send_keys(comments)
         wd.find_element(By.XPATH, "//*[@id='comments']//span[@class='input-group-btn']").click()
+        if wd.find_element(By.XPATH, "//*[@class='sweet-content']"):
+            error = wd.find_element(By.XPATH, "//*[@class='sweet-content']")
+            print("Ошибка:", error.text)
+            wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
         comments_edit = wd.find_element(By.XPATH, "//*[@id='comments']/p").text
         print("comments =", comments, ";", "comments_edit =", comments_edit)
         assert comments == comments_edit

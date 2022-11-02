@@ -15,10 +15,18 @@ class CbaseConfigHelper:
         select = Select(wd.find_element(By.XPATH, "//*[@id='js-upgrade-plugin-select']"))
         select.select_by_visible_text("cbase: База пациентов")
 
-    def client_branch_activate(self):
+    def client_branch_status(self, status):
         wd = self.app.wd
-        active = wd.find_element(By.XPATH, "//*[@class='btn-default btn active']/input").get.attribute("class value")
-        not_active = wd.find_element(By.XPATH, "//*[@class='btn-default btn']/input").get.attribute("class value")
-        print(active, not_active)
-
+        plugin_off = wd.find_element(By.XPATH,
+                                     "//*[@name='settings[cbase.client.branches.branchAll]'][@value='0']/parent::label")
+        plugin_on = wd.find_element(By.XPATH,
+                                    "//*[@name='settings[cbase.client.branches.branchAll]'][@value='1']/parent::label")
+        if status == "Отключено":
+            plugin_off.click()
+        if status == "Включено":
+            plugin_on.click()
+        active = wd.find_element(By.CSS_SELECTOR,
+                                 "#form_upgrade_confightml_switcher_1__parent > label.btn-default.btn.active")
+        print("Прикреплять пациента ко всем филиалам автоматически:", active.text)
+        assert active.text == status
 

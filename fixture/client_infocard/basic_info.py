@@ -311,7 +311,11 @@ class BasicInfoHelper:
     def edit_patient_state_none(self):
         wd = self.app.wd
         # self.scroll_to_element()
-        self.go_to_element_by_id(id_locator="state")
+        # self.go_to_element_by_id(id_locator="state")
+        # wd.execute_script("window.scrollTo(0,1600)")
+        element = wd.find_element(By.ID, "state")
+        wd.execute_script("arguments[0].scrollIntoView(false);", element)
+        time.sleep(1)
         state = wd.find_element(By.XPATH, "//*[@id='state']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='state'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='state']//span[@class='input-group-btn']").click()
@@ -322,7 +326,10 @@ class BasicInfoHelper:
     def edit_patient_city(self, city):
         wd = self.app.wd
         # self.scroll_to_element()
-        self.go_to_element_by_id(id_locator="city")
+        # self.go_to_element_by_id(id_locator="city")
+        element = wd.find_element(By.ID, "city")
+        wd.execute_script("arguments[0].scrollIntoView(false);", element)
+        time.sleep(1)
         wd.find_element(By.XPATH, "//*[@data-key='city'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='city']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='city']//input").send_keys(city)
@@ -334,7 +341,10 @@ class BasicInfoHelper:
     def edit_patient_city_without_changes(self):
         wd = self.app.wd
         # self.scroll_to_element()
-        self.go_to_element_by_id(id_locator="city")
+        # self.go_to_element_by_id(id_locator="city")
+        element = wd.find_element(By.ID, "city")
+        wd.execute_script("arguments[0].scrollIntoView(false);", element)
+        time.sleep(1)
         city = wd.find_element(By.XPATH, "//*[@id='city']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='city'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='city']//span[@class='input-group-btn']").click()
@@ -345,7 +355,10 @@ class BasicInfoHelper:
     def edit_patient_street(self, street):
         wd = self.app.wd
         # self.scroll_to_element()
-        self.go_to_element_by_id(id_locator="street")
+        # self.go_to_element_by_id(id_locator="street")
+        element = wd.find_element(By.ID, "city")
+        wd.execute_script("arguments[0].scrollIntoView(false);", element)
+        time.sleep(1)
         wd.find_element(By.XPATH, "//*[@data-key='street'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='street']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='street']//input").send_keys(street)

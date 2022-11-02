@@ -14,7 +14,7 @@ def test_edit_patient_surname(app):
         app.basic_info.add_patient_for(
             Group(surname="SURNAME", name="Артур", secondname="Артурович", birthday="12081980",
                   phone="79058889556",
-                  fromwhere="2ГИС", filial="Филиал 1"))
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_surname(Group(surname="SURNAME-EDIT"), text="SURNAME-EDIT")
 
@@ -33,7 +33,7 @@ def test_edit_patient_name(app):
         app.basic_info.add_patient_for(
             Group(surname="surname-edit", name="name", secondname="secondname", birthday="16071979",
                   phone="79057147232",
-                  fromwhere="2ГИС", filial="Филиал 1"))
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="surname-edit")
     app.basic_info.edit_patient_name(Group(name="NAME-EDIT"), text="NAME-EDIT")
 
@@ -52,7 +52,7 @@ def test_edit_patient_secondname(app):
         app.basic_info.add_patient_for(
             Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
                   phone="79051591232",
-                  fromwhere="2ГИС", filial="Филиал 1"))
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.basic_info.edit_patient_secondname(Group(secondname="SECONDNAME-EDIT"), text="SECONDNAME-EDIT")
 
@@ -85,7 +85,7 @@ def test_edit_patient_sex_male(app):
         app.basic_info.add_patient_for(
             Group(surname="SEX-MALE", name="ПОЛ", secondname="МУЖСКОЙ", birthday="21101984",
                   phone="79051593692",
-                  fromwhere="2ГИС", filial="Филиал 1"))
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SEX-MALE")
     app.basic_info.edit_patient_sex(sex="Мужской")
 
@@ -104,7 +104,7 @@ def test_edit_patient_sex_female(app):
         app.basic_info.add_patient_for(
             Group(surname="SEX-FEMALE", name="ПОЛ", secondname="Женский", birthday="23101985",
                   phone="79051151254",
-                  fromwhere="2ГИС", filial="Филиал 1"))
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SEX-FEMALE")
     app.basic_info.edit_patient_sex(sex="Женский")
 
