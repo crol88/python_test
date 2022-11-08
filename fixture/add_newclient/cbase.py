@@ -245,4 +245,3 @@ class CbaseHelper:
         print(filial.text)
         assert filial.text == "Пациент обслуживается: не прикреплен к филиалам"
 
-

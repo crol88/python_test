@@ -16,7 +16,7 @@ from fixture.add_newclient.cbase_config import CbaseConfigHelper
 
 
 class Application:
-    def __init__(self):
+    def __init__(self, base_url):
         self.wd = webdriver.Chrome()
         self.wd.implicitly_wait(10)
         self.session = SessionHelper(self)
@@ -30,13 +30,15 @@ class Application:
         self.cbase_filter = CbaseFilterHelper(self)
         self.infocard_mainpage = InfoCardHelper(self)
         self.cbase_config = CbaseConfigHelper(self)
+        self.base_url = base_url
 
     def open_homepage(self):
         wd = self.wd
         # wd.get("https://stablev10.dm.dental-pro.online/")
         # wd.get("https://betav10.dm.dental-pro.online/")
         # wd.get("https://regress.dm.dental-pro.online/")
-        wd.get("https://betav11.dm.dental-pro.online/")
+        # wd.get("https://betav11.dm.dental-pro.online/")
+        wd.get(self.base_url)
         wd.maximize_window()
         # wd.set_window_size(1920, 1080)
 

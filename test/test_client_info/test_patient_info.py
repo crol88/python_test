@@ -137,5 +137,4 @@ def test_add_personal_discount(app):
             Group(surname="ADD-VIP", name="name", secondname="secondname", birthday="12081980", phone="79058889556",
                   fromwhere="2ГИС", filial=""))
     app.cbase.search_patient(search_name="ADD-VIP")
-    app.infocard_mainpage.personal_discount(discount="15")
-
+    app.infocard_mainpage.personal_discount()
