@@ -6,7 +6,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 import random
-import os.path
+import pathlib
 
 
 class InfoCardHelper:
@@ -106,9 +106,10 @@ class InfoCardHelper:
         wd = self.app.wd
         old_photo = wd.find_element(By.XPATH, "//*[@class='thumbnail photo_sub_wrapper']/img").get_attribute("src")
         wd.find_element(By.XPATH, "//*[@class='btn btn-info js-tooltip photo_sub_upload']").click()
-        # filename = "patient_photo.JPG"
+        path = str(pathlib.Path.cwd() / 'patient_photo.JPG')
+        print(path)
         upload = wd.find_element(By.XPATH, "//input[@type='file']")
-        upload.send_keys("C:/Devel/python_test/files/patient_photo.JPG")
+        upload.send_keys(path)
         success = wd.find_element(By.XPATH, "//*[@class='text-success form_cbase_photo_upload_0__toShowAfterSuccess']")
         assert success is not None
         wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
