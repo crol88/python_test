@@ -14,9 +14,9 @@ def app(request):
     global target
     if target is None:
         config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
-        with open(config_file, encoding="utf-8") as config_file:
+        with open(config_file, encoding="utf-8") as f:
             # with open(request.config.getoption("--target"), encoding="utf-8") as config_file:
-            target = json.load(config_file)
+            target = json.load(f)
     if fixture is None or not fixture.is_valid():
         fixture = Application(base_url=target['baseUrl'])
         fixture.session.login(username=target['username'], password=target['password'])
@@ -35,3 +35,4 @@ def stop(request):
 
 def pytest_addoption(parser):
     parser.addoption("--target", action="store", default="target.json")
+
