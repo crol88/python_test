@@ -17,14 +17,21 @@ class CbaseHelper:
     def open_form_newclient(self):
         # Открыть список пациентов
         self.open_cbase()
-        self.push_button_newClient()
+        self.push_button_newclient()
 
     @testit.step('Открыть список пациентов')
     def open_cbase(self):
         wd = self.app.wd
         if len(wd.find_elements(By.LINK_TEXT, "Добавить")) == 0:
+            # if len(wd.find_elements(By.LINK_TEXT, "Сбросить")) != 0:
+            #     wd.find_element(By.LINK_TEXT, "Сбросить").click()
             wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
             wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+
+    def open_cbase_temp(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+        wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
 
     def check_exists_by_xpath(self):
         wd = self.app.wd
@@ -41,7 +48,7 @@ class CbaseHelper:
             wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(3)
         # Добавить нового пациента
-        self.push_button_newClient()
+        self.push_button_newclient()
 
     def select_all_filial(self, filial):
         wd = self.app.wd
@@ -59,7 +66,7 @@ class CbaseHelper:
     #     time.sleep(2)
 
     @testit.step('Нажать Добавить')
-    def push_button_newClient(self):
+    def push_button_newclient(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']").click()
 
@@ -176,7 +183,7 @@ class CbaseHelper:
         if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
             wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
             wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
-        self.push_button_newClient()
+        self.push_button_newclient()
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
 
@@ -192,15 +199,15 @@ class CbaseHelper:
 
     @testit.step('Если пациент отсутствует, добавляем')
     def add_patient_for(self, group):
-        wd = self.app.wd
-        with testit.step('Изменить филиал, если указан'):
-            if group.filial is not None:
-                wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
-                wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.filial)
-                wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        # wd = self.app.wd
+        # with testit.step('Изменить филиал, если указан'):
+        #     if group.filial is not None:
+        #         wd.find_element(By.XPATH, "//*[@title='Филиал']").click()
+        #         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.filial)
+        #         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(3)
         # Добавить нового пациента
-        self.push_button_newClient()
+        self.push_button_newclient()
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
 
@@ -224,10 +231,15 @@ class CbaseHelper:
     def get_patient_list(self):
         wd = self.app.wd
         self.open_cbase()
-        patient_list = []
-        for element in wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"):
-            patient_list = element.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr/td[2]")
-        return list(patient_list)
+        # patient_list = []
+        # for element in wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"):
+        #     patient = element.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr/td[2]/a").text
+        #     print(patient)
+        # return list(patient_list)
+        patient_list = wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']//tr/td[2]/a")
+        names = [e.text for e in patient_list]
+        print('Кол-во пациентов в списке:', len(names))
+        return names
 
     def select_any_patient(self):
         wd = self.app.wd
@@ -244,4 +256,3 @@ class CbaseHelper:
         filial = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[3]/*[@class='panel-body']")
         print(filial.text)
         assert filial.text == "Пациент обслуживается: не прикреплен к филиалам"
-

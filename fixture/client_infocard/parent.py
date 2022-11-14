@@ -38,6 +38,7 @@ class ParentHelper:
     def edit_parent_birthday_none(self):
         wd = self.app.wd
         self.open_parent_info()
+        time.sleep(1)
         save_value = wd.find_element(By.XPATH, "//*[@id='parent_birthday']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='parent_birthday'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='parent_birthday']//span[@class='input-group-btn']").click()
@@ -59,6 +60,7 @@ class ParentHelper:
     def edit_parent_name_none(self):
         wd = self.app.wd
         self.open_parent_info()
+        time.sleep(1)
         save_value = wd.find_element(By.XPATH, "//*[@id='parent_name']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='parent_name'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='parent_name']//span[@class='input-group-btn']").click()

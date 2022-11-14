@@ -11,6 +11,17 @@ def test_upload_patient_photo(app):
     app.infocard_mainpage.upload_photo()
 
 
+def test_delete_upload_patient_photo(app):
+    if app.cbase.count("PHOTO") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="PHOTO", name="ADD", secondname="TEST", birthday="12111991", phone="79058887546",
+                  fromwhere="2ГИС"))
+        app.cbase.search_patient(search_name="PHOTO")
+        app.infocard_mainpage.upload_photo()
+    app.cbase.search_patient(search_name="PHOTO")
+    app.infocard_mainpage.delete_photo()
+
+
 def test_add_vip_patient(app):
     if app.cbase.count("ADD-VIP") == 0:
         app.cbase.add_patient_for(
@@ -37,7 +48,7 @@ def test_add_insurance_mark(app):
     if app.cbase.count("INSURANCE") == 0:
         app.cbase.add_patient_for(
             Group(surname="INSURANCE", name="MARK", secondname="TEST", birthday="22031997", phone="79051768556",
-                  fromwhere="2ГИС", filial=""))
+                  fromwhere="2ГИС"))
     app.cbase.search_patient(search_name="INSURANCE")
     app.basic_info.add_mark(mark="Страховой")
 
@@ -51,6 +62,33 @@ def test_add_blacklist_mark(app):
     app.basic_info.add_mark(mark="Черный список")
 
 
+def test_delete_mark_vip_new(app):
+    if app.cbase.count("MARK-TEST") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="MARK-TEST", name="MARK", secondname="TEST", birthday="13031993", phone="79051766656",
+                  fromwhere="2ГИС"))
+    app.cbase.search_patient(search_name="MARK-TEST")
+    app.basic_info.delete_some_mark(mark="vip")
+
+
+def test_delete_mark_blacklist_new(app):
+    if app.cbase.count("MARK-TEST") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="MARK-TEST", name="MARK", secondname="TEST", birthday="13031993", phone="79051766656",
+                  fromwhere="2ГИС"))
+    app.cbase.search_patient(search_name="MARK-TEST")
+    app.basic_info.delete_some_mark(mark="blacklist")
+
+
+def test_delete_mark_insurance_new(app):
+    if app.cbase.count("MARK-TEST") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="MARK-TEST", name="MARK", secondname="TEST", birthday="13031993", phone="79051766656",
+                  fromwhere="2ГИС"))
+    app.cbase.search_patient(search_name="MARK-TEST")
+    app.basic_info.delete_some_mark(mark="insurance")
+
+
 def test_delete_vip_mark(app):
     if app.cbase.count("VIP-LIST") == 0:
         app.cbase.add_patient_for(
@@ -59,7 +97,7 @@ def test_delete_vip_mark(app):
     app.cbase.search_patient(search_name="VIP-LIST")
     if app.infocard_mainpage.mark(mark="VIP", check_mark="VIP") == 0:
         app.basic_info.add_mark(mark="VIP")
-    app.infocard_mainpage.delete_mark(mark="VIP", status="VIP")
+    app.infocard_mainpage.delete_vip_mark(status="VIP")
 
 
 def test_delete_insurance_mark(app):
@@ -138,3 +176,4 @@ def test_add_personal_discount(app):
                   fromwhere="2ГИС", filial=""))
     app.cbase.search_patient(search_name="ADD-VIP")
     app.infocard_mainpage.personal_discount()
+

@@ -41,6 +41,7 @@ class AddressHelper:
         apt = wd.find_element(By.XPATH, "//*[@id='fact_apt']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='fact_apt'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='fact_apt']//span[@class='input-group-btn']").click()
+        time.sleep(1)
         apt_edit = wd.find_element(By.XPATH, "//*[@id='fact_apt']/p").text
         print("apt =", apt, ";", "apt_edit =", apt_edit)
         assert apt == apt_edit

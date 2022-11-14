@@ -46,15 +46,18 @@ def test_add_patient_without_filial_plugin_on(app):
 
 
 def test_add_and_delete_patient(app):
-    old_groups = app.cbase.get_group_list()
+    # old_groups = app.cbase.get_group_list()
+    old_groups = app.cbase.get_patient_list()
     app.cbase.change_filial(Group(filial=""))
     app.cbase.fill_newclient_form(
         Group(surname="Пациент", name="Для", secondname="Удаления", birthday="12081980", phone="79058889556",
               fromwhere="2ГИС"))
     app.cbase.submit_newpatient_creation()
     app.cbase.delete_new_patient(search_name="Пациент")
+    # new_groups = app.cbase.get_group_list()
     new_groups = app.cbase.get_group_list()
-    assert len(old_groups) - 1 == len(new_groups)
+    print("Кол-во пациентов до удаления:", len(old_groups), ';', 'Кол-во пациентов после удаления:', len(new_groups))
+    assert len(old_groups) == len(new_groups)
 
 
 def test_patient_for_search(app):

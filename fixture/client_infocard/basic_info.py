@@ -50,13 +50,13 @@ class BasicInfoHelper:
         time.sleep(3)
         # Добавить нового пациента
         with testit.step('Нажать Добавить'):
-            self.push_button_newClient()
+            self.push_button_newclient()
         with testit.step('Заполнить форму добавления нового пациента'):
             self.fill_newclient_form(group)
         with testit.step('Подтвердить ввод данных'):
             self.submit_newpatient_creation()
 
-    def push_button_newClient(self):
+    def push_button_newclient(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']").click()
 
@@ -509,5 +509,63 @@ class BasicInfoHelper:
         wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
         time.sleep(1)
         status = wd.find_element(By.XPATH, "//*[@class='list-group-item_flex']").text
-        print("status=", status, ";", "mark=", mark)
+        print("status:", status, ";", "mark:", mark)
         assert status == mark
+
+    def delete_vip_mark(self):
+        wd = self.app.wd
+        wd.execute_script("window.scrollTo(0,600)")
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//*[@class='mb-10']//text()[contains(.,'VIP')]/preceding-sibling::span//*["
+                                  "@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+        if len(wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")) != 0:
+            marks = wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")
+            names = [e.text for e in marks]
+            print(names)
+            assert "VIP" not in names
+
+    def delete_blacklist_mark(self):
+        wd = self.app.wd
+        wd.execute_script("window.scrollTo(0,600)")
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//text()[contains(.,'Черный список')]/preceding-sibling::span/button").click()
+        wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+        if len(wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")) != 0:
+            marks = wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")
+            names = [e.text for e in marks]
+            print(names)
+            assert "Черный список" not in names
+
+    def delete_insurance_mark(self):
+        wd = self.app.wd
+        wd.execute_script("window.scrollTo(0,600)")
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//text()[contains(.,'Страховой')]/preceding-sibling::span/button").click()
+        wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+        if len(wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")) != 0:
+            marks = wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")
+            names = [e.text for e in marks]
+            print(names)
+            assert "Страховой" not in names
+
+    def delete_some_mark(self, mark):
+        # mark can be: "vip", "blacklist" or "insurance"
+        wd = self.app.wd
+        wd.execute_script("window.scrollTo(0,600)")
+        select_mark = mark
+        if select_mark == "vip":
+            if len(wd.find_elements(By.XPATH, "//*[@class='mb-10']//text()[contains(.,'VIP')]"
+                                              "/preceding-sibling::span//*[@type='button']")) == 0:
+                self.add_mark(mark="VIP")
+            self.delete_vip_mark()
+        if select_mark == "blacklist":
+            if len(wd.find_elements(By.XPATH, "//*[@class='mb-10']//text()[contains(.,'Черный список')]"
+                                              "/preceding-sibling::span//*[@type='button']")) == 0:
+                self.add_mark(mark="Черный список")
+            self.delete_blacklist_mark()
+        if select_mark == "insurance":
+            if len(wd.find_elements(By.XPATH, "//*[@class='mb-10']//text()[contains(.,'Страховой')]"
+                                              "/preceding-sibling::span//*[@type='button']")) == 0:
+                self.add_mark(mark="Страховой")
+            self.delete_insurance_mark()

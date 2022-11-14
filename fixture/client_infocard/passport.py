@@ -64,6 +64,7 @@ class PassportHelper:
     def edit_passport_address_none(self):
         wd = self.app.wd
         self.open_passport_info()
+        time.sleep(1)
         reg = wd.find_element(By.XPATH, "//*[@id='passport_address']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='passport_address'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='passport_address']//span[@class='input-group-btn']").click()

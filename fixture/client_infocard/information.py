@@ -44,6 +44,7 @@ class InformationHelper:
     def edit_comments_none(self):
         wd = self.app.wd
         self.open_additional_info()
+        time.sleep(1)
         comments = wd.find_element(By.XPATH, "//*[@id='comments']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='comments'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='comments']//span[@class='input-group-btn']").click()
@@ -58,9 +59,18 @@ class InformationHelper:
         wd.find_element(By.XPATH, "//*[@id='first_record_date']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='first_record_date']//input").send_keys(date)
         wd.find_element(By.XPATH, "//*[@id='first_record_date']//span[@class='input-group-btn']").click()
+        self.error_trapping()
         date_edit = wd.find_element(By.XPATH, "//*[@id='first_record_date']/p").text
         print("date =", date, ";", "date_edit =", date_edit)
         assert date == date_edit
+
+    def error_trapping(self):
+        wd = self.app.wd
+        if wd.find_element(By.XPATH, "//*[@class='sweet-content']"):
+            error = wd.find_element(By.XPATH, "//*[@class='sweet-content']")
+            print("Ошибка:", error.text)
+            wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+            assert error == 0
 
     def edit_first_record_date_none(self):
         wd = self.app.wd
@@ -80,6 +90,7 @@ class InformationHelper:
         wd.find_element(By.XPATH, "//*[@id='id1c']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='id1c']//input").send_keys(id1c)
         wd.find_element(By.XPATH, "//*[@id='id1c']//span[@class='input-group-btn']").click()
+        self.error_trapping()
         id1c_edit = wd.find_element(By.XPATH, "//*[@id='id1c']/p").text
         print("id1c =", id1c, ";", "id1c_edit =", id1c_edit)
         assert id1c == id1c_edit
@@ -111,6 +122,7 @@ class InformationHelper:
         select = Select(wd.find_element(By.XPATH, "//*[@id='id_fromwhere']//select"))
         select.select_by_visible_text(random_name)
         wd.find_element(By.XPATH, "//*[@id='id_fromwhere']//span[@class='input-group-btn']").click()
+        self.error_trapping()
         from_where_edit = wd.find_element(By.XPATH, "//*[@id='id_fromwhere']/p").text
         print("random_name =", random_name, ";", "from_where_edit =", from_where_edit)
         assert random_name == from_where_edit
@@ -144,6 +156,7 @@ class InformationHelper:
         from_where = wd.find_element(By.XPATH, "//*[@id='id_fromwhere']/p").text
         wd.find_element(By.XPATH, "//*[@data-key='id_fromwhere'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='id_fromwhere']//span[@class='input-group-btn']").click()
+        self.error_trapping()
         from_where_edit = wd.find_element(By.XPATH, "//*[@id='id_fromwhere']/p").text
         print("from_where =", from_where, ";", "from_where_edit =", from_where_edit)
         assert from_where == from_where_edit
@@ -158,8 +171,9 @@ class InformationHelper:
         selected_value = wd.find_element(By.XPATH, "//*[@id='nosms']/div[1]/label").text
         wd.find_element(By.XPATH, "//*[@id='nosms']//input[@value=1]").click()
         time.sleep(2)
-        if len(wd.find_elements(By.XPATH, "//*[@class='sweet-confirm styled']")) > 0:
-            wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+        self.error_trapping()
+        # if len(wd.find_elements(By.XPATH, "//*[@class='sweet-confirm styled']")) > 0:
+        #     wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
         new_value = wd.find_element(By.XPATH, "//*[@id='nosms']/p").text
         print("enter_data =", selected_value, ";", "save_data =", new_value)
         assert selected_value == new_value
@@ -174,8 +188,7 @@ class InformationHelper:
         selected_value = wd.find_element(By.XPATH, "//*[@id='nosms']/div[2]/label").text
         wd.find_element(By.XPATH, "//*[@id='nosms']//input[@value=0]").click()
         time.sleep(2)
-        if len(wd.find_elements(By.XPATH, "//*[@class='sweet-confirm styled']")) > 0:
-            wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+        self.error_trapping()
         new_value = wd.find_element(By.XPATH, "//*[@id='nosms']/p").text
         print("enter_data =", selected_value, ";", "save_data =", new_value)
         assert selected_value == new_value
@@ -190,6 +203,7 @@ class InformationHelper:
         wd.find_element(By.XPATH, "//*[@id='points']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='points']//input").send_keys(points)
         wd.find_element(By.XPATH, "//*[@id='points']//span[@class='input-group-btn']").click()
+        self.error_trapping()
         points_edit = wd.find_element(By.XPATH, "//*[@id='points']/p").text
         print("points =", points, ";", "points_edit =", points_edit)
         assert points == points_edit
@@ -217,6 +231,7 @@ class InformationHelper:
         wd.find_element(By.XPATH, "//*[@id='total_summ']//input").clear()
         wd.find_element(By.XPATH, "//*[@id='total_summ']//input").send_keys(summ)
         wd.find_element(By.XPATH, "//*[@id='total_summ']//span[@class='input-group-btn']").click()
+        self.error_trapping()
         summ_edit = wd.find_element(By.XPATH, "//*[@id='total_summ']/p").text
         print("summ =", summ, ";", "summ_edit =", summ_edit)
         assert summ == summ_edit

@@ -88,6 +88,17 @@ class InfoCardHelper:
         assert status not in names
         print(names)
 
+    def delete_vip_mark(self, status):
+        wd = self.app.wd
+        wd.execute_script("window.scrollTo(0,600)")
+        wd.find_element(By.XPATH, "//*[@class='mb-10']//text()[contains(.,'VIP')]/preceding-sibling::span//*["
+                                  "@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+        marks = wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")
+        names = [e.text for e in marks]
+        assert status not in names
+        print(names)
+
     def mark(self, mark, check_mark):
         wd = self.app.wd
         wd.execute_script("window.scrollTo(0,600)")
@@ -113,6 +124,17 @@ class InfoCardHelper:
         success = wd.find_element(By.XPATH, "//*[@class='text-success form_cbase_photo_upload_0__toShowAfterSuccess']")
         assert success is not None
         wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
+        time.sleep(1)
+        new_photo = wd.find_element(By.XPATH, "//*[@class='thumbnail photo_sub_wrapper']/img").get_attribute("src")
+        assert old_photo != new_photo
+
+    def delete_photo(self):
+        wd = self.app.wd
+        old_photo = wd.find_element(By.XPATH, "//*[@class='thumbnail photo_sub_wrapper']/img").get_attribute("src")
+        wd.find_element(By.XPATH, "//*[@class='btn btn-danger js-delete-alert photo_sub_remove js-tooltip']").click()
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+        time.sleep(1)
         new_photo = wd.find_element(By.XPATH, "//*[@class='thumbnail photo_sub_wrapper']/img").get_attribute("src")
         assert old_photo != new_photo
 
