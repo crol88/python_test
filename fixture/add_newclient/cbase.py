@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
+import datetime
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
@@ -7,6 +9,7 @@ from selenium.webdriver.support.ui import Select
 from model.group import Group
 import testit
 import random
+import pathlib
 
 
 class CbaseHelper:
@@ -108,7 +111,7 @@ class CbaseHelper:
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.fromwhere)
         wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(2)
-        wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
+        wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']").click()
 
     @testit.step('Подтвердить добавление нового пациента')
     def submit_newpatient_creation(self):
@@ -118,6 +121,14 @@ class CbaseHelper:
             wd.send_keys(Keys.PAGE_DOWN)
             time.sleep(1)
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']").click()
+        if len(wd.find_elements(By.XPATH, "//*[@role='alert']")) > 0:
+            alert_obj = wd.find_element(By.XPATH, "//*[@role='alert']")
+            msg = alert_obj.text
+            print(msg)
+            name = str(datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S') + '.png')
+            capture_path = str(pathlib.Path.cwd() / 'screenshots' / name)
+            wd.save_screenshot(capture_path)
+            wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-done-step']").click()
         time.sleep(2)
 
@@ -238,7 +249,7 @@ class CbaseHelper:
         # return list(patient_list)
         patient_list = wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']//tr/td[2]/a")
         names = [e.text for e in patient_list]
-        print('Кол-во пациентов в списке:', len(names))
+        print('Кол-во пациентов:', len(names))
         return names
 
     def select_any_patient(self):
@@ -256,3 +267,61 @@ class CbaseHelper:
         filial = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[3]/*[@class='panel-body']")
         print(filial.text)
         assert filial.text == "Пациент обслуживается: не прикреплен к филиалам"
+
+    def check_empty_surname(self):
+        wd = self.app.wd
+        surname_field = wd.find_element(By.XPATH, "//*[@id='js-newrec-surname']/following-sibling::span").text
+        field = wd.find_element(By.XPATH, "//*[@for='js-newrec-surname']").text
+        form_error = wd.find_elements(By.XPATH, "//*[@class='form-group has-error']/*[@for='js-newrec-surname']")
+        print(field, surname_field)
+        assert len(form_error) != 0
+        assert surname_field == "Поле обязательное для заполнения."
+
+    def check_empty_name(self):
+        wd = self.app.wd
+        name_field = wd.find_element(By.XPATH, "//*[@id='js-newrec-name']/following-sibling::span").text
+        field = wd.find_element(By.XPATH, "//*[@for='js-newrec-name']").text
+        form_error = wd.find_elements(By.XPATH, "//*[@class='form-group has-error']/*[@for='js-newrec-name']")
+        print(field, name_field)
+        assert len(form_error) != 0
+        assert name_field == "Поле обязательное для заполнения."
+
+    def check_empty_secondname(self):
+        wd = self.app.wd
+        name_field = wd.find_element(By.XPATH, "//*[@name='wizard[data][second_name]']/following-sibling::span").text
+        field = wd.find_element(By.XPATH,
+                                "//*[@for='form_cbase_admin_newClient_input_0_wizard[data][second_name]']").text
+        form_error = wd.find_elements(By.XPATH,
+                                      "//*[@for='form_cbase_admin_newClient_input_0_wizard[data][second_name]']")
+        print(field, name_field)
+        assert len(form_error) != 0
+        assert name_field == "Поле обязательное для заполнения."
+
+    def check_empty_birthday(self):
+        wd = self.app.wd
+        name_field = wd.find_element(By.XPATH, "//*[@class='datepicker-group']/following-sibling::span").text
+        field = wd.find_element(By.XPATH, "//*[@for='form_cbase_admin_newClient_date_0_']/parent::div").text
+        form_error = wd.find_elements(By.XPATH, "//*[@class='form-group has-error']"
+                                                "/*[@for='form_cbase_admin_newClient_date_0_']")
+        print(field)
+        assert len(form_error) != 0
+        assert name_field == "Поле обязательное для заполнения."
+
+    def check_empty_phone(self):
+        wd = self.app.wd
+        name_field = wd.find_element(By.XPATH, "//*[@id='js-newrec-phone']/following-sibling::span").text
+        field = wd.find_element(By.XPATH, "//*[@for='js-newrec-phone']").text
+        form_error = wd.find_elements(By.XPATH, "//*[@class='form-group has-error']/*[@for='js-newrec-phone']")
+        print(field, name_field)
+        assert len(form_error) != 0
+        assert name_field == "Поле обязательное для заполнения."
+
+    def check_empty_fromwhere(self):
+        wd = self.app.wd
+        name_field = wd.find_element(By.XPATH, "//*[@name='wizard[data][id_fromwhere]']/following-sibling::span").text
+        field = wd.find_element(By.XPATH, "//*[@for='form_cbase_admin_newClient_select_0_']").text
+        form_error = wd.find_elements(By.XPATH, "//*[@class='form-group has-error']"
+                                                "/*[@for='form_cbase_admin_newClient_select_0_']")
+        print(field, name_field)
+        assert len(form_error) != 0
+        assert name_field == "Поле обязательное для заполнения."
