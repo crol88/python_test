@@ -34,6 +34,7 @@ class CbaseHelper:
     def open_cbase_temp(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+        time.sleep(1)
         wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
 
     def check_exists_by_xpath(self):
@@ -58,7 +59,7 @@ class CbaseHelper:
         select = Select(wd.find_element(By.XPATH, "//*[@class='company-switch-wrapper']/select"))
         select.select_by_visible_text(filial)
         selected = wd.find_element(By.XPATH, "//*[@class='company-switch-wrapper']//*[@class='select2-chosen']").text
-        print(selected)
+        print("Выбранный филиал:", selected)
         assert filial == selected
 
     # def select_filial(self, group):
@@ -71,6 +72,10 @@ class CbaseHelper:
     @testit.step('Нажать Добавить')
     def push_button_newclient(self):
         wd = self.app.wd
+        if len(wd.find_elements(By.LINK_TEXT, "Добавить")) == 0:
+            wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+        element = wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
         wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']").click()
 
     @testit.step('Заполнить форму добавления нового пациента')
@@ -203,6 +208,10 @@ class CbaseHelper:
         wd = self.app.wd
         with testit.step('Открыть список пациентов'):
             if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
+                b = wd.find_element(By.XPATH,
+                                    "//*[@alt='Пациенты']/parent::div/parent::div/parent::div").get_attribute("class")
+                if str(b) == "link subMenuOpen active":
+                    wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
                 wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
                 wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
         with testit.step('Если пациент присутствует, вернуться к списку'):
@@ -249,6 +258,7 @@ class CbaseHelper:
         # return list(patient_list)
         patient_list = wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']//tr/td[2]/a")
         names = [e.text for e in patient_list]
+        assert len(patient_list) > 0
         print('Кол-во пациентов:', len(names))
         return names
 
@@ -265,7 +275,8 @@ class CbaseHelper:
     def check_filial_info(self):
         wd = self.app.wd
         filial = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[3]/*[@class='panel-body']")
-        print(filial.text)
+        print("Фактический результат *", filial.text)
+        print("Ожидаемый результат *", "Пациент обслуживается: не прикреплен к филиалам")
         assert filial.text == "Пациент обслуживается: не прикреплен к филиалам"
 
     def check_empty_surname(self):
@@ -276,6 +287,8 @@ class CbaseHelper:
         print(field, surname_field)
         assert len(form_error) != 0
         assert surname_field == "Поле обязательное для заполнения."
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
 
     def check_empty_name(self):
         wd = self.app.wd
@@ -285,6 +298,8 @@ class CbaseHelper:
         print(field, name_field)
         assert len(form_error) != 0
         assert name_field == "Поле обязательное для заполнения."
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
 
     def check_empty_secondname(self):
         wd = self.app.wd
@@ -296,6 +311,8 @@ class CbaseHelper:
         print(field, name_field)
         assert len(form_error) != 0
         assert name_field == "Поле обязательное для заполнения."
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
 
     def check_empty_birthday(self):
         wd = self.app.wd
@@ -306,6 +323,8 @@ class CbaseHelper:
         print(field)
         assert len(form_error) != 0
         assert name_field == "Поле обязательное для заполнения."
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
 
     def check_empty_phone(self):
         wd = self.app.wd
@@ -315,6 +334,8 @@ class CbaseHelper:
         print(field, name_field)
         assert len(form_error) != 0
         assert name_field == "Поле обязательное для заполнения."
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
 
     def check_empty_fromwhere(self):
         wd = self.app.wd
@@ -325,3 +346,14 @@ class CbaseHelper:
         print(field, name_field)
         assert len(form_error) != 0
         assert name_field == "Поле обязательное для заполнения."
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
+
+    def empty_patient_list(self):
+        wd = self.app.wd
+        alert = wd.find_element(By.XPATH, "//*[@class='alert alert-info']").text
+        status = wd.find_element(By.XPATH, "//*[@class='info']").text
+        print("Результат запроса:", alert)
+        print("Список пациентов:", status)
+        assert status == "Ничего не найдено"
+        assert alert == "По вашему запросу ничего не найдено, попробуйте изменить параметры поиска."

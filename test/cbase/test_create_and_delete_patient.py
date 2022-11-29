@@ -45,6 +45,20 @@ def test_add_patient_without_filial_plugin_on(app):
     app.cbase.check_filial_info()
 
 
+def test_patient_search_criteria_set_off(app):
+    app.cbase_config.open_cbase_config()
+    app.cbase_config.search_criteria_set(status='Включено')
+    app.cbase.open_cbase_temp()
+    app.cbase.empty_patient_list()
+
+
+def test_patient_search_criteria_set_on(app):
+    app.cbase_config.open_cbase_config()
+    app.cbase_config.search_criteria_set(status='Отключено')
+    app.cbase.open_cbase_temp()
+    app.cbase.get_patient_list()
+
+
 def test_add_and_delete_patient(app):
     # old_groups = app.cbase.get_group_list()
     old_groups = app.cbase.get_patient_list()
@@ -61,7 +75,7 @@ def test_add_and_delete_patient(app):
 
 
 def test_patient_for_search(app):
-    if app.cbase.count("АТЕСТ-Добавить") == 0:
+    if app.cbase.count("УТЕСТ") == 0:
         # app.cbase.change_filial(Group())
         app.cbase.fill_newclient_form(
             Group(surname="Утест", name="Добавить", secondname="Удалить", birthday="12081980", phone="79058889556",
@@ -91,13 +105,13 @@ def test_delete_patient(app):
         assert old_groups == new_groups
 
 
-def test_del_patient(app):
-    old_groups = app.cbase.get_group_list()
-    app.cbase.delete_new_patient(search_name="NEW")
-    new_groups = app.cbase.get_group_list()
-    assert len(old_groups) - 1 == len(new_groups)
-    old_groups[0:1] = []
-    assert old_groups == new_groups
+# def test_del_patient(app):
+#     old_groups = app.cbase.get_group_list()
+#     app.cbase.delete_new_patient(search_name="NEW")
+#     new_groups = app.cbase.get_group_list()
+#     assert len(old_groups) - 1 == len(new_groups)
+#     old_groups[0:1] = []
+#     assert old_groups == new_groups
 
 
 def test_add_patient_empty_surname(app):

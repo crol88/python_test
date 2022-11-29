@@ -35,6 +35,7 @@ class InfoCardHelper:
         print("Пациенту добавлен статус VIP:", vip, ";", "Список VIP пациентов:", vip_client)
         assert vip == vip_client
 
+
     def open_cbase_vip_list(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
@@ -72,7 +73,9 @@ class InfoCardHelper:
         wd.refresh()
         # wd.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.PAGE_DOWN)
         wd.execute_script("window.scrollTo(0,200)")
+        time.sleep(3)
         note_after = wd.find_element(By.XPATH, "//*[@class='form-control js-tooltip js-edit-note']").text
+        time.sleep(1)
         print("Ввод текста:", enter_text, ";", "Сохраненный текст:", note_after)
         assert note_after == enter_text
 
@@ -170,7 +173,9 @@ class InfoCardHelper:
         with testit.step('Подтвердить выбор'):
             wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
         with testit.step('Проверить, что выбранный врач добавлен в инфокарту пациента'):
-            doc_info = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[10]").text
+            wd.execute_script("window.scrollTo(0,2000)")
+            time.sleep(2)
+            doc_info = wd.find_element(By.XPATH, "//*[contains(text(),'Лечащий врач')]/parent::div").text
             result = re.search(random_doctor, doc_info)
             print("Выбранный врач:", random_doctor, ";", "Сохраненный врач в инфокарте:", (result.group(0)))
             assert random_doctor == (result.group(0))

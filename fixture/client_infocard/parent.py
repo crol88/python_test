@@ -1,6 +1,8 @@
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+import datetime
+import pathlib
 
 
 class ParentHelper:
@@ -242,6 +244,9 @@ class ParentHelper:
         time.sleep(2)
         if len(wd.find_elements(By.XPATH, "//*[@class='sweet-confirm styled']")) > 0:
             wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
+            name = str('parent_sex_male_' + datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S') + '.png')
+            capture_path = str(pathlib.Path.cwd() / 'screenshots' / name)
+            wd.save_screenshot(capture_path)
         new_value = wd.find_element(By.XPATH, "//*[@id='passport_sex']/p").text
         print("enter_data =", selected_value, ";", "save_data =", new_value)
         assert selected_value == new_value

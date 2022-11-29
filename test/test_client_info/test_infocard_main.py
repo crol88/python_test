@@ -89,37 +89,37 @@ def test_delete_mark_insurance_new(app):
     app.basic_info.delete_some_mark(mark="insurance")
 
 
-def test_delete_vip_mark(app):
-    if app.cbase.count("VIP-LIST") == 0:
-        app.cbase.add_patient_for(
-            Group(surname="VIP-LIST", name="name", secondname="secondname", birthday="19041987", phone="79051278556",
-                  fromwhere="2ГИС", filial=""))
-    app.cbase.search_patient(search_name="VIP-LIST")
-    if app.infocard_mainpage.mark(mark="VIP", check_mark="VIP") == 0:
-        app.basic_info.add_mark(mark="VIP")
-    app.infocard_mainpage.delete_vip_mark(status="VIP")
-
-
-def test_delete_insurance_mark(app):
-    if app.cbase.count("INSURANCE") == 0:
-        app.cbase.add_patient_for(
-            Group(surname="INSURANCE", name="MARK", secondname="TEST", birthday="22031997", phone="79051768556",
-                  fromwhere="2ГИС", filial=""))
-    app.cbase.search_patient(search_name="INSURANCE")
-    if app.infocard_mainpage.mark(mark="Страховой", check_mark="Страховой") == 0:
-        app.basic_info.add_mark(mark="Страховой")
-    app.infocard_mainpage.delete_mark(mark="Страховой", status="Страховой")
-
-
-def test_delete_blacklist_mark(app):
-    if app.cbase.count("BLACKLIST") == 0:
-        app.cbase.add_patient_for(
-            Group(surname="BLACKLIST", name="MARK", secondname="TEST", birthday="13031993", phone="79051766656",
-                  fromwhere="2ГИС", filial=""))
-    app.cbase.search_patient(search_name="BLACKLIST")
-    if app.infocard_mainpage.mark(mark="Черный список", check_mark="Черный список") == 0:
-        app.basic_info.add_mark(mark="Черный список")
-    app.infocard_mainpage.delete_mark(mark="Черный список", status="Черный список")
+# def test_delete_vip_mark(app):
+#     if app.cbase.count("VIP-LIST") == 0:
+#         app.cbase.add_patient_for(
+#             Group(surname="VIP-LIST", name="name", secondname="secondname", birthday="19041987", phone="79051278556",
+#                   fromwhere="2ГИС", filial=""))
+#     app.cbase.search_patient(search_name="VIP-LIST")
+#     if app.infocard_mainpage.mark(mark="VIP", check_mark="VIP") == 0:
+#         app.basic_info.add_mark(mark="VIP")
+#     app.infocard_mainpage.delete_vip_mark(status="VIP")
+#
+#
+# def test_delete_insurance_mark(app):
+#     if app.cbase.count("INSURANCE") == 0:
+#         app.cbase.add_patient_for(
+#             Group(surname="INSURANCE", name="MARK", secondname="TEST", birthday="22031997", phone="79051768556",
+#                   fromwhere="2ГИС", filial=""))
+#     app.cbase.search_patient(search_name="INSURANCE")
+#     if app.infocard_mainpage.mark(mark="Страховой", check_mark="Страховой") == 0:
+#         app.basic_info.add_mark(mark="Страховой")
+#     app.infocard_mainpage.delete_mark(mark="Страховой", status="Страховой")
+#
+#
+# def test_delete_blacklist_mark(app):
+#     if app.cbase.count("BLACKLIST") == 0:
+#         app.cbase.add_patient_for(
+#             Group(surname="BLACKLIST", name="MARK", secondname="TEST", birthday="13031993", phone="79051766656",
+#                   fromwhere="2ГИС", filial=""))
+#     app.cbase.search_patient(search_name="BLACKLIST")
+#     if app.infocard_mainpage.mark(mark="Черный список", check_mark="Черный список") == 0:
+#         app.basic_info.add_mark(mark="Черный список")
+#     app.infocard_mainpage.delete_mark(mark="Черный список", status="Черный список")
 
 
 def test_add_client_without_filial(app):

@@ -35,4 +35,3 @@ def stop(request):
 
 def pytest_addoption(parser):
     parser.addoption("--target", action="store", default="target.json")
-
