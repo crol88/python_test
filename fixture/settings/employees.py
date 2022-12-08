@@ -244,13 +244,13 @@ class EmployeesHelper:
                                               "active']")) == 0:
                 wd.find_element(By.XPATH,
                                 "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon']").click()
-        b = wd.find_element(By.XPATH,
-                            "//span[.='Расписание']/parent::div[@role='button']").get_attribute("aria-expanded")
-        if str(b) == "false":
-            wd.find_element(By.XPATH, "//span[.='Расписание']/parent::div[@role='button']").click()
-        time.sleep(1)
-        if len(wd.find_elements(By.XPATH, "//div[.='График работы врачей']/parent::div[@class='headbarLeft']")) == 0:
-            wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()
+            b = wd.find_element(By.XPATH,
+                                "//span[.='Расписание']/parent::div[@role='button']").get_attribute("aria-expanded")
+            if str(b) == "false":
+                wd.find_element(By.XPATH, "//span[.='Расписание']/parent::div[@role='button']").click()
+            time.sleep(1)
+            if len(wd.find_elements(By.XPATH, "//div[.='График работы врачей']/parent::div[@class='headbarLeft']")) == 0:
+                wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()
         return len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname))
 
     def check_doc_schedule(self, group):
@@ -346,10 +346,13 @@ class EmployeesHelper:
     def fill_chair_selection(self, group):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//div[@id='s2id_form_stompro_admin_dayGraphWizard_select_0_']").click()
-        wd.find_element(By.XPATH,
-                        "//input[contains(@aria-activedescendant,'select2-result-label')]").send_keys(group.title)
-        wd.find_element(By.XPATH,
-                        "//input[contains(@aria-activedescendant,'select2-result-label')]").send_keys(Keys.ENTER)
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(group.title)
+        wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        # # wd.find_element(By.XPATH,
+        # #                 "//input[contains(@aria-activedescendant,'select2-result-label')]").send_keys(group.title)
+        # wd.find_element(By.XPATH,
+        #                 "//input[contains(@aria-activedescendant,'select2-result-label')]").send_keys(Keys.ENTER)
         wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
 
     def default_interval_selection(self, group):
