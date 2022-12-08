@@ -13,8 +13,8 @@ class SessionHelper:
     def login(self, username, password):
         wd = self.app.wd
         self.app.open_homepage()
-        if len(wd.find_elements(By.LINK_TEXT, "Запрос лицензии")) != 0:
-            wd.find_element(By.LINK_TEXT, "Запрос лицензии").click()
+        if len(wd.find_elements(By.XPATH, "//div[@class='alert alert-danger']")) != 0:
+            wd.find_element(By.XPATH, "//a[.='Запрос лицензии']").click()
             wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
         wd.find_element(By.ID, "form_user_loginhtml_input_0_login").send_keys(username)
         wd.find_element(By.ID, "form_user_loginhtml_password_0_password").send_keys(password)

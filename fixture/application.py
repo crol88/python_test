@@ -15,6 +15,7 @@ from fixture.client_infocard.infocard_mainpage import InfoCardHelper
 from fixture.add_newclient.cbase_config import CbaseConfigHelper
 from fixture.schedule.schedule import ScheduleHelper
 from fixture.settings.employees import EmployeesHelper
+from fixture.settings.schedule import ScheduleSetHelper
 
 
 class Application:
@@ -35,6 +36,7 @@ class Application:
         self.schedule = ScheduleHelper(self)
         self.base_url = base_url
         self.settings = EmployeesHelper(self)
+        self.set_schedule = ScheduleSetHelper(self)
 
     def open_homepage(self):
         wd = self.wd

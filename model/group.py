@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class Group:
     def __init__(self, surname=None, name=None, secondname=None, birthday=None, phone=None, fromwhere=None,
-                 filial=None, cbaseid=None, value=None, login=None, password=None, mail=None):
+                 filial=None, cbaseid=None, value=None, login=None, password=None, mail=None, s_time=None):
         self.name = name
         self.surname = surname
         self.secondname = secondname
@@ -14,6 +14,7 @@ class Group:
         self.login = login
         self.password = password
         self.mail = mail
+        self.s_time = s_time
 
     def __repr__(self):
         return f"{self.__class__}: {self.cbaseid, self.name, self.value}"
@@ -24,10 +25,9 @@ class Group:
 
 
 class Chair:
-    def __init__(self, title=None, sorting=None, department=None, filial=None):
+    def __init__(self, title=None, sorting=None, department=None, filial=None, s_time=None):
         self.title = title
         self.sorting = sorting
         self.department = department
         self.filial = filial
-
-
+        self.s_time = s_time

@@ -100,7 +100,7 @@ class ScheduleHelper:
         assert random_dep.text in str(n)
         wd.find_element(By.XPATH, "//*[@class='react-select__indicators css-1wy0on6']/div[1]").click()
 
-    def new_patietn_record(self):
+    def new_patient_record(self):
         wd = self.app.wd
         all_groups = wd.find_elements(By.XPATH, "//*[@class='filter-groups']/button")
         del all_groups[0]

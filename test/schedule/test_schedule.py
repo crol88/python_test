@@ -36,7 +36,7 @@ def test_check_doctor_department(app):
 def test_new_patient_record(app):
     app.schedule.open_schedule()
     app.cbase.select_all_filial(filial="Все филиалы")
-    app.schedule.new_patietn_record()
+    app.schedule.new_patient_record()
 
 
 

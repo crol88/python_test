@@ -35,7 +35,6 @@ class InfoCardHelper:
         print("Пациенту добавлен статус VIP:", vip, ";", "Список VIP пациентов:", vip_client)
         assert vip == vip_client
 
-
     def open_cbase_vip_list(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
