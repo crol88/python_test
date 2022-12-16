@@ -16,6 +16,7 @@ from fixture.add_newclient.cbase_config import CbaseConfigHelper
 from fixture.schedule.schedule import ScheduleHelper
 from fixture.settings.employees import EmployeesHelper
 from fixture.settings.schedule import ScheduleSetHelper
+from fixture.client_infocard.tplan import TreatmentPlanHelper
 
 
 class Application:
@@ -37,6 +38,7 @@ class Application:
         self.base_url = base_url
         self.settings = EmployeesHelper(self)
         self.set_schedule = ScheduleSetHelper(self)
+        self.tplan = TreatmentPlanHelper(self)
 
     def open_homepage(self):
         wd = self.wd
