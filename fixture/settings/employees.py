@@ -148,12 +148,14 @@ class EmployeesHelper:
 
     def add_doctor(self, group):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//*[@href='/boss/ajax.json?action=addDoctor']").click()
-        # select = Select(wd.find_element(By.ID, "user"))
+        # wd.find_element(By.XPATH, "//*[@href='/boss/ajax.json?action=addDoctor']").click()
+        wd.find_element(By.XPATH, "//a[.='Добавить']").click()
+        # select = Select(wd.find_element(By.XPATH, "//select[@name='user_id']"))
         # select.select_by_visible_text(group.login)
-        wd.find_element(By.ID, "s2id_user").click()
+        # wd.find_element(By.ID, "s2id_user").click()
+        wd.find_element(By.XPATH, "//div[@class='select2-container js-select2']").click()
         wd.find_element(By.XPATH, "//div[@id='select2-drop']/div/input").clear()
-        wd.find_element(By.XPATH, "//div[@id='select2-drop']/div/input").send_keys(group.login)
+        wd.find_element(By.XPATH, "//div[@id='select2-drop']/div/input").send_keys(group.surname)
         wd.find_element(By.XPATH, "//div[@id='select2-drop']/div/input").send_keys(Keys.ENTER)
 
     def delete_doctor(self, group):
@@ -166,9 +168,11 @@ class EmployeesHelper:
 
     def add_department(self, department):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//*[@id='s2id_group']").click()
-        wd.find_element(By.XPATH, "//*[@id='s2id_group']//input").send_keys(department)
-        wd.find_element(By.XPATH, "//*[@id='s2id_group']//input").send_keys(Keys.ENTER)
+        # wd.find_element(By.XPATH, "//*[@id='s2id_group']").click()
+        # wd.find_element(By.XPATH, "//*[@id='s2id_group']//input").send_keys(department)
+        # wd.find_element(By.XPATH, "//*[@id='s2id_group']//input").send_keys(Keys.ENTER)
+        wd.find_element(By.XPATH, "//label[contains(text(),'Отделения врача')]/following-sibling::input").send_keys(department)
+        wd.find_element(By.XPATH, "//label[contains(text(),'Отделения врача')]/following-sibling::input").send_keys(Keys.ENTER)
         # all_dep = wd.find_elements(By.XPATH, "//*[@id='group']/option")
         # names = [e.text for e in all_dep]
         # print(names)
@@ -176,7 +180,7 @@ class EmployeesHelper:
         # # select.select_by_value('2')
         wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
         time.sleep(1)
-        wd.find_element(By.XPATH, "//button[@class='modalClose']").click()
+        # wd.find_element(By.XPATH, "//button[@class='modalClose']").click()
 
     def add_user_step(self, group):
         self.open_employees_users()
@@ -271,7 +275,20 @@ class EmployeesHelper:
                 self.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
                                                  login='new-user-test', mail='newmail@mail.ru', phone='79041871637'))
                 self.open_employees_doctor()
-                self.add_doctor(Group(login="new-user-test"))
+                self.add_doctor(Group(surname="Surname"))
+                self.add_department(department="Терапевты")
+        # self.check_doc_schedule(Group(surname="Surname"))
+
+    def add_alt_schedule_step(self):
+        if self.schedule_availability(Group(surname="Second")) == 0:
+            if self.chair_availability(Chair(title="second-test-chair")) == 0:
+                self.add_chair(
+                    Chair(title="second-test-chair", sorting="10", department="Терапевты", filial="Филиал 1"))
+            if self.doctor_availability(Group(surname="Second")) == 0:
+                self.add_user_step(Group(surname="Second", name="Name", secondname="Secondname",
+                                                 login='Second-user-test', mail='Secondmail@mail.ru', phone='79041871136'))
+                self.open_employees_doctor()
+                self.add_doctor(Group(surname="Second"))
                 self.add_department(department="Терапевты")
         # self.check_doc_schedule(Group(surname="Surname"))
 
@@ -425,3 +442,20 @@ class EmployeesHelper:
         alert = wd.find_element(By.XPATH, "//div[@class='alert alert-success']").text
         assert alert == "График работы врача сохранен."
 
+    def fill_first_schedule(self):
+        self.add_schedule_step()
+        self.fill_doc_schedule(Group(surname="Surname"))
+        self.fill_date_picker()
+        self.fill_chair_selection(Chair(title="test-chair"))
+        self.default_interval_selection(Group(s_time="13:00"))
+        self.default_schedule_correction()
+        self.schedule_confirm()
+
+    def fill_second_schedule(self):
+        self.add_alt_schedule_step()
+        self.fill_doc_schedule(Group(surname="Second"))
+        self.fill_date_picker()
+        self.fill_chair_selection(Chair(title="second-test-chair"))
+        self.default_interval_selection(Group(s_time="13:00"))
+        self.default_schedule_correction()
+        self.schedule_confirm()

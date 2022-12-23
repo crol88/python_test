@@ -172,3 +172,4 @@ def test_add_patient_empty_fromwhere(app):
     app.cbase.check_empty_fromwhere()
     new_list = app.cbase.get_patient_list()
     assert len(old_list) == len(new_list)
+

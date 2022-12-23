@@ -197,3 +197,4 @@ class InfoCardHelper:
         saved_discount = discount_field.get_attribute("value")
         print("Вводимое значение:", discount, ";", "Сохраненное значение:", saved_discount)
         assert int(discount) == int(saved_discount)
+

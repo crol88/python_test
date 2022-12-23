@@ -181,3 +181,20 @@ class TreatmentPlanHelper:
         wd.find_element(By.XPATH, "//button[.='Шейка зуба']").click()
         act = wd.find_element(By.XPATH, "//button[.='Зубные отложения']").get_attribute("class")
         assert act == "DentalPanel_problem"
+
+    def open_fin_plane(self):
+        self.open_treatment_plan()
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[@class='Canban_switch-view']//*[@class='glyphicon glyphicon-list-alt']/parent::button")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        a = element.get_attribute("class")
+        print(a)
+        assert a == "btn btn-default active"
+
+    def add_fin_plane_step(self):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//a[@href='/medblock/finplan/formAdd?variantID=895']")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        time.sleep(1)
+        element.click()

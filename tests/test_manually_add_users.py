@@ -38,9 +38,10 @@ def test_add_doctor(app):
     if app.settings.doctor_availability(Group(surname="Surname")) == 0:
         app.settings.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
                                          login='new-user-test', mail='newmail@mail.ru', phone='79041871637'))
-        app.settings.open_employees_doctor()
-        app.settings.add_doctor(Group(login="new-user-test"))
-        app.settings.add_department(department="Терапевты")
+    app.settings.open_employees_doctor()
+    app.settings.add_doctor(Group(surname="Surname"))
+    app.settings.add_department(department="Терапевты")
+        # app.settings.add_department(department="Хирурги")
 
 
 def test_delete_doc(app):
@@ -48,7 +49,7 @@ def test_delete_doc(app):
         app.settings.add_user_step(Group(surname="Удалить", name="Name", secondname="Secondname",
                                          login='delusertest', mail='delmail@mail.ru', phone='79041871472'))
         app.settings.open_employees_doctor()
-        app.settings.add_doctor(Group(login="delusertest"))
+        app.settings.add_doctor(Group(surname="Удалить"))
         app.settings.add_department(department="Терапевты")
     app.settings.delete_doctor(Group(surname="Удалить"))
 
@@ -81,15 +82,24 @@ def test_fill_doc_schedule_tomorrow(app):
     app.settings.fill_doc_schedule_tomorrow(Group(surname="Surname"))
     app.settings.fill_date_picker_tomorrow()
     app.settings.fill_chair_selection(Chair(title="test-chair"))
-    app.settings.default_interval_selection(Group(s_time="12:00"))
+    app.settings.default_interval_selection(Group(s_time="16:00"))
     app.settings.default_schedule_correction()
     app.settings.schedule_confirm()
 
 
-def test(app):
+def test_delete_schedule_tomorrow(app):
     app.settings.add_schedule_step()
     if app.settings.day_graph_availability(Group(surname="Surname")) == 0:
         app.settings.fill_doc_schedule_tomorrow(Group(surname="Surname"))
         app.settings.fill_date_picker_tomorrow()
         app.settings.fill_graph_day_form(Chair(title="test-chair"))
     app.settings.delete_day_doc_schedule(Group(surname="Surname"))
+
+
+def test_edit_schedule(app):
+    app.settings.fill_doc_schedule_tomorrow()
+
+
+def test_dnd(app):
+    app.settings.fill_first_schedule()
+    app.settings.fill_second_schedule()
