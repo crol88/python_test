@@ -15,10 +15,13 @@ class ScheduleHelper:
 
     def open_schedule(self):
         wd = self.app.wd
-        check = wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']").get_attribute('class')
-        if check != "active":
-            schedule = wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']")
-            schedule.click()
+        if len(wd.find_elements(By.XPATH, "//div[.='Расписание на день']")) == 0:
+            wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']").click()
+        # check = wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']").get_attribute('class')
+        # if check != "active":
+        #     schedule = wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']")
+        #     time.sleep(2)
+        #     schedule.click()
         time.sleep(1)
         status = wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']").get_attribute('class')
         assert status == "active"
@@ -107,4 +110,68 @@ class ScheduleHelper:
         random_dep = random.choice(all_groups)
         random_dep.click()
         print(random_dep.text)
+
+    def add_record(self):
+        wd = self.app.wd
+
+    def add_test_record(self):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[17]")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        time.sleep(10)
+        element.click()
+        time.sleep(10)
+
+    def open_record_form(self):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[17]")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        time.sleep(5)
+        element.click()
+        record_form = wd.find_elements(By.XPATH, "//h4[.='Запись пациента']")
+        assert record_form != 0
+
+    def open_new_patient_form(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//button[.='Новый пациент']").click()
+        time.sleep(2)
+        new = wd.find_element(By.XPATH, "//label[.='Новый пациент']")
+        assert new != 0
+
+    def fill_new_patient_form(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//input[@id='client_surname']").send_keys("Schedule")
+        wd.find_element(By.XPATH, "//input[@id='client_name']").send_keys("New")
+        wd.find_element(By.XPATH, "//input[@id='client_second-name']").send_keys("Patient")
+        wd.find_element(By.XPATH, "//input[@id='client_number']").click()
+        wd.find_element(By.XPATH, "//input[@id='client_number']").send_keys("79081421617")
+        wd.find_element(By.XPATH, "//input[@class='form-control birthday-datepicker']").click()
+        wd.find_element(By.XPATH, "//input[@class='form-control birthday-datepicker']").send_keys("10.12.1990")
+        wd.find_element(By.XPATH, "//span[.='Мужской']").click()
+        from_where = wd.find_elements(By.XPATH, "//select[@id='client_id-fromWhere']/option")
+        name = [e.text for e in from_where]
+        del name[0]
+        r = random.choice(name)
+        select = Select(wd.find_element(By.XPATH, "//select[@id='client_id-fromWhere']"))
+        select.select_by_visible_text(r)
+        wd.find_element(By.XPATH, "//button[.='Сохранить пациента']").click()
+
+    def fill_new_patient_record(self):
+        wd = self.app.wd
+        priem_list = wd.find_elements(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select/option")
+        priem = [e.text for e in priem_list]
+        del priem[0]
+        print(priem)
+        r = random.choice(priem)
+        select = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select"))
+        select.select_by_visible_text(r)
+        select_time = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[3]/select"))
+        select_time.select_by_value('60')
+        element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[17]")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
+
+    def check_task_dnd(self):
+        wd = self.app.wd
+
 

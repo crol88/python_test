@@ -1,4 +1,4 @@
-import time
+
 from model.group import Group
 from model.group import Chair
 
@@ -41,7 +41,7 @@ def test_add_doctor(app):
     app.settings.open_employees_doctor()
     app.settings.add_doctor(Group(surname="Surname"))
     app.settings.add_department(department="Терапевты")
-        # app.settings.add_department(department="Хирурги")
+    # app.settings.add_department(department="Хирурги")
 
 
 def test_delete_doc(app):
@@ -69,6 +69,7 @@ def test_add_doc_schedule(app):
 
 def test_fill_doc_schedule_day(app):
     app.settings.add_schedule_step()
+    # app.settings.schedule_availability(Group(surname="Surname"))
     app.settings.fill_doc_schedule(Group(surname="Surname"))
     app.settings.fill_date_picker()
     app.settings.fill_chair_selection(Chair(title="test-chair"))
@@ -96,10 +97,23 @@ def test_delete_schedule_tomorrow(app):
     app.settings.delete_day_doc_schedule(Group(surname="Surname"))
 
 
-def test_edit_schedule(app):
-    app.settings.fill_doc_schedule_tomorrow()
-
-
-def test_dnd(app):
-    app.settings.fill_first_schedule()
+def test_open_record_form(app):
     app.settings.fill_second_schedule()
+    app.schedule.open_schedule()
+    app.schedule.open_record_form()
+    app.schedule.open_new_patient_form()
+    app.schedule.fill_new_patient_form()
+    app.schedule.fill_new_patient_record()
+
+
+# def test_edit_schedule(app):
+#     app.settings.fill_doc_schedule_tomorrow()
+
+
+# def test_dnd(app):
+#     # app.settings.fill_first_schedule()
+#     app.settings.fill_second_schedule()
+#     app.schedule.open_schedule()
+#     app.schedule.add_test_record()
+
+
