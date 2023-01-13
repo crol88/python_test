@@ -18,7 +18,7 @@ def app(request):
             # with open(request.config.getoption("--target"), encoding="utf-8") as config_file:
             target = json.load(f)
     if fixture is None or not fixture.is_valid():
-        fixture = Application(base_url=target['stablev11'])
+        fixture = Application(base_url=target['betav11'])
         fixture.session.login(username=target['username'], password=target['password'])
     return fixture
 

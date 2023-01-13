@@ -1,8 +1,8 @@
+import random
 import time
 import datetime
-import random
+from datetime import timedelta
 
-from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -138,9 +138,9 @@ class ScheduleHelper:
         new = wd.find_element(By.XPATH, "//label[.='Новый пациент']")
         assert new != 0
 
-    def fill_new_patient_form(self):
+    def fill_new_patient_form(self, group):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//input[@id='client_surname']").send_keys("Schedule")
+        wd.find_element(By.XPATH, "//input[@id='client_surname']").send_keys(group.surname)
         wd.find_element(By.XPATH, "//input[@id='client_name']").send_keys("New")
         wd.find_element(By.XPATH, "//input[@id='client_second-name']").send_keys("Patient")
         wd.find_element(By.XPATH, "//input[@id='client_number']").click()
@@ -171,7 +171,35 @@ class ScheduleHelper:
         wd.execute_script("arguments[0].scrollIntoView();", element)
         wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
 
-    def check_task_dnd(self):
+    def check_task_dnd(self, locator):
         wd = self.app.wd
+        if len(wd.find_elements(By.XPATH, "//div[contains(text(),'%s')]" % locator)) != 0:
+            element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+        print("//div[contains(text(),'%s')]" % locator)
+        return len(wd.find_elements(By.XPATH, "//div[contains(text(),'%s')]" % locator))
+
+    def check_fill_schedule(self, group):
+        wd = self.app.wd
+        sys_date = str(datetime.date.today().strftime('%d.%m.%y'))
+        locator = f"{sys_date} / {group.surname}"
+        if len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator)) != 0:
+            print("//div[contains(@data-original-title,'%s')]/small" % locator)
+            element = wd.find_element(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+        return len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator))
+
+    def hold_record(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Удалить или отложить запись']").click()
+        del_rec = wd.find_element(By.XPATH, "//h4[.='Вы действительно хотите удалить запись?']")
+        assert del_rec != 0
+        select = Select(wd.find_element(By.XPATH, "//select[@name='reason']"))
+        select.select_by_visible_text('Отложенная запись')
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//button[@type='submit']").click()
 
 
