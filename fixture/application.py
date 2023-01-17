@@ -22,7 +22,7 @@ from fixture.client_infocard.tplan import TreatmentPlanHelper
 class Application:
     def __init__(self, base_url):
         self.wd = webdriver.Chrome()
-        self.wd.implicitly_wait(10)
+        self.wd.implicitly_wait(5)
         self.session = SessionHelper(self)
         self.basic_info = BasicInfoHelper(self)
         self.contact = ContactHelper(self)

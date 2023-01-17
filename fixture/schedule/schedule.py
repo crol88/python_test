@@ -34,6 +34,11 @@ class ScheduleHelper:
         print("Дата DP:", dp_date, "*", "Дата системы:", sys_date)
         assert dp_date == sys_date
 
+    def schedule_new_patient(self):
+        self.open_schedule()
+        self.open_record_form()
+        self.open_new_patient_form()
+
     def select_doctor_schedule(self):
         wd = self.app.wd
         doctor = wd.find_elements(By.XPATH, "//*[@class='header-title']")
@@ -131,6 +136,15 @@ class ScheduleHelper:
         record_form = wd.find_elements(By.XPATH, "//h4[.='Запись пациента']")
         assert record_form != 0
 
+    def open_new_record_form(self):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[25]")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        time.sleep(5)
+        element.click()
+        record_form = wd.find_elements(By.XPATH, "//h4[.='Запись пациента']")
+        assert record_form != 0
+
     def open_new_patient_form(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//button[.='Новый пациент']").click()
@@ -161,7 +175,7 @@ class ScheduleHelper:
         priem_list = wd.find_elements(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select/option")
         priem = [e.text for e in priem_list]
         del priem[0]
-        print(priem)
+        # print(priem)
         r = random.choice(priem)
         select = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select"))
         select.select_by_visible_text(r)
@@ -202,4 +216,84 @@ class ScheduleHelper:
         time.sleep(2)
         wd.find_element(By.XPATH, "//button[@type='submit']").click()
 
+    def task_panel_navigation(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        time.sleep(2)
+        nav = wd.find_elements(By.XPATH, "//li[@role='presentation']")
+        name = [e.text for e in nav]
+        print(name)
+        assert name == ['Информация о пациенте', 'Копировать', 'Амбулаторная карта', 'План лечения', 'Заполнить анкету',
+                        'Пациент пришёл', 'Отметить результат посещения', 'Перенести запись',
+                        'Удалить или отложить запись', 'Запланировать посещение', 'Отправить СМС', 'Оплатить']
+        element.click()
 
+    def tp_patient_information(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//li[.='Информация о пациенте']").click()
+        client_info = wd.find_element(By.XPATH, "//a[@id='client_info-tab']/parent::li").get_attribute('class')
+        assert client_info == "active"
+
+    def tp_paticard(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Амбулаторная карта']").click()
+        time.sleep(2)
+        paticard = wd.find_element(By.XPATH, "//div[contains(text(),'Амбулаторные записи пациента')]").text
+        print(paticard[:28])
+        paticard_page = paticard[:28]
+        assert paticard_page == "Амбулаторные записи пациента"
+
+    def mark_visit_result(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Отметить результат посещения']").click()
+        modal_header = wd.find_element(By.XPATH, "//h4[.='Отметить результат посещения']").text
+        assert modal_header == "Отметить результат посещения"
+        self.modal_close()
+
+    def modal_close(self):
+        wd = self.app.wd
+        modal_close = wd.find_element(By.XPATH, "//button[@class='modalClose']")
+        if modal_close != 0:
+            modal_close.click()
+
+    def tp_delete_record(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Удалить или отложить запись']").click()
+        del_rec = wd.find_element(By.XPATH, "//h4[.='Вы действительно хотите удалить запись?']")
+        assert del_rec != 0
+        self.modal_close()
+
+    def tp_send_sms(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Отправить СМС']").click()
+        sms = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
+        assert sms == "Отправить смс"
+        self.modal_close()
+
+    def tp_copy_form(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Копировать']").click()
+        copy_form = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
+        assert copy_form == "Копировать запись"
+        self.modal_close()
