@@ -1,7 +1,6 @@
 import random
 import time
 import datetime
-from datetime import timedelta
 
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
@@ -17,11 +16,6 @@ class ScheduleHelper:
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//div[.='Расписание на день']")) == 0:
             wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']").click()
-        # check = wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']").get_attribute('class')
-        # if check != "active":
-        #     schedule = wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']")
-        #     time.sleep(2)
-        #     schedule.click()
         time.sleep(1)
         status = wd.find_element(By.XPATH, "//*[@href='/visits/schedule/index']").get_attribute('class')
         assert status == "active"
@@ -37,6 +31,11 @@ class ScheduleHelper:
     def schedule_new_patient(self):
         self.open_schedule()
         self.open_record_form()
+        self.open_new_patient_form()
+
+    def schedule_edit_new_patient(self):
+        self.open_schedule()
+        self.open_record_form_edit()
         self.open_new_patient_form()
 
     def select_doctor_schedule(self):
@@ -116,9 +115,6 @@ class ScheduleHelper:
         random_dep.click()
         print(random_dep.text)
 
-    def add_record(self):
-        wd = self.app.wd
-
     def add_test_record(self):
         wd = self.app.wd
         element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[17]")
@@ -130,6 +126,15 @@ class ScheduleHelper:
     def open_record_form(self):
         wd = self.app.wd
         element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[17]")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        time.sleep(5)
+        element.click()
+        record_form = wd.find_elements(By.XPATH, "//h4[.='Запись пациента']")
+        assert record_form != 0
+
+    def open_record_form_edit(self):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[.='Suredit S.E.']/parent::div/following-sibling::div//div[17]")
         wd.execute_script("arguments[0].scrollIntoView();", element)
         time.sleep(5)
         element.click()
@@ -297,3 +302,97 @@ class ScheduleHelper:
         copy_form = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
         assert copy_form == "Копировать запись"
         self.modal_close()
+
+    def tp_open_medblock(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='План лечения']").click()
+        time.sleep(2)
+        medblock = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
+        print(medblock)
+        assert medblock == "Зубная формула"
+
+    def tp_patient_came(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Пациент пришёл']").click()
+        time.sleep(2)
+        patient_came = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
+        assert patient_came == "Пациент пришёл"
+        self.modal_close()
+
+    def tp_move_record(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Перенести запись']").click()
+        time.sleep(2)
+        move_rec = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
+        assert move_rec == "Перенести запись"
+        self.modal_close()
+
+    def tp_plan_visit(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Запланировать посещение']").click()
+        time.sleep(2)
+        visit = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
+        visit_page = visit[:12]
+        print(visit_page)
+        assert visit_page == "Планирование"
+
+    def pay(self, locator):
+        wd = self.app.wd
+        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        wd.find_element(By.XPATH, "//li[.='Оплатить']").click()
+        time.sleep(2)
+        pay = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
+        assert pay == "Касса"
+
+    def edit_mode(self):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//a[@class='btn btn-default js-scheduler-edit']").click()
+        element = wd.find_element(By.XPATH, "//div[@title='Suredit S.E. - edit_sched-chair']/following-sibling::div/a")
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        wd.find_element(By.XPATH, "//div[@title='Suredit S.E. - edit_sched-chair']/following-sibling::div/a").click()
+        time.sleep(1)
+        select_start = Select(wd.find_element(By.XPATH, "//select[@name='start']"))
+        select_start.select_by_visible_text('14:00')
+        time.sleep(1)
+        select_end = Select(wd.find_element(By.XPATH, "//select[@name='end']"))
+        select_end.select_by_visible_text('20:00')
+        wd.find_element(By.XPATH, "//button[@type='submit']").click()
+        self.open_schedule_set()
+        work_time = wd.find_element(By.XPATH, "//div[contains(@data-original-title,'Suredit S.E.')]/div["
+                                              "@class='text-nowrap text-bold']").text
+        start_time = work_time[:5]
+        end_time = work_time[-5:]
+        assert start_time == "14:00", end_time == "20:00"
+        self.open_schedule()
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//a[@class='btn btn-default js-scheduler-edit active']").click()
+
+    def open_schedule_set(self):
+        wd = self.app.wd
+        if len(wd.find_elements(By.XPATH, "//*[@class='breadcrumb']//li[.='График работы врачей']")) == 0:
+            if len(wd.find_elements(By.XPATH, "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon "
+                                              "active']")) == 0:
+                wd.find_element(By.XPATH,
+                                "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon']").click()
+            b = wd.find_element(By.XPATH,
+                                "//span[.='Расписание']/parent::div[@role='button']").get_attribute("aria-expanded")
+            if str(b) == "false":
+                wd.find_element(By.XPATH, "//span[.='Расписание']/parent::div[@role='button']").click()
+            time.sleep(1)
+            if len(wd.find_elements(By.XPATH,
+                                    "//div[.='График работы врачей']/parent::div[@class='headbarLeft']")) == 0:
+                wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()

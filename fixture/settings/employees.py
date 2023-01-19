@@ -1,11 +1,9 @@
 import time
 import datetime
 from datetime import timedelta
-import random
 import pathlib
 from model.group import Group
 from model.group import Chair
-from selenium.webdriver import ActionChains
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -326,6 +324,19 @@ class EmployeesHelper:
                 self.add_department(department="Терапевты")
                 self.open_schedule_set()
 
+    def edit_schedule_step(self):
+        if self.schedule_availability(Group(surname="Suredit")) == 0:
+            if self.chair_availability(Chair(title="edit_sched-chair")) == 0:
+                self.add_chair(
+                    Chair(title="edit_sched-chair", sorting="14", department="Терапевты", filial="Филиал 1"))
+            if self.doctor_availability(Group(surname="Surtest")) == 0:
+                self.add_user_step(Group(surname="Suredit", name="Sur", secondname="Edit",
+                                         login='Suredit-test', mail='Suredit@mail.ru', phone='79041871793'))
+                self.open_employees_doctor()
+                self.add_doctor(Group(surname="Suredit"))
+                self.add_department(department="Терапевты")
+                self.open_schedule_set()
+
     def fill_doc_schedule(self, group):
         wd = self.app.wd
         sys_date = str(datetime.date.today().strftime('%d.%m.%y'))
@@ -493,6 +504,15 @@ class EmployeesHelper:
         self.fill_doc_schedule(Group(surname="Second"))
         self.fill_date_picker()
         self.fill_chair_selection(Chair(title="second-test-chair"))
+        self.default_interval_selection(Group(s_time="10:00"))
+        self.default_schedule_correction()
+        self.schedule_confirm()
+
+    def fill_edit_schedule(self):
+        self.edit_schedule_step()
+        self.fill_doc_schedule(Group(surname="Suredit"))
+        self.fill_date_picker()
+        self.fill_chair_selection(Chair(title="edit_sched-chair"))
         self.default_interval_selection(Group(s_time="10:00"))
         self.default_schedule_correction()
         self.schedule_confirm()

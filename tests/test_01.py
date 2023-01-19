@@ -29,3 +29,12 @@ def test(app):
         app.settings.fill_date_picker_tomorrow()
         app.settings.fill_graph_day_form(Chair(title="test-chair"))
     app.settings.delete_day_doc_schedule(Group(surname="Surname"))
+
+
+def test_schedule_edit(app):
+    if app.settings.doctor_availability(Group(surname="Schedule")) == 0:
+        app.settings.add_user_step(Group(surname="Schedule", name="Name", secondname="Secondname",
+                                         login='Schedule-test', mail='Schedulemail@mail.ru', phone='79041877825'))
+    app.settings.open_employees_doctor()
+    app.settings.add_doctor(Group(surname="Schedule"))
+    app.settings.add_department(department="Терапевты")
