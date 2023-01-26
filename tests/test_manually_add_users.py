@@ -62,8 +62,10 @@ def test_add_doc_schedule(app):
             app.settings.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
                                              login='new-user-test', mail='newmail@mail.ru', phone='79041871637'))
             app.settings.open_employees_doctor()
-            app.settings.add_doctor(Group(login="new-user-test"))
+            # app.settings.add_doctor(Group(login="new-user-test"))
+            app.settings.add_doctor(Group(surname="Surname"))
             app.settings.add_department(department="Терапевты")
+    app.settings.schedule_availability(Group(surname="Surname"))
     app.settings.check_doc_schedule(Group(surname="Surname"))
 
 
@@ -104,16 +106,3 @@ def test_open_record_form(app):
     app.schedule.open_new_patient_form()
     app.schedule.fill_new_patient_form()
     app.schedule.fill_new_patient_record()
-
-
-# def test_edit_schedule(app):
-#     app.settings.fill_doc_schedule_tomorrow()
-
-
-# def test_dnd(app):
-#     # app.settings.fill_first_schedule()
-#     app.settings.fill_second_schedule()
-#     app.schedule.open_schedule()
-#     app.schedule.add_test_record()
-
-

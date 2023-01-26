@@ -169,6 +169,7 @@ class EmployeesHelper:
         # wd.find_element(By.ID, "s2id_user").click()
         wd.find_element(By.XPATH, "//div[@class='select2-container js-select2']").click()
         wd.find_element(By.XPATH, "//div[@id='select2-drop']/div/input").clear()
+        time.sleep(1)
         wd.find_element(By.XPATH, "//div[@id='select2-drop']/div/input").send_keys(group.surname)
         wd.find_element(By.XPATH, "//div[@id='select2-drop']/div/input").send_keys(Keys.ENTER)
 

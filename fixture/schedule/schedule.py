@@ -5,6 +5,7 @@ import datetime
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import ActionChains
 
 
 class ScheduleHelper:
@@ -115,6 +116,17 @@ class ScheduleHelper:
         random_dep.click()
         print(random_dep.text)
 
+    def select_patient(self, group):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//div[@class=' css-nsoqb2']/input").send_keys(group.surname)
+        time.sleep(4)
+        wd.find_element(By.XPATH, "//div[contains(@id,'option-0')]").click()
+        time.sleep(1)
+        # wd.find_element(By.ID, "react-select-3-option-0").click()
+        # pick = wd.find_elements(By.XPATH, "//div[contains(@id,'option')]")
+        # n = [e.get_attribute('id') for e in pick]
+        # print(n)
+
     def add_test_record(self):
         wd = self.app.wd
         element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[17]")
@@ -141,9 +153,10 @@ class ScheduleHelper:
         record_form = wd.find_elements(By.XPATH, "//h4[.='Запись пациента']")
         assert record_form != 0
 
-    def open_new_record_form(self):
+    def open_new_record_form(self, timehelper):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[25]")
+        element = wd.find_element(By.XPATH,
+                                  "//div[.='Second N.S.']/parent::div/following-sibling::div//div[%s]" % timehelper)
         wd.execute_script("arguments[0].scrollIntoView();", element)
         time.sleep(5)
         element.click()
@@ -179,8 +192,8 @@ class ScheduleHelper:
         wd = self.app.wd
         priem_list = wd.find_elements(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select/option")
         priem = [e.text for e in priem_list]
+        print(priem)
         del priem[0]
-        # print(priem)
         r = random.choice(priem)
         select = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select"))
         select.select_by_visible_text(r)
@@ -361,9 +374,10 @@ class ScheduleHelper:
     def edit_mode(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//a[@class='btn btn-default js-scheduler-edit']").click()
-        element = wd.find_element(By.XPATH, "//div[@title='Suredit S.E. - edit_sched-chair']/following-sibling::div/a")
+        element = wd.find_element(By.XPATH, "//div[@title='Suredit S.E. - ']/following-sibling::div/a")
         wd.execute_script("arguments[0].scrollIntoView();", element)
-        wd.find_element(By.XPATH, "//div[@title='Suredit S.E. - edit_sched-chair']/following-sibling::div/a").click()
+        # wd.find_element(By.XPATH, "//div[@title='Suredit S.E. - edit_sched-chair']/following-sibling::div/a").click()
+        element.click()
         time.sleep(1)
         select_start = Select(wd.find_element(By.XPATH, "//select[@name='start']"))
         select_start.select_by_visible_text('14:00')
@@ -396,3 +410,42 @@ class ScheduleHelper:
             if len(wd.find_elements(By.XPATH,
                                     "//div[.='График работы врачей']/parent::div[@class='headbarLeft']")) == 0:
                 wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()
+
+    def open_service_record_form(self, surname, t_start, t_end):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//button[@title='Служебная запись']").click()
+        wd.find_element(By.XPATH, "//ul[@class='select2-choices']//input").send_keys(surname)
+        wd.find_element(By.XPATH, "//ul[@class='select2-choices']//input").send_keys(Keys.ENTER)
+        select = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][type_id]']"))
+        select.select_by_visible_text("Учеба")
+        wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
+        time.sleep(2)
+        empty_field = wd.find_elements(By.XPATH, "//*[.='Поле обязательное для заполнения.']")
+        error = wd.find_elements(By.XPATH, "//*[@role='alert']")
+        if len(empty_field) or len(error) > 0:
+            wd.find_element(By.XPATH, "//button[@class='modalClose']").click()
+        wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
+        time_start = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][timeStart]']"))
+        time_start.select_by_visible_text(t_start)
+        time_end = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][timeEnd]']"))
+        time_end.select_by_visible_text(t_end)
+        wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
+        time.sleep(5)
+        tp = wd.find_elements(By.XPATH, "//span[contains(text(),'%s')]/ancestor::div[@class='columns-col']//div[.='Учеба']" % surname)
+        print("//span[contains(text(),'%s')]/ancestor::div[@class='columns-col']//div[.='Учеба']" % surname)
+        assert tp != 0
+
+    def check_schedule_test_data(self, surname):
+        wd = self.app.wd
+        locator = wd.find_elements(By.XPATH, "//span[contains(text(),'%s')]" % surname)
+        print("//span[contains(text(),'%s')]" % surname)
+        return len(locator)
+
+    def tp_dnd(self):
+        wd = self.app.wd
+        # wd.switch_to.frame(wd.find_element(By.XPATH, "(//div[@class='columns-col'])[6]"))
+        drag = wd.find_element(By.XPATH, "(//div[@draggable='true'])[10]")
+        # print("//span[contains(text(),'%s')]/ancestor::div[@class='columns-col']//div[@class='taskDnD']" % surname)
+        # drop = wd.find_element(By.XPATH, "(//div[@role='presentation'])[234]/div")
+        ActionChains(wd).drag_and_drop_by_offset(drag, 1400, 785)
+        time.sleep(5)
