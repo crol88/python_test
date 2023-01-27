@@ -2,12 +2,12 @@
 import time
 import datetime
 
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 from model.group import Group
-import testit
 import random
 import pathlib
 
@@ -22,7 +22,6 @@ class CbaseHelper:
         self.open_cbase()
         self.push_button_newclient()
 
-    @testit.step('Открыть список пациентов')
     def open_cbase(self):
         wd = self.app.wd
         if len(wd.find_elements(By.LINK_TEXT, "Добавить")) == 0:
@@ -69,7 +68,7 @@ class CbaseHelper:
     #     wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
     #     time.sleep(2)
 
-    @testit.step('Нажать Добавить')
+    @allure.step("Нажать 'Добавить пациента'")
     def push_button_newclient(self):
         wd = self.app.wd
         if len(wd.find_elements(By.LINK_TEXT, "Добавить")) == 0:
@@ -78,27 +77,24 @@ class CbaseHelper:
         wd.execute_script("arguments[0].scrollIntoView();", element)
         wd.find_element(By.XPATH, "//*[@href='/cbase/admin/newClient']").click()
 
-    @testit.step('Заполнить форму добавления нового пациента')
+    @allure.step("Заполнить форму создания нового пациента")
     def fill_newclient_form(self, group):
         wd = self.app.wd
         # Заполнить обязательные поля ввода валидными данными
-        with testit.step('Заполнить поле Фамилия'):
+        with allure.step(f"Ввести фамилию: {group.surname}"):
             wd.find_element(By.XPATH, "//*[@id='js-newrec-surname']").send_keys(group.surname)
-        with testit.step('Заполнить поле Имя'):
+        with allure.step(f"Ввести имя: {group.name}"):
             wd.find_element(By.XPATH, "//*[@id='js-newrec-name']").send_keys(group.name)
-        with testit.step('Заполнить поле Отчество'):
-            wd.find_element(By.XPATH,
-                            "//*[@id='form_cbase_admin_newClient_input_0_wizard[data][second_name]']").send_keys(
-                group.secondname)
-        with testit.step('Заполнить поле Дата рождения'):
-            wd.find_element(By.XPATH, "//*[@id='form_cbase_admin_newClient_date_0__visible']").send_keys(
-                group.birthday)
-        with testit.step('Заполнить поле Телефон'):
+        with allure.step(f"Ввести отчество: {group.secondname}"):
+            wd.find_element(By.XPATH, "//*[@id='form_cbase_admin_newClient_input_0_wizard[data][second_name]']").\
+                send_keys(group.secondname)
+        with allure.step(f"Ввести дату рождения: {group.birthday}"):
+            wd.find_element(By.XPATH, "//*[@id='form_cbase_admin_newClient_date_0__visible']").send_keys(group.birthday)
+        with allure.step(f"Ввести телефон: {group.phone}"):
             wd.find_element(By.XPATH, "//*[@id='js-newrec-phone']").send_keys(group.phone)
-        with testit.step('Заполнить поле Откуда о нас узнали'):
+        with allure.step(f"Выбрать 'Откуда о нас узнали': {group.fromwhere}"):
             wd.find_element(By.XPATH, "//*[text()='Откуда о нас узнали']").click()
             wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.fromwhere)
-        with testit.step('Подтвердить ввод данных'):
             wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
 
     def empty_newclient_form(self, group):
@@ -118,14 +114,15 @@ class CbaseHelper:
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']").click()
 
-    @testit.step('Подтвердить добавление нового пациента')
+    @allure.step("Подтвердить ввод данных")
     def submit_newpatient_creation(self):
         wd = self.app.wd
         # Подтвердить ввод данных
-        if wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']") == 0:
-            wd.send_keys(Keys.PAGE_DOWN)
-            time.sleep(1)
-        wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']").click()
+        with allure.step("Нажать 'Далее'"):
+            if wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']") == 0:
+                wd.send_keys(Keys.PAGE_DOWN)
+                time.sleep(1)
+            wd.find_element(By.XPATH, "//*[@class='btn-default btn js-jump-step']").click()
         if len(wd.find_elements(By.XPATH, "//*[@role='alert']")) > 0:
             alert_obj = wd.find_element(By.XPATH, "//*[@role='alert']")
             msg = alert_obj.text
@@ -134,19 +131,16 @@ class CbaseHelper:
             capture_path = str(pathlib.Path.cwd() / 'screenshots' / name)
             wd.save_screenshot(capture_path)
             wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
-        wd.find_element(By.XPATH, "//*[@class='btn-default btn js-done-step']").click()
-        time.sleep(2)
+        with allure.step("Нажать 'Готово'"):
+            wd.find_element(By.XPATH, "//*[@class='btn-default btn js-done-step']").click()
+            time.sleep(2)
 
-    @testit.step('Удалить пациента')
     def delete_new_patient(self, search_name):
         wd = self.app.wd
-        with testit.step('Найти пациента через глобальный поиск'):
-            self.search_patient(search_name)
-        with testit.step('Нажать Опции'):
-            wd.find_element(By.XPATH, "//*[@class='col-md-8 text-right pageActions']/div[2]/div[1]").click()
-        with testit.step('Нажать Удалить'):
-            wd.find_element(By.XPATH, "//*[@class='js-client_delete']").click()
-            time.sleep(2)
+        self.search_patient(search_name)
+        wd.find_element(By.XPATH, "//*[@class='col-md-8 text-right pageActions']/div[2]/div[1]").click()
+        wd.find_element(By.XPATH, "//*[@class='js-client_delete']").click()
+        time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
         time.sleep(2)
         wd.find_element(By.XPATH, "//*[@class='sweet-spacer']/following-sibling::button[1]").click()
@@ -174,18 +168,14 @@ class CbaseHelper:
             wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-basic_info-btn']").click()
         self.group_cache = None
 
-    @testit.step('Найти пациента через глобальный поиск')
     def search_patient(self, search_name):
         wd = self.app.wd
         wd.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.HOME)
         time.sleep(2)
-        with testit.step('Нажать Поиск по пациентам'):
-            wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
-        with testit.step('Ввести фамилию пациента'):
-            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
+        wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
+        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
         time.sleep(2)
-        with testit.step('Нажать ENTER'):
-            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(2)
 
     def check_basic_info(self):
@@ -193,7 +183,6 @@ class CbaseHelper:
         if len(wd.find_elements(By.LINK_TEXT, "Основная информация")) == 0:
             return
 
-    @testit.step('Добавить нового пациента')
     def add_patient(self, group):
         wd = self.app.wd
         if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
@@ -203,10 +192,10 @@ class CbaseHelper:
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
 
-    @testit.step('Проверка наличия пациента в cbase')
+    @allure.step("Открыть список пациентов")
     def count(self, check_patient):
         wd = self.app.wd
-        with testit.step('Открыть список пациентов'):
+        with allure.step(f"Проверить с списке наличие пациента: {check_patient}"):
             if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
                 b = wd.find_element(By.XPATH,
                                     "//*[@alt='Пациенты']/parent::div/parent::div/parent::div").get_attribute("class")
@@ -214,10 +203,9 @@ class CbaseHelper:
                     wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
                 wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
                 wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
-        with testit.step('Если пациент присутствует, вернуться к списку'):
             return len(wd.find_elements(By.LINK_TEXT, check_patient))
 
-    @testit.step('Если пациент отсутствует, добавляем')
+    @allure.step("Если пациент не найден")
     def add_patient_for(self, group):
         # wd = self.app.wd
         # with testit.step('Изменить филиал, если указан'):
@@ -233,7 +221,6 @@ class CbaseHelper:
 
     group_cache = None
 
-    @testit.step('Получить список пациентов')
     def get_group_list(self):
         # Проверка списка пациентов
         if self.group_cache is None:
@@ -247,7 +234,6 @@ class CbaseHelper:
                 self.group_cache.append(Group(name=text, cbaseid=cbaseid))
         return list(self.group_cache)
 
-    @testit.step('Сохранить список пациентов')
     def get_patient_list(self):
         wd = self.app.wd
         self.open_cbase()

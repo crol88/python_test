@@ -2,6 +2,7 @@ import random
 import time
 import datetime
 
+import allure
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -13,6 +14,7 @@ class ScheduleHelper:
     def __init__(self, app):
         self.app = app
 
+    @allure.step("Открыть расписание на день")
     def open_schedule(self):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//div[.='Расписание на день']")) == 0:
@@ -116,12 +118,15 @@ class ScheduleHelper:
         random_dep.click()
         print(random_dep.text)
 
+    @allure.step("Выбрать пациента")
     def select_patient(self, group):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//div[@class=' css-nsoqb2']/input").send_keys(group.surname)
-        time.sleep(4)
-        wd.find_element(By.XPATH, "//div[contains(@id,'option-0')]").click()
-        time.sleep(1)
+        with allure.step(f"Ввести фамилию пациента: {group.surname}"):
+            wd.find_element(By.XPATH, "//div[@class=' css-nsoqb2']/input").send_keys(group.surname)
+            time.sleep(4)
+        with allure.step(f"В результате поиска выбрать пациента {group.surname}"):
+            wd.find_element(By.XPATH, "//div[contains(@id,'option-0')]").click()
+            time.sleep(1)
         # wd.find_element(By.ID, "react-select-3-option-0").click()
         # pick = wd.find_elements(By.XPATH, "//div[contains(@id,'option')]")
         # n = [e.get_attribute('id') for e in pick]
@@ -135,6 +140,7 @@ class ScheduleHelper:
         element.click()
         time.sleep(10)
 
+    @allure.step("Открыть форму записи пациента")
     def open_record_form(self):
         wd = self.app.wd
         element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[17]")
@@ -153,6 +159,7 @@ class ScheduleHelper:
         record_form = wd.find_elements(By.XPATH, "//h4[.='Запись пациента']")
         assert record_form != 0
 
+    @allure.step("Открыть форму записи пациента у ранее выбранного врача")
     def open_new_record_form(self, timehelper):
         wd = self.app.wd
         element = wd.find_element(By.XPATH,
@@ -163,6 +170,7 @@ class ScheduleHelper:
         record_form = wd.find_elements(By.XPATH, "//h4[.='Запись пациента']")
         assert record_form != 0
 
+    @allure.step("Нажать 'Новый пациент'")
     def open_new_patient_form(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//button[.='Новый пациент']").click()
@@ -170,39 +178,53 @@ class ScheduleHelper:
         new = wd.find_element(By.XPATH, "//label[.='Новый пациент']")
         assert new != 0
 
+    @allure.step("Заполнить форму добавления нового пациента")
     def fill_new_patient_form(self, group):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//input[@id='client_surname']").send_keys(group.surname)
-        wd.find_element(By.XPATH, "//input[@id='client_name']").send_keys("New")
-        wd.find_element(By.XPATH, "//input[@id='client_second-name']").send_keys("Patient")
-        wd.find_element(By.XPATH, "//input[@id='client_number']").click()
-        wd.find_element(By.XPATH, "//input[@id='client_number']").send_keys("79081421617")
-        wd.find_element(By.XPATH, "//input[@class='form-control birthday-datepicker']").click()
-        wd.find_element(By.XPATH, "//input[@class='form-control birthday-datepicker']").send_keys("10.12.1990")
-        wd.find_element(By.XPATH, "//span[.='Мужской']").click()
-        from_where = wd.find_elements(By.XPATH, "//select[@id='client_id-fromWhere']/option")
-        name = [e.text for e in from_where]
-        del name[0]
-        r = random.choice(name)
-        select = Select(wd.find_element(By.XPATH, "//select[@id='client_id-fromWhere']"))
-        select.select_by_visible_text(r)
-        wd.find_element(By.XPATH, "//button[.='Сохранить пациента']").click()
+        with allure.step(f"Ввести фамилию: {group.surname}"):
+            wd.find_element(By.XPATH, "//input[@id='client_surname']").send_keys(group.surname)
+        with allure.step("Ввести имя: New"):
+            wd.find_element(By.XPATH, "//input[@id='client_name']").send_keys("New")
+        with allure.step("Ввести фамилию: Patient"):
+            wd.find_element(By.XPATH, "//input[@id='client_second-name']").send_keys("Patient")
+        with allure.step("Ввести телефон: 79081421617"):
+            wd.find_element(By.XPATH, "//input[@id='client_number']").click()
+            wd.find_element(By.XPATH, "//input[@id='client_number']").send_keys("79081421617")
+        with allure.step("Ввести дату рождения: 10.12.1990"):
+            wd.find_element(By.XPATH, "//input[@class='form-control birthday-datepicker']").click()
+            wd.find_element(By.XPATH, "//input[@class='form-control birthday-datepicker']").send_keys("10.12.1990")
+        with allure.step("Выбрать пол"):
+            wd.find_element(By.XPATH, "//span[.='Мужской']").click()
+        with allure.step(f"Выбрать 'Откуда о нас узнали'"):
+            from_where = wd.find_elements(By.XPATH, "//select[@id='client_id-fromWhere']/option")
+            name = [e.text for e in from_where]
+            del name[0]
+            r = random.choice(name)
+            select = Select(wd.find_element(By.XPATH, "//select[@id='client_id-fromWhere']"))
+            select.select_by_visible_text(r)
+        with allure.step("Нажать 'Сохранить пациента'"):
+            wd.find_element(By.XPATH, "//button[.='Сохранить пациента']").click()
 
+    @allure.step("Заполнить форму записи пациента")
     def fill_new_patient_record(self):
         wd = self.app.wd
-        priem_list = wd.find_elements(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select/option")
-        priem = [e.text for e in priem_list]
-        print(priem)
-        del priem[0]
-        r = random.choice(priem)
-        select = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select"))
-        select.select_by_visible_text(r)
-        select_time = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[3]/select"))
-        select_time.select_by_value('60')
+        with allure.step("Выбрать прием"):
+            priem_list = wd.find_elements(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select/option")
+            priem = [e.text for e in priem_list]
+            print(priem)
+            del priem[0]
+            r = random.choice(priem)
+            select = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select"))
+            select.select_by_visible_text(r)
+        with allure.step("Выбрать продолжительность приема"):
+            select_time = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[3]/select"))
+            select_time.select_by_value('60')
         element = wd.find_element(By.XPATH, "//div[.='Second N.S.']/parent::div/following-sibling::div//div[17]")
         wd.execute_script("arguments[0].scrollIntoView();", element)
-        wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
 
+    @allure.step("Проверить наличие записи в расписании")
     def check_task_dnd(self, locator):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//div[contains(text(),'%s')]" % locator)) != 0:
@@ -211,42 +233,55 @@ class ScheduleHelper:
         print("//div[contains(text(),'%s')]" % locator)
         return len(wd.find_elements(By.XPATH, "//div[contains(text(),'%s')]" % locator))
 
+    @allure.step("Проверить график работы врача на текущую дату")
     def check_fill_schedule(self, group):
         wd = self.app.wd
-        sys_date = str(datetime.date.today().strftime('%d.%m.%y'))
-        locator = f"{sys_date} / {group.surname}"
-        if len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator)) != 0:
-            print("//div[contains(@data-original-title,'%s')]/small" % locator)
-            element = wd.find_element(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator)
-            wd.execute_script("arguments[0].scrollIntoView();", element)
-        return len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator))
+        with allure.step(f"Проверить график работы врача '{group.surname}' на текущую дату"):
+            sys_date = str(datetime.date.today().strftime('%d.%m.%y'))
+            locator = f"{sys_date} / {group.surname}"
+            if len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator)) != 0:
+                print("//div[contains(@data-original-title,'%s')]/small" % locator)
+                element = wd.find_element(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator)
+                wd.execute_script("arguments[0].scrollIntoView();", element)
+            return len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator))
 
+    @allure.step("Отложенная запись")
     def hold_record(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Удалить или отложить запись']").click()
+        with allure.step(f"Нажать на запись в расписании пациента {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor::div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В меню выбрать 'Удалить или отложить запись'"):
+            wd.find_element(By.XPATH, "//li[.='Удалить или отложить запись']").click()
         del_rec = wd.find_element(By.XPATH, "//h4[.='Вы действительно хотите удалить запись?']")
         assert del_rec != 0
-        select = Select(wd.find_element(By.XPATH, "//select[@name='reason']"))
-        select.select_by_visible_text('Отложенная запись')
+        with allure.step("Выбрать причину выписки: Отложенная запись"):
+            select = Select(wd.find_element(By.XPATH, "//select[@name='reason']"))
+            select.select_by_visible_text('Отложенная запись')
         time.sleep(2)
-        wd.find_element(By.XPATH, "//button[@type='submit']").click()
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//button[@type='submit']").click()
 
+    @allure.step("Проверить навигацию записи в расписании")
     def task_panel_navigation(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
+        with allure.step(f"Нажать на запись в расписании пациента {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
         time.sleep(2)
-        nav = wd.find_elements(By.XPATH, "//li[@role='presentation']")
-        name = [e.text for e in nav]
-        print(name)
-        assert name == ['Информация о пациенте', 'Копировать', 'Амбулаторная карта', 'План лечения', 'Заполнить анкету',
-                        'Пациент пришёл', 'Отметить результат посещения', 'Перенести запись',
-                        'Удалить или отложить запись', 'Запланировать посещение', 'Отправить СМС', 'Оплатить']
-        element.click()
+        with allure.step("Проверить список навигации"):
+            nav = wd.find_elements(By.XPATH, "//li[@role='presentation']")
+            name = [e.text for e in nav]
+            print(name)
+            assert name == ['Информация о пациенте', 'Копировать', 'Амбулаторная карта', 'План лечения',
+                            'Заполнить анкету', 'Пациент пришёл', 'Отметить результат посещения', 'Перенести запись',
+                            'Удалить или отложить запись', 'Запланировать посещение', 'Отправить СМС', 'Оплатить']
+        with allure.step("Закрыть карту приема"):
+            element.click()
 
     def tp_patient_information(self, locator):
         wd = self.app.wd

@@ -1,6 +1,8 @@
 from model.group import Group
+import allure
 
 
+@allure.description("Запись нового пациента через расписание")
 def test_open_record_form(app):
     app.settings.schedule_availability(Group(surname="Second"))
     if app.schedule.check_fill_schedule(Group(surname="Second")) == 0:
@@ -12,6 +14,7 @@ def test_open_record_form(app):
     app.schedule.fill_new_patient_record()
 
 
+@allure.description("Выбор существующего пациента при создании приема")
 def test_select_patient(app):
     if app.cbase.count("REACTSELECT") == 0:
         app.cbase.add_patient_for(
@@ -26,6 +29,7 @@ def test_select_patient(app):
     app.schedule.fill_new_patient_record()
 
 
+@allure.description("Отложенная запись через запись в расписании")
 def test_schedule_hold_record(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -40,6 +44,7 @@ def test_schedule_hold_record(app):
     app.schedule.hold_record(locator="SCHEDULE")
 
 
+@allure.description("Навигация записи в расписании")
 def test_task_panel_navigation(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:

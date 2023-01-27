@@ -1,7 +1,6 @@
 import re
 import time
 
-import testit
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
@@ -154,30 +153,25 @@ class InfoCardHelper:
         print(check_m.text)
         assert manager == check_m.text
 
-    @testit.step('Добавить лечащего врача')
     def select_doctor(self):
         wd = self.app.wd
         time.sleep(1)
-        with testit.step('Нажать кнопку Выбор лечащего врача'):
-            wd.execute_script("window.scrollTo(0,2000)")
-            time.sleep(1)
-            wd.find_element(By.LINK_TEXT, "Выбор лечащего врача").click()
-        with testit.step('Выбрать любого врача из выпадающего списка'):
-            doctor_list = wd.find_elements(By.XPATH, "//*[@id='form_cbase_addDoctor_doctor_0_']//option")
-            names = [e.text for e in doctor_list]
-            names.remove("Выберите врача")
-            random_doctor = random.choice(names)
-            select = Select(wd.find_element(By.XPATH, "//*[@id='form_cbase_addDoctor_doctor_0_']"))
-            select.select_by_visible_text(random_doctor)
-        with testit.step('Подтвердить выбор'):
-            wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
-        with testit.step('Проверить, что выбранный врач добавлен в инфокарту пациента'):
-            wd.execute_script("window.scrollTo(0,2000)")
-            time.sleep(2)
-            doc_info = wd.find_element(By.XPATH, "//*[contains(text(),'Лечащий врач')]/parent::div").text
-            result = re.search(random_doctor, doc_info)
-            print("Выбранный врач:", random_doctor, ";", "Сохраненный врач в инфокарте:", (result.group(0)))
-            assert random_doctor == (result.group(0))
+        wd.execute_script("window.scrollTo(0,2000)")
+        time.sleep(1)
+        wd.find_element(By.LINK_TEXT, "Выбор лечащего врача").click()
+        doctor_list = wd.find_elements(By.XPATH, "//*[@id='form_cbase_addDoctor_doctor_0_']//option")
+        names = [e.text for e in doctor_list]
+        names.remove("Выберите врача")
+        random_doctor = random.choice(names)
+        select = Select(wd.find_element(By.XPATH, "//*[@id='form_cbase_addDoctor_doctor_0_']"))
+        select.select_by_visible_text(random_doctor)
+        wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
+        wd.execute_script("window.scrollTo(0,2000)")
+        time.sleep(2)
+        doc_info = wd.find_element(By.XPATH, "//*[contains(text(),'Лечащий врач')]/parent::div").text
+        result = re.search(random_doctor, doc_info)
+        print("Выбранный врач:", random_doctor, ";", "Сохраненный врач в инфокарте:", (result.group(0)))
+        assert random_doctor == (result.group(0))
 
     def personal_discount(self):
         wd = self.app.wd

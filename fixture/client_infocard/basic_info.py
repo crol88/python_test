@@ -1,9 +1,10 @@
 import time
 import random
+
+import allure
 from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-import testit
 
 
 class BasicInfoHelper:
@@ -11,27 +12,23 @@ class BasicInfoHelper:
     def __init__(self, app):
         self.app = app
 
-    @testit.step('Открыть список пациентов')
+    @allure.description('Открыть список пациентов')
     def count(self, check_patient):
         wd = self.app.wd
-        with testit.step('Проверить присутствие пациента, если пациент присутствует, вернуться к списку'):
+        with allure.step('Проверить присутствие пациента, если пациент присутствует, вернуться к списку'):
             if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
                 wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
                 wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
             return len(wd.find_elements(By.LINK_TEXT, check_patient))
 
-    @testit.step('Найти пациента через глобальный поиск')
     def search_patient(self, search_name):
         wd = self.app.wd
         wd.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.HOME)
         time.sleep(2)
-        with testit.step('Нажать Поиск по пациентам'):
-            wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
-        with testit.step('Ввести фамилию пациента'):
-            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
+        wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
+        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
         time.sleep(2)
-        with testit.step('Подтвердить результат поиска'):
-            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(2)
 
     def open_cbase(self):
@@ -40,7 +37,6 @@ class BasicInfoHelper:
             wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
             wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
 
-    @testit.step('Если пациент отсутствует, добавляем')
     def add_patient_for(self, group):
         wd = self.app.wd
         if group.filial is not None:
@@ -49,12 +45,9 @@ class BasicInfoHelper:
             wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(3)
         # Добавить нового пациента
-        with testit.step('Нажать Добавить'):
-            self.push_button_newclient()
-        with testit.step('Заполнить форму добавления нового пациента'):
-            self.fill_newclient_form(group)
-        with testit.step('Подтвердить ввод данных'):
-            self.submit_newpatient_creation()
+        self.push_button_newclient()
+        self.fill_newclient_form(group)
+        self.submit_newpatient_creation()
 
     def push_button_newclient(self):
         wd = self.app.wd
@@ -123,20 +116,15 @@ class BasicInfoHelper:
         wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
         wd.find_element(By.XPATH, "//*[@id='surname']//input").get_attribute("value")
 
-    @testit.step('Редактирование фамилии и проверка результата')
     def edit_patient_surname(self, group, text):
         wd = self.app.wd
-        with testit.step('Активировать поле Фамилия'):
-            wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
-        with testit.step('Очистить поле ввода и ввести новую Фамилию'):
-            wd.find_element(By.XPATH, "//*[@id='surname']//input").clear()
-            wd.find_element(By.XPATH, "//*[@id='surname']//input").send_keys(group.surname)
-        with testit.step('Сохранить данные'):
-            wd.find_element(By.XPATH, "//*[@id='surname']//span[@class='input-group-btn']").click()
-        with testit.step('Проверить ожидаемый и фактический результат'):
-            surname = wd.find_element(By.XPATH, "//*[@id='surname']/p").text
-            print("enter_data =", text, ";", "save_data =", surname)
-            assert text == surname
+        wd.find_element(By.XPATH, "//*[@data-key='surname'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='surname']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='surname']//input").send_keys(group.surname)
+        wd.find_element(By.XPATH, "//*[@id='surname']//span[@class='input-group-btn']").click()
+        surname = wd.find_element(By.XPATH, "//*[@id='surname']/p").text
+        print("enter_data =", text, ";", "save_data =", surname)
+        assert text == surname
 
     def edit_patient_surname_fill(self, text):
         wd = self.app.wd
