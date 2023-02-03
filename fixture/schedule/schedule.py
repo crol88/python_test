@@ -283,37 +283,53 @@ class ScheduleHelper:
         with allure.step("Закрыть карту приема"):
             element.click()
 
+    @allure.step("Информация о пациенте")
     def tp_patient_information(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor::div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
         time.sleep(2)
-        wd.find_element(By.XPATH, "//li[.='Информация о пациенте']").click()
-        client_info = wd.find_element(By.XPATH, "//a[@id='client_info-tab']/parent::li").get_attribute('class')
-        assert client_info == "active"
+        with allure.step("В открывшемся окне нажать 'Информация о пациенте'"):
+            wd.find_element(By.XPATH, "//li[.='Информация о пациенте']").click()
+        with allure.step(f"Переадресация в инфокарту пациента 'Информация о пациенте {locator}'"):
+            client_info = wd.find_element(By.XPATH, "//a[@id='client_info-tab']/parent::li").get_attribute('class')
+            assert client_info == "active"
 
+    @allure.step("Амбулаторная карта")
     def tp_paticard(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Амбулаторная карта']").click()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Амбулаторная карта'"):
+            wd.find_element(By.XPATH, "//li[.='Амбулаторная карта']").click()
         time.sleep(2)
-        paticard = wd.find_element(By.XPATH, "//div[contains(text(),'Амбулаторные записи пациента')]").text
-        print(paticard[:28])
-        paticard_page = paticard[:28]
-        assert paticard_page == "Амбулаторные записи пациента"
+        with allure.step(f"Переадресация в амбулаторные записи пациента: {locator}"):
+            paticard = wd.find_element(By.XPATH, "//div[contains(text(),'Амбулаторные записи пациента')]").text
+            print(paticard[:28])
+            paticard_page = paticard[:28]
+            assert paticard_page == "Амбулаторные записи пациента"
 
+    @allure.step("Отметить результат посещения")
     def mark_visit_result(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Отметить результат посещения']").click()
-        modal_header = wd.find_element(By.XPATH, "//h4[.='Отметить результат посещения']").text
-        assert modal_header == "Отметить результат посещения"
-        self.modal_close()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Отметить результат посещения'"):
+            wd.find_element(By.XPATH, "//li[.='Отметить результат посещения']").click()
+        with allure.step(f"Открывается модальное окно с формой для отметки результата посещения пациента: {locator}"):
+            modal_header = wd.find_element(By.XPATH, "//h4[.='Отметить результат посещения']").text
+            assert modal_header == "Отметить результат посещения"
+        with allure.step("Закрыть модальное окно"):
+            self.modal_close()
 
     def modal_close(self):
         wd = self.app.wd
@@ -321,115 +337,164 @@ class ScheduleHelper:
         if modal_close != 0:
             modal_close.click()
 
+    @allure.step("Открыть форму удаления записи")
     def tp_delete_record(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Удалить или отложить запись']").click()
-        del_rec = wd.find_element(By.XPATH, "//h4[.='Вы действительно хотите удалить запись?']")
-        assert del_rec != 0
-        self.modal_close()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Удалить или отложить запись'"):
+            wd.find_element(By.XPATH, "//li[.='Удалить или отложить запись']").click()
+        with allure.step(f"Открывается модальное окно c формой удаления записи пациента: {locator}"):
+            del_rec = wd.find_element(By.XPATH, "//h4[.='Вы действительно хотите удалить запись?']")
+            assert del_rec != 0
+        with allure.step("Закрыть модальное окно"):
+            self.modal_close()
 
+    @allure.step("Открыть форму отправки СМС")
     def tp_send_sms(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Отправить СМС']").click()
-        sms = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
-        assert sms == "Отправить смс"
-        self.modal_close()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor::div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Отправить СМС'"):
+            wd.find_element(By.XPATH, "//li[.='Отправить СМС']").click()
+        with allure.step(f"Открывается модальное окно с формой отправки СМС пациента: {locator}"):
+            sms = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
+            assert sms == "Отправить смс"
+        with allure.step("Закрыть модальное окно"):
+            self.modal_close()
 
+    @allure.step("Открыть форму копирования записи")
     def tp_copy_form(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Копировать']").click()
-        copy_form = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
-        assert copy_form == "Копировать запись"
-        self.modal_close()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Копировать'"):
+            wd.find_element(By.XPATH, "//li[.='Копировать']").click()
+        with allure.step(f"Открывается модальное окно с формой копирования записи пациента: {locator}"):
+            copy_form = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
+            assert copy_form == "Копировать запись"
+        with allure.step("Закрыть модальное окно"):
+            self.modal_close()
 
+    @allure.step("План лечения")
     def tp_open_medblock(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='План лечения']").click()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'План лечения'"):
+            wd.find_element(By.XPATH, "//li[.='План лечения']").click()
         time.sleep(2)
-        medblock = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
-        print(medblock)
-        assert medblock == "Зубная формула"
+        with allure.step(f"Переадресация в план лечения пациента: {locator}"):
+            medblock = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
+            assert medblock == "Зубная формула"
 
+    @allure.step("Пациент пришел")
     def tp_patient_came(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Пациент пришёл']").click()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH,
+                                      "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Пациент пришел'"):
+            wd.find_element(By.XPATH, "//li[.='Пациент пришёл']").click()
         time.sleep(2)
-        patient_came = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
-        assert patient_came == "Пациент пришёл"
-        self.modal_close()
+        with allure.step(f"Открывается модальное окно с формой 'Пациент пришел' пациента: {locator}"):
+            patient_came = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
+            assert patient_came == "Пациент пришёл"
+        with allure.step("Закрыть модальное окно"):
+            self.modal_close()
 
+    @allure.step("")
     def tp_move_record(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Перенести запись']").click()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Перенести запись'"):
+            wd.find_element(By.XPATH, "//li[.='Перенести запись']").click()
         time.sleep(2)
-        move_rec = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
-        assert move_rec == "Перенести запись"
-        self.modal_close()
+        with allure.step(f"Открывается модальное окно с формой переноса записи для пациента: {locator}"):
+            move_rec = wd.find_element(By.XPATH, "//h4[@class='modalHeading']").text
+            assert move_rec == "Перенести запись"
+        with allure.step("Закрыть модальное окно"):
+            self.modal_close()
 
+    @allure.step("Запланировать посещение через расписание")
     def tp_plan_visit(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Запланировать посещение']").click()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Запланировать посещение'"):
+            wd.find_element(By.XPATH, "//li[.='Запланировать посещение']").click()
         time.sleep(2)
-        visit = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
-        visit_page = visit[:12]
-        print(visit_page)
-        assert visit_page == "Планирование"
+        with allure.step(f"Переадресация на страницу планирования пациента: {locator}"):
+            visit = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
+            visit_page = visit[:12]
+            print(visit_page)
+            assert visit_page == "Планирование"
 
+    @allure.step("Оплатить")
     def pay(self, locator):
         wd = self.app.wd
-        element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        element.click()
-        wd.find_element(By.XPATH, "//li[.='Оплатить']").click()
+        with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
+            element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
+        with allure.step("В открывшемся окне нажать 'Оплатить'"):
+            wd.find_element(By.XPATH, "//li[.='Оплатить']").click()
         time.sleep(2)
-        pay = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
-        assert pay == "Касса"
+        with allure.step(f"Переадресация в кассу пациента: {locator}"):
+            pay = wd.find_element(By.XPATH, "//div[@class='pageTitle js-page-title']").text
+            assert pay == "Касса"
 
+    @allure.step("Редактировать график в расписании")
     def edit_mode(self):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//a[@class='btn btn-default js-scheduler-edit']").click()
-        element = wd.find_element(By.XPATH, "//div[@title='Suredit S.E. - ']/following-sibling::div/a")
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        # wd.find_element(By.XPATH, "//div[@title='Suredit S.E. - edit_sched-chair']/following-sibling::div/a").click()
-        element.click()
+        with allure.step("Нажать 'Режим редактирования'"):
+            wd.find_element(By.XPATH, "//a[@class='btn btn-default js-scheduler-edit']").click()
+        with allure.step("Нажать 'Редактировать график' у ранне созданного врача"):
+            element = wd.find_element(By.XPATH, "//div[contains(@title,'Suredit S.E. - ')]/following-sibling::div/a")
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            element.click()
         time.sleep(1)
-        select_start = Select(wd.find_element(By.XPATH, "//select[@name='start']"))
-        select_start.select_by_visible_text('14:00')
+        with allure.step("Выбрать начало работы"):
+            select_start = Select(wd.find_element(By.XPATH, "//select[@name='start']"))
+            select_start.select_by_visible_text('14:00')
         time.sleep(1)
-        select_end = Select(wd.find_element(By.XPATH, "//select[@name='end']"))
-        select_end.select_by_visible_text('20:00')
-        wd.find_element(By.XPATH, "//button[@type='submit']").click()
+        with allure.step("Выбрать окончание работы"):
+            select_end = Select(wd.find_element(By.XPATH, "//select[@name='end']"))
+            select_end.select_by_visible_text('20:00')
+        with allure.step("Сохранить изменения"):
+            wd.find_element(By.XPATH, "//button[@type='submit']").click()
         self.open_schedule_set()
-        work_time = wd.find_element(By.XPATH, "//div[contains(@data-original-title,'Suredit S.E.')]/div["
-                                              "@class='text-nowrap text-bold']").text
-        start_time = work_time[:5]
-        end_time = work_time[-5:]
-        assert start_time == "14:00", end_time == "20:00"
+        with allure.step("Проверить внесение изменений в графике работы врачей"):
+            work_time = wd.find_element(By.XPATH, "//div[contains(@data-original-title,'Suredit S.E.')]/div["
+                                                  "@class='text-nowrap text-bold']").text
+            start_time = work_time[:5]
+            end_time = work_time[-5:]
+            assert start_time == "14:00", end_time == "20:00"
         self.open_schedule()
         time.sleep(1)
-        wd.find_element(By.XPATH, "//a[@class='btn btn-default js-scheduler-edit active']").click()
+        with allure.step("Закрыть режим редактирования"):
+            wd.find_element(By.XPATH, "//a[@class='btn btn-default js-scheduler-edit active']").click()
 
+    @allure.step("Открыть 'Настройки/Расписание/График работы врачей'")
     def open_schedule_set(self):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//*[@class='breadcrumb']//li[.='График работы врачей']")) == 0:
@@ -446,30 +511,42 @@ class ScheduleHelper:
                                     "//div[.='График работы врачей']/parent::div[@class='headbarLeft']")) == 0:
                 wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()
 
+    @allure.step("Добавить служебную запись")
     def open_service_record_form(self, surname, t_start, t_end):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//button[@title='Служебная запись']").click()
-        wd.find_element(By.XPATH, "//ul[@class='select2-choices']//input").send_keys(surname)
-        wd.find_element(By.XPATH, "//ul[@class='select2-choices']//input").send_keys(Keys.ENTER)
-        select = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][type_id]']"))
-        select.select_by_visible_text("Учеба")
-        wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
+        with allure.step("Нажать 'Служебная запись'"):
+            wd.find_element(By.XPATH, "//button[@title='Служебная запись']").click()
+        with allure.step(f"Ввести фамилию врача: {surname}"):
+            wd.find_element(By.XPATH, "//ul[@class='select2-choices']//input").send_keys(surname)
+            wd.find_element(By.XPATH, "//ul[@class='select2-choices']//input").send_keys(Keys.ENTER)
+        with allure.step("Выбрать тип записи"):
+            select = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][type_id]']"))
+            select.select_by_visible_text("Учеба")
+        with allure.step("Нажать 'Далее'"):
+            wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
         time.sleep(2)
         empty_field = wd.find_elements(By.XPATH, "//*[.='Поле обязательное для заполнения.']")
         error = wd.find_elements(By.XPATH, "//*[@role='alert']")
         if len(empty_field) or len(error) > 0:
             wd.find_element(By.XPATH, "//button[@class='modalClose']").click()
-        wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
-        time_start = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][timeStart]']"))
-        time_start.select_by_visible_text(t_start)
-        time_end = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][timeEnd]']"))
-        time_end.select_by_visible_text(t_end)
-        wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
+        with allure.step("Выбор места. Нажать 'Далее'"):
+            wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
+        with allure.step(f"Выбор диапазона. Выбрать время начала: {t_start}"):
+            time_start = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][timeStart]']"))
+            time_start.select_by_visible_text(t_start)
+        with allure.step(f"Выбор диапазона. Выбрать время окончания: {t_end}"):
+            time_end = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][timeEnd]']"))
+            time_end.select_by_visible_text(t_end)
+        with allure.step("Выбор диапазона. Нажать 'Далее'"):
+            wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
         time.sleep(5)
-        tp = wd.find_elements(By.XPATH, "//span[contains(text(),'%s')]/ancestor::div[@class='columns-col']//div[.='Учеба']" % surname)
-        print("//span[contains(text(),'%s')]/ancestor::div[@class='columns-col']//div[.='Учеба']" % surname)
-        assert tp != 0
+        with allure.step(f"Служебная запись добавлена в расписание врача {surname} "):
+            tp = wd.find_elements(By.XPATH, "//span[contains(text(),'%s')]/ancestor::div[@class='columns-col']//div["
+                                            ".='Учеба']" % surname)
+            print("//span[contains(text(),'%s')]/ancestor::div[@class='columns-col']//div[.='Учеба']" % surname)
+            assert tp != 0
 
+    @allure.step("Проверить тестовые данные в расписании")
     def check_schedule_test_data(self, surname):
         wd = self.app.wd
         locator = wd.find_elements(By.XPATH, "//span[contains(text(),'%s')]" % surname)

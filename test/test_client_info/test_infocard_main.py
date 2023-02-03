@@ -1,5 +1,4 @@
 from model.group import Group
-import testit
 
 
 def test_upload_patient_photo(app):
@@ -176,4 +175,3 @@ def test_add_personal_discount(app):
                   fromwhere="2ГИС", filial=""))
     app.cbase.search_patient(search_name="ADD-VIP")
     app.infocard_mainpage.personal_discount()
-

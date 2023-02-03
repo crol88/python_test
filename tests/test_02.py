@@ -59,6 +59,7 @@ def test_task_panel_navigation(app):
     app.schedule.task_panel_navigation(locator="SCHEDULE")
 
 
+@allure.description("Открыть информацию о пациенте через запись в расписании")
 def test_task_panel_patient_information(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -71,6 +72,7 @@ def test_task_panel_patient_information(app):
     app.schedule.tp_patient_information(locator="SCHEDULE")
 
 
+@allure.description("Открыть амбулаторную карту через запись в расписании")
 def test_task_panel_paticard(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -83,6 +85,7 @@ def test_task_panel_paticard(app):
     app.schedule.tp_paticard(locator="SCHEDULE")
 
 
+@allure.description("Отметить результат посещения через расписание")
 def test_task_panel_visit_result(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -95,6 +98,7 @@ def test_task_panel_visit_result(app):
     app.schedule.mark_visit_result(locator="SCHEDULE")
 
 
+@allure.description("Форма удаления записи в расписании")
 def test_task_panel_delete_record(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -107,6 +111,7 @@ def test_task_panel_delete_record(app):
     app.schedule.tp_delete_record(locator="SCHEDULE")
 
 
+@allure.description("Открыть форму отправки СМС через расписание")
 def test_task_panel_send_sms(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -119,6 +124,7 @@ def test_task_panel_send_sms(app):
     app.schedule.tp_send_sms(locator="SCHEDULE")
 
 
+@allure.description("Открыть форму копирования записи в расписании")
 def test_task_panel_copy_record(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -131,6 +137,7 @@ def test_task_panel_copy_record(app):
     app.schedule.tp_copy_form(locator="SCHEDULE")
 
 
+@allure.description("Открыть план лечения через запись в расписании")
 def test_task_panel_medblock(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -143,6 +150,7 @@ def test_task_panel_medblock(app):
     app.schedule.tp_open_medblock(locator="SCHEDULE")
 
 
+@allure.description("Открыть форму пациент пришел")
 def test_task_panel_patient_came(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -155,6 +163,7 @@ def test_task_panel_patient_came(app):
     app.schedule.tp_patient_came(locator="SCHEDULE")
 
 
+@allure.description("Перенести запись в расписании")
 def test_task_panel_move_record(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -167,6 +176,7 @@ def test_task_panel_move_record(app):
     app.schedule.tp_move_record(locator="SCHEDULE")
 
 
+@allure.description("Запланировать посещение через запись в расписании")
 def test_task_panel_plan_visit(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -179,6 +189,7 @@ def test_task_panel_plan_visit(app):
     app.schedule.tp_plan_visit(locator="SCHEDULE")
 
 
+@allure.description("Переход в кассу через запись в расписании")
 def test_task_panel_pay(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="SCHEDULE") == 0:
@@ -191,6 +202,7 @@ def test_task_panel_pay(app):
     app.schedule.pay(locator="SCHEDULE")
 
 
+@allure.description("Изменение расписания через режим редактирования")
 def test_edit_schedule(app):
     app.schedule.open_schedule()
     if app.schedule.check_task_dnd(locator="EDIT-SCHED") == 0:
@@ -201,6 +213,7 @@ def test_edit_schedule(app):
     app.schedule.edit_mode()
 
 
+@allure.description("Служебная запись в расписании")
 def test_schedule_service_record(app):
     app.schedule.open_schedule()
     surname = "Second"
