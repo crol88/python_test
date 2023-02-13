@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-
 from fixture.session import SessionHelper
 from fixture.client_infocard.basic_info import BasicInfoHelper
 from fixture.client_infocard.contact import ContactHelper

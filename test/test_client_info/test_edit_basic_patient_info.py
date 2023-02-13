@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from model.group import Group
-import testit
-
-# def test(app):
-# app.basic_info.open_random_patient()
+import allure
 
 
-# @testit.workItemIds(261)
-# @testit.displayName('edit_patient_surname')
-# @testit.externalId('001')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Ввести фамилию пациента и сохранить")
 def test_edit_patient_surname(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -16,18 +13,26 @@ def test_edit_patient_surname(app):
                   phone="79058889556",
                   fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
-    app.basic_info.edit_patient_surname(Group(surname="SURNAME-EDIT"), text="SURNAME-EDIT")
+    app.basic_info.edit_patient_surname(Group(surname="SURNAME-EDIT"))
 
 
-@testit.displayName('edit_patient_surname_without_changes')
-@testit.externalId('002')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить фамилию пациента без изменений")
+@allure.description("Проверить, что после случайного открытия поля ввода сохраненная информация остается без изменений")
 def test_edit_patient_surname_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME", name="Артур", secondname="Артурович", birthday="12081980",
+                  phone="79058889556",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.basic_info.edit_patient_surname_fill(text="SURNAME-EDIT")
 
 
-@testit.displayName('edit_patient_name')
-@testit.externalId('003')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Ввести имя пациента и сохранить")
 def test_edit_patient_name(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -35,18 +40,25 @@ def test_edit_patient_name(app):
                   phone="79057147232",
                   fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="surname-edit")
-    app.basic_info.edit_patient_name(Group(name="NAME-EDIT"), text="NAME-EDIT")
+    app.basic_info.edit_patient_name(Group(name="NAME-EDIT"))
 
 
-@testit.displayName('edit_patient_name_without_changes')
-@testit.externalId('004')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить имя пациента без изменений")
 def test_edit_patient_name_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname-edit", name="name", secondname="secondname", birthday="16071979",
+                  phone="79057147232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.basic_info.edit_patient_name_fill()
 
 
-@testit.displayName('edit_patient_secondname')
-@testit.externalId('005')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Ввести отчество пациента и сохранить")
 def test_edit_patient_secondname(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -57,29 +69,48 @@ def test_edit_patient_secondname(app):
     app.basic_info.edit_patient_secondname(Group(secondname="SECONDNAME-EDIT"), text="SECONDNAME-EDIT")
 
 
-@testit.displayName('edit_patient_secondname_without_changes')
-@testit.externalId('006')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить отчество пациента без изменений")
 def test_edit_patient_secondname_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
-    app.basic_info.edit_patient_secondname_fill(text="SECONDNAME-EDIT")
+    app.basic_info.edit_patient_secondname_fill()
 
 
-@testit.displayName('edit_patient_birthday')
-@testit.externalId('007')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Ввести дату рождения пациента и сохранить")
 def test_edit_patient_birthday(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.basic_info.edit_patient_birthday(Group(birthday="21.12.1999"), text="21.12.1999")
 
 
-@testit.displayName('edit_patient_birthday_without_changes')
-@testit.externalId('008')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить дату рождения без изменений")
 def test_edit_patient_birthday_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.basic_info.edit_patient_birthday_fill()
 
 
-@testit.displayName('edit_patient_sex_male')
-@testit.externalId('009')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Выбрать мужской пол пациента и сохранить")
 def test_edit_patient_sex_male(app):
     if app.basic_info.count(check_patient="SEX-MALE") == 0:
         app.basic_info.add_patient_for(
@@ -90,15 +121,22 @@ def test_edit_patient_sex_male(app):
     app.basic_info.edit_patient_sex(sex="Мужской")
 
 
-@testit.displayName('edit_patient_sex_male_without_changes')
-@testit.externalId('010')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить пол пациента без изменений")
 def test_edit_patient_sex_male_without_changes(app):
+    if app.basic_info.count(check_patient="SEX-MALE") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SEX-MALE", name="ПОЛ", secondname="МУЖСКОЙ", birthday="21101984",
+                  phone="79051593692",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SEX-MALE")
     app.basic_info.edit_patient_sex_male_fill()
 
 
-@testit.displayName('edit_patient_sex_female')
-@testit.externalId('011')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Выбрать женский пол пациента и сохранить")
 def test_edit_patient_sex_female(app):
     if app.basic_info.count(check_patient="SEX-FEMALE") == 0:
         app.basic_info.add_patient_for(
@@ -109,155 +147,191 @@ def test_edit_patient_sex_female(app):
     app.basic_info.edit_patient_sex(sex="Женский")
 
 
-@testit.displayName('edit_patient_sex_female')
-@testit.externalId('012')
-def test_edit_patient_sex_female(app):
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить инн пациента")
+def test_edit_patient_inn(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_inn(inn="736833331215")
 
 
-@testit.displayName('edit_patient_inn_without_changes')
-@testit.externalId('013')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить инн пациента без изменений")
 def test_edit_patient_inn_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_inn_fill()
 
 
-@testit.displayName('edit_patient_country')
-@testit.externalId('014')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить значение поле 'Страна'")
 def test_edit_patient_country(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_country(country="country-edit")
 
 
-@testit.displayName('edit_patient_country_without_changes')
-@testit.externalId('015')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить значение поле 'Страна' без изменений")
 def test_edit_patient_country_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_country_fill()
 
 
-@testit.displayName('edit_patient_postcode')
-@testit.externalId('016')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить почтовый индекс")
 def test_edit_patient_postcode(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_postcode(postcode="432001")
 
 
-@testit.displayName('edit_patient_postcode_without_changes')
-@testit.externalId('017')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить почтовый индекс без изменений")
 def test_edit_patient_postcode_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_postcode_none()
 
 
-@testit.displayName('edit_patient_state')
-@testit.externalId('018')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить 'Область' пациента")
 def test_edit_patient_state(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_state(state="State")
 
 
-@testit.displayName('edit_patient_state_without_changes')
-@testit.externalId('019')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить 'Область' пациента без редактирования")
 def test_edit_patient_state_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_state_none()
 
 
-@testit.displayName('edit_patient_city')
-@testit.externalId('020')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить 'Город' пациента")
 def test_edit_patient_city(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_city(city="city")
 
 
-@testit.displayName('edit_patient_city_without_changes')
-@testit.externalId('021')
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить 'Город' пациента без редактирования")
 def test_edit_patient_city_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_city_without_changes()
 
 
-@testit.displayName('edit_patient_street')
-@testit.externalId('022')
 def test_edit_patient_street(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_street(street="street")
 
 
-@testit.displayName('edit_patient_street_without_changes')
-@testit.externalId('023')
 def test_edit_patient_street_without_changes(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_street_none()
 
 
-@testit.displayName('test_edit_patient_building')
-@testit.externalId('024')
 def test_edit_patient_building(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_building(building="4")
 
 
-@testit.displayName('edit_patient_building_without_changes')
-@testit.externalId('025')
 def test_edit_patient_building_without_changes(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_building_none()
 
 
-@testit.displayName('edit_patient_apartment')
-@testit.externalId('026')
 def test_edit_patient_apartment(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_apartment(apt="56")
 
 
-@testit.displayName('edit_patient_apartment_without_changes')
-@testit.externalId('027')
 def test_edit_patient_apartment_without_changes(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_apartment_none()
 
 
-@testit.displayName('edit_patient_address')
-@testit.externalId('028')
 def test_edit_patient_address(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_address(address="testaddress")
 
 
-@testit.displayName('edit_patient_address_without_changes')
-@testit.externalId('029')
 def test_edit_patient_address_without_changes(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_address_none()
 
 
-@testit.displayName('edit_patient_first_data')
-@testit.externalId('030')
 def test_edit_patient_first_data(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_first_data(data="31.12.2021")
 
 
-@testit.displayName('edit_patient_first_data_without_changes')
-@testit.externalId('031')
 def test_edit_patient_first_data_without_changes(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_first_data_none()
 
 
-@testit.displayName('edit_patient_last_data')
-@testit.externalId('032')
 def test_edit_patient_last_data(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_last_data(data="10.10.2021")
 
 
-@testit.displayName('edit_patient_last_data_without_changes')
-@testit.externalId('033')
 def test_edit_patient_last_data_without_changes(app):
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_last_data_none()

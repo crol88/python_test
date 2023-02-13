@@ -1,15 +1,16 @@
 from model.group import Group
 from model.group import Chair
 
+class Test():
 
-def test_fill_doc_schedule_day(app):
-    app.settings.add_schedule_step()
-    app.settings.fill_doc_schedule(Group(surname="Surname"))
-    app.settings.fill_date_picker()
-    app.settings.fill_chair_selection(Chair(title="test-chair"))
-    app.settings.default_interval_selection(Group(s_time="13:00"))
-    app.settings.default_schedule_correction()
-    app.settings.schedule_confirm()
+    def test_fill_doc_schedule_day(app):
+        app.settings.add_schedule_step()
+        app.settings.fill_doc_schedule(Group(surname="Surname"))
+        app.settings.fill_date_picker()
+        app.settings.fill_chair_selection(Chair(title="test-chair"))
+        app.settings.default_interval_selection(Group(s_time="13:00"))
+        app.settings.default_schedule_correction()
+        app.settings.schedule_confirm()
 
 
 def test_fill_doc_schedule_tomorrow(app):
