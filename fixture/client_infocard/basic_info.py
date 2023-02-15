@@ -229,10 +229,11 @@ class BasicInfoHelper:
             wd.find_element(By.XPATH, "//*[@id='birthday']//input").send_keys(group.birthday)
         with allure.step("Нажать Сохранить"):
             wd.find_element(By.XPATH, "//*[@id='birthday']//span[@class='input-group-btn']").click()
-        birthday = wd.find_element(By.XPATH, "//*[@id='birthday']/p").text
+        bd = wd.find_element(By.XPATH, "//*[@id='birthday']/p").text
+        birthday = bd[:10]
         print("enter_data =", group.birthday, ";", "save_data =", birthday)
         with allure.step(f"Проверка. Вводимое значение: {group.birthday}. Сохраненное значение: {birthday}"):
-            assert group.birthday in birthday
+            assert group.birthday == birthday
 
     @allure.step("Сохранить дату рождения без изменений")
     def edit_patient_birthday_fill(self):
@@ -448,6 +449,7 @@ class BasicInfoHelper:
         with allure.step(f"Проверка. Значение до редактирования: {city}. Значение после сохранения: {city_edit}"):
             assert city == city_edit
 
+    @allure.step("Редактировать и сохранить улицу")
     def edit_patient_street(self, street):
         wd = self.app.wd
         # self.scroll_to_element()
@@ -455,139 +457,194 @@ class BasicInfoHelper:
         element = wd.find_element(By.ID, "city")
         wd.execute_script("arguments[0].scrollIntoView(false);", element)
         time.sleep(1)
-        wd.find_element(By.XPATH, "//*[@data-key='street'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='street']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='street']//input").send_keys(street)
-        wd.find_element(By.XPATH, "//*[@id='street']//span[@class='input-group-btn']").click()
+        with allure.step("Нажать кнопку редактировать поле улица"):
+            wd.find_element(By.XPATH, "//*[@data-key='street'][@type='button']").click()
+        with allure.step(f"Ввести значение: {street}"):
+            wd.find_element(By.XPATH, "//*[@id='street']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='street']//input").send_keys(street)
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='street']//span[@class='input-group-btn']").click()
         street_edit = wd.find_element(By.XPATH, "//*[@id='street']/p").text
         print("enter_data =", street, ";", "save_data =", street_edit)
-        assert street == street_edit
+        with allure.step(f"Проверка. Вводимое значение: {street}. Сохраненное значение: {street_edit}"):
+            assert street == street_edit
 
+    @allure.step("Сохранить улицу без изменений")
     def edit_patient_street_none(self):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="street")
         street = wd.find_element(By.XPATH, "//*[@id='street']/p").text
-        wd.find_element(By.XPATH, "//*[@data-key='street'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='street']//span[@class='input-group-btn']").click()
+        with allure.step("Нажать кнопку редактировать улицу"):
+            wd.find_element(By.XPATH, "//*[@data-key='street'][@type='button']").click()
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='street']//span[@class='input-group-btn']").click()
         street_edit = wd.find_element(By.XPATH, "//*[@id='street']/p").text
         print("enter_data =", street, ";", "save_data =", street_edit)
-        assert street == street_edit
+        with allure.step(f"Проверка. Значение до редактирования: {street}. Значение после сохранения: {street_edit}"):
+            assert street == street_edit
 
+    @allure.step("Редактировать и сохранить 'дом'")
     def edit_patient_building(self, building):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="building")
-        wd.find_element(By.XPATH, "//*[@data-key='building'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='building']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='building']//input").send_keys(building)
-        wd.find_element(By.XPATH, "//*[@id='building']//span[@class='input-group-btn']").click()
+        with allure.step("Нажать кнопку редактировать поле дом"):
+            wd.find_element(By.XPATH, "//*[@data-key='building'][@type='button']").click()
+        with allure.step(f"Ввести значение: {building}"):
+            wd.find_element(By.XPATH, "//*[@id='building']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='building']//input").send_keys(building)
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='building']//span[@class='input-group-btn']").click()
         building_edit = wd.find_element(By.XPATH, "//*[@id='building']/p").text
         print("enter_data =", building, ";", "save_data =", building_edit)
-        assert building == building_edit
+        with allure.step(f"Проверка. Вводимое значение: {building}. Сохраненное значение: {building_edit}"):
+            assert building == building_edit
 
+    @allure.step("Сохранить 'дом' без изменений")
     def edit_patient_building_none(self):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="building")
         building = wd.find_element(By.XPATH, "//*[@id='building']/p").text
-        wd.find_element(By.XPATH, "//*[@data-key='building'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='building']//span[@class='input-group-btn']").click()
+        with allure.step("Нажать кнопку редактировать поле 'дом'"):
+            wd.find_element(By.XPATH, "//*[@data-key='building'][@type='button']").click()
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='building']//span[@class='input-group-btn']").click()
         building_edit = wd.find_element(By.XPATH, "//*[@id='building']/p").text
         print("enter_data =", building, ";", "save_data =", building_edit)
-        assert building == building_edit
+        with allure.step(f"Проверка. Значение до редактирования: {building}. "
+                         f"Значение после сохранения: {building_edit}"):
+            assert building == building_edit
 
+    @allure.step("Редактировать и сохранить поле 'квартира'")
     def edit_patient_apartment(self, apt):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="apt")
-        wd.find_element(By.XPATH, "//*[@data-key='apt'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='apt']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='apt']//input").send_keys(apt)
-        wd.find_element(By.XPATH, "//*[@id='apt']//span[@class='input-group-btn']").click()
+        with allure.step("Нажать кнопку редактировать поле 'квартира'"):
+            wd.find_element(By.XPATH, "//*[@data-key='apt'][@type='button']").click()
+        with allure.step(f"Ввести значение: {apt}"):
+            wd.find_element(By.XPATH, "//*[@id='apt']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='apt']//input").send_keys(apt)
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='apt']//span[@class='input-group-btn']").click()
         apt_edit = wd.find_element(By.XPATH, "//*[@id='apt']/p").text
         print("enter_data =", apt, ";", "save_data =", apt_edit)
-        assert apt == apt_edit
+        with allure.step(f"Проверка. Вводимое значение: {apt}. Сохраненное значение: {apt_edit}"):
+            assert apt == apt_edit
 
+    @allure.step("Сохранить поле 'квартира' без изменений")
     def edit_patient_apartment_none(self):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="apt")
         apt = wd.find_element(By.XPATH, "//*[@id='apt']/p").text
-        wd.find_element(By.XPATH, "//*[@data-key='apt'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='apt']//span[@class='input-group-btn']").click()
+        with allure.step("Нажать кнопку редактировать поле 'квартира'"):
+            wd.find_element(By.XPATH, "//*[@data-key='apt'][@type='button']").click()
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='apt']//span[@class='input-group-btn']").click()
         apt_edit = wd.find_element(By.XPATH, "//*[@id='apt']/p").text
         print("enter_data =", apt, ";", "save_data =", apt_edit)
-        assert apt == apt_edit
+        with allure.step(f"Проверка. Значение до редактирования: {apt}. Значение после сохранения: {apt_edit}"):
+            assert apt == apt_edit
 
+    @allure.step("Редактировать и сохранить адрес пациента")
     def edit_patient_address(self, address):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="address")
-        wd.find_element(By.XPATH, "//*[@data-key='address'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='address']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='address']//input").send_keys(address)
-        wd.find_element(By.XPATH, "//*[@id='address']//span[@class='input-group-btn']").click()
+        with allure.step("Нажать кнопку редактировать поле 'адрес'"):
+            wd.find_element(By.XPATH, "//*[@data-key='address'][@type='button']").click()
+        with allure.step(f"Ввести значение: {address}"):
+            wd.find_element(By.XPATH, "//*[@id='address']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='address']//input").send_keys(address)
+        with allure.step("Нажать Сохранить"):
+            wd.find_element(By.XPATH, "//*[@id='address']//span[@class='input-group-btn']").click()
+            assert wd.find_elements(By.XPATH, "//div[@class='input-group has-error']") == 0
         address_edit = wd.find_element(By.XPATH, "//*[@id='address']/p").text
         print("enter_data =", address, ";", "save_data =", address_edit)
-        assert address == address_edit
+        with allure.step(f"Проверка. Вводимое значение: {address}. Сохраненное значение: {address_edit}"):
+            assert address == address_edit
 
+    @allure.step("Сохранить адрес без изменений")
     def edit_patient_address_none(self):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="address")
         address = wd.find_element(By.XPATH, "//*[@id='address']/p").text
-        wd.find_element(By.XPATH, "//*[@data-key='address'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='address']//span[@class='input-group-btn']").click()
+        with allure.step("Нажать кнопку редактировать поле 'адрес'"):
+            wd.find_element(By.XPATH, "//*[@data-key='address'][@type='button']").click()
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='address']//span[@class='input-group-btn']").click()
         address_edit = wd.find_element(By.XPATH, "//*[@id='address']/p").text
         print("enter_data =", address, ";", "save_data =", address_edit)
-        assert address == address_edit
+        with allure.step(f"Проверка. Значение до редактирования: {address}. Значение после сохранения: {address_edit}"):
+            assert address == address_edit
 
-    def edit_patient_first_data(self, data):
+    @allure.step("Редактировать и сохранить дату первого приема")
+    def edit_patient_first_data(self, date):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="date_of_first_appointment")
-        wd.find_element(By.XPATH, "//*[@data-key='date_of_first_appointment'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//input").send_keys(data)
-        wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//span[@class='input-group-btn']").click()
-        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
-        print("enter_data =", data, ";", "save_data =", data_edit)
-        assert data == data_edit
+        with allure.step("Нажать кнопку редактировать поле 'дата первого приема'"):
+            wd.find_element(By.XPATH, "//*[@data-key='date_of_first_appointment'][@type='button']").click()
+        with allure.step(f"Ввести значение: {date}"):
+            wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//input").send_keys(date)
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//span[@class='input-group-btn']").click()
+        date_edit = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
+        print("enter_data =", date, ";", "save_data =", date_edit)
+        with allure.step(f"Проверка. Вводимое значение: {date}. Сохраненное значение: {date_edit}"):
+            assert date == date_edit
 
+    @allure.step("Сохранить дату первого приема без изменений")
     def edit_patient_first_data_none(self):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="date_of_first_appointment")
-        data = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
-        wd.find_element(By.XPATH, "//*[@data-key='date_of_first_appointment'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//span[@class='input-group-btn']").click()
-        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
-        print("enter_data =", data, ";", "save_data =", data_edit)
-        assert data == data_edit
+        date = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
+        with allure.step("Нажать кнопку редактировать поле 'дата первой записи'"):
+            wd.find_element(By.XPATH, "//*[@data-key='date_of_first_appointment'][@type='button']").click()
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']//span[@class='input-group-btn']").click()
+        date_edit = wd.find_element(By.XPATH, "//*[@id='date_of_first_appointment']/p").text
+        print("enter_data =", date, ";", "save_data =", date_edit)
+        with allure.step(f"Проверка. Значение до редактирования: {date}. Значение после сохранения: {date_edit}"):
+            assert date == date_edit
 
-    def edit_patient_last_data(self, data):
+    @allure.step("Редактировать и сохранить дату последнего приема")
+    def edit_patient_last_data(self, date):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="date_of_last_appointment")
-        wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").send_keys(data)
-        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
-        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
-        print("enter_data =", data, ";", "save_data =", data_edit)
-        assert data_edit == data
+        with allure.step("Нажать кнопку редактировать поле 'дата последней записи'"):
+            wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
+        with allure.step(f"Ввести значение: {date}"):
+            wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").clear()
+            wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//input").send_keys(date)
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
+        date_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
+        print("enter_data =", date, ";", "save_data =", date_edit)
+        with allure.step(f"Проверка. Вводимое значение: {date}. Сохраненное значение: {date_edit}"):
+            assert date_edit == date
 
+    @allure.step("Сохранить дату последнего посещения без изменений")
     def edit_patient_last_data_none(self):
         wd = self.app.wd
         # self.scroll_to_element()
         self.go_to_element_by_id(id_locator="date_of_last_appointment")
         data = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
-        wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
-        data_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
-        print("enter_data =", data, ";", "save_data =", data_edit)
-        assert data_edit == data
+        with allure.step("Нажать кнопку редактировать поле 'дата последнего посещения'"):
+            wd.find_element(By.XPATH, "//*[@data-key='date_of_last_appointment'][@type='button']").click()
+        with allure.step("Нажать 'Сохранить'"):
+            wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']//span[@class='input-group-btn']").click()
+        date_edit = wd.find_element(By.XPATH, "//*[@id='date_of_last_appointment']/p").text
+        print("enter_data =", data, ";", "save_data =", date_edit)
+        with allure.step(f"Проверка. Значение до редактирования: {data}. Значение после сохранения: {date_edit}"):
+            assert date_edit == data
 
     def go_to_element_by_id(self, id_locator):
         wd = self.app.wd

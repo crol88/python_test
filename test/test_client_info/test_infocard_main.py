@@ -157,8 +157,6 @@ def test_choice_coordinator(app):
     app.infocard_mainpage.choice_coordinator(filial="Филиал 1", manager="Координатор: Супер Пользователь С.С.")
 
 
-@testit.displayName("Добавить лечащего врача")
-@testit.externalId("1-001")
 def test_choice_doctor(app):
     if app.cbase.count("ADD-VIP") == 0:
         app.cbase.add_patient_for(

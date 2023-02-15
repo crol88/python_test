@@ -1,58 +1,111 @@
 # -*- coding: utf-8 -*-
-import testit
+import allure
+from model.group import Group
 
 
-@testit.displayName('edit_city_phone')
-@testit.externalId('048')
+@allure.epic("Информация о пациенте. Контактная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить городской телефон")
 def test_edit_city_phone(app):
-    app.contact.search_patient(search_name="SURNAME")
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
+    app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.contact.edit_city_phone(phone="123456")
 
 
-@testit.displayName('edit_city_phone_none')
-@testit.externalId('049')
+@allure.epic("Информация о пациенте. Контактная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить городской телефон без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_city_phone_none(app):
-    app.contact.search_patient(search_name="SURNAME")
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
+    app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.contact.edit_city_phone_none()
 
 
-@testit.displayName('edit_email')
-@testit.externalId('050')
+@allure.epic("Информация о пациенте. Контактная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить E-mail пациента")
 def test_edit_email(app):
-    app.contact.search_patient(search_name="SURNAME")
-    app.contact.edit_email(mail="TEST@TEST.COM")
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
+    app.basic_info.search_patient(search_name="SURNAME-EDIT")
+    app.contact.edit_email(mail="test@test.com")
 
 
-@testit.displayName('edit_email_none')
-@testit.externalId('051')
+@allure.epic("Информация о пациенте. Контактная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить E-mail пациента без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_email_none(app):
-    app.contact.search_patient(search_name="SURNAME")
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
+    app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.contact.edit_email_none()
 
 
-@testit.displayName('edit_mobile_phone')
-@testit.externalId('052')
+@allure.epic("Информация о пациенте. Контактная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить мобильный телефон пациента")
 def test_edit_mobile_phone(app):
-    app.contact.search_patient(search_name="SURNAME")
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
+    app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.contact.edit_mobile_phone(mobile="79051501245")
 
 
-@testit.displayName('edit_mobile_phone_none')
-@testit.externalId('053')
+@allure.epic("Информация о пациенте. Контактная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить мобильный телефон пациента без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_mobile_phone_none(app):
-    app.contact.search_patient(search_name="SURNAME")
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
+    app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.contact.edit_mobile_phone_none()
 
 
-@testit.displayName('edit_phone')
-@testit.externalId('054')
+@allure.epic("Информация о пациенте. Контактная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить другой телефон пациента")
 def test_edit_phone(app):
-    app.contact.search_patient(search_name="SURNAME")
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
+    app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.contact.edit_phone(phone="79051504578")
 
 
-@testit.displayName('edit_phone_none')
-@testit.externalId('055')
+@allure.epic("Информация о пациенте. Контактная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить другой телефон пациента без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_phone_none(app):
-    app.contact.search_patient(search_name="SURNAME")
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
+    app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.contact.edit_phone_none()

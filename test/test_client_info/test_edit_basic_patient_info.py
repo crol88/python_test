@@ -7,10 +7,10 @@ import allure
 @allure.tag("Инфокарта пациента")
 @allure.title("Ввести фамилию пациента и сохранить")
 def test_edit_patient_surname(app):
-    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+    if app.basic_info.count(check_patient="SURNAME") == 0:
         app.basic_info.add_patient_for(
-            Group(surname="SURNAME", name="Артур", secondname="Артурович", birthday="12081980",
-                  phone="79058889556",
+            Group(surname="SURNAME", name="name", secondname="secondname", birthday="16071979",
+                  phone="79057147232",
                   fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_surname(Group(surname="SURNAME-EDIT"))
@@ -19,12 +19,12 @@ def test_edit_patient_surname(app):
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить фамилию пациента без изменений")
-@allure.description("Проверить, что после случайного открытия поля ввода сохраненная информация остается без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_surname_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
-            Group(surname="SURNAME", name="Артур", secondname="Артурович", birthday="12081980",
-                  phone="79058889556",
+            Group(surname="SURNAME-EDIT", name="name", secondname="secondname", birthday="16071979",
+                  phone="79057147232",
                   fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
     app.basic_info.edit_patient_surname_fill(text="SURNAME-EDIT")
@@ -46,6 +46,7 @@ def test_edit_patient_name(app):
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить имя пациента без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_name_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -66,12 +67,13 @@ def test_edit_patient_secondname(app):
                   phone="79051591232",
                   fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
-    app.basic_info.edit_patient_secondname(Group(secondname="SECONDNAME-EDIT"), text="SECONDNAME-EDIT")
+    app.basic_info.edit_patient_secondname(Group(secondname="SECONDNAME-EDIT"))
 
 
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить отчество пациента без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_secondname_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -92,12 +94,13 @@ def test_edit_patient_birthday(app):
                   phone="79051591232",
                   fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME-EDIT")
-    app.basic_info.edit_patient_birthday(Group(birthday="21.12.1999"), text="21.12.1999")
+    app.basic_info.edit_patient_birthday(Group(birthday="21.12.1999"))
 
 
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить дату рождения без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_birthday_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -163,6 +166,7 @@ def test_edit_patient_inn(app):
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить инн пациента без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_inn_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -189,6 +193,7 @@ def test_edit_patient_country(app):
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить значение поле 'Страна' без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_country_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -215,6 +220,7 @@ def test_edit_patient_postcode(app):
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить почтовый индекс без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_postcode_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -241,6 +247,7 @@ def test_edit_patient_state(app):
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить 'Область' пациента без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_state_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -267,6 +274,7 @@ def test_edit_patient_city(app):
 @allure.epic("Информация о пациенте. Основная информация")
 @allure.tag("Инфокарта пациента")
 @allure.title("Сохранить 'Город' пациента без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_city_without_changes(app):
     if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
         app.basic_info.add_patient_for(
@@ -277,61 +285,163 @@ def test_edit_patient_city_without_changes(app):
     app.basic_info.edit_patient_city_without_changes()
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить значение поля 'Улица'")
 def test_edit_patient_street(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_street(street="street")
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить значение поля 'Улица' без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_street_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_street_none()
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить значение поля 'Дом'")
 def test_edit_patient_building(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_building(building="4")
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить значение поля 'Дом' без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_building_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_building_none()
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить значение поля 'Квартира'")
 def test_edit_patient_apartment(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_apartment(apt="56")
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить значение поля 'Квартира' без редактирования")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_apartment_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_apartment_none()
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить значение поля 'Адрес'")
 def test_edit_patient_address(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_address(address="testaddress")
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить значение поля 'Адрес' без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_address_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_address_none()
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить дату первого приема")
 def test_edit_patient_first_data(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
-    app.basic_info.edit_patient_first_data(data="31.12.2021")
+    app.basic_info.edit_patient_first_data(date="31.12.2021")
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить дату первого приема без изменений")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_first_data_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_first_data_none()
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Редактировать и сохранить дату последнего приема")
 def test_edit_patient_last_data(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
-    app.basic_info.edit_patient_last_data(data="10.10.2021")
+    app.basic_info.edit_patient_last_data(date="10.10.2021")
 
 
+@allure.epic("Информация о пациенте. Основная информация")
+@allure.tag("Инфокарта пациента")
+@allure.title("Сохранить дату последнего приема без изменения")
+@allure.description("Проверить, что после активации поля ввода, сохраняются ранее введенные данные")
 def test_edit_patient_last_data_without_changes(app):
+    if app.basic_info.count(check_patient="SURNAME-EDIT") == 0:
+        app.basic_info.add_patient_for(
+            Group(surname="surname", name="name", secondname="secondname", birthday="17111983",
+                  phone="79051591232",
+                  fromwhere="2ГИС", filial=""))
     app.basic_info.search_patient(search_name="SURNAME")
     app.basic_info.edit_patient_last_data_none()
