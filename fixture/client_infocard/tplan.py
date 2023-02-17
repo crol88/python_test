@@ -198,3 +198,32 @@ class TreatmentPlanHelper:
         wd.execute_script("arguments[0].scrollIntoView();", element)
         time.sleep(1)
         element.click()
+
+    def check_drafts(self, service):
+        wd = self.app.wd
+        if len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service)) > 0:
+            print("Есть черновик приема")
+        return len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service))
+
+    def select_optimal_tplan(self, variants, area, problem, var_next, doctor):
+        wd = self.app.wd
+        self.select_all_teeth()
+        wd.find_element(By.XPATH, "//button[.='%s']" % area).click()
+        act = wd.find_element(By.XPATH, "//button[.='%s']" % problem).get_attribute("class")
+        if act != "DentalPanel_problem active":
+            wd.find_element(By.XPATH, "//button[.='%s']" % problem).click()
+        time.sleep(2)
+        element = wd.find_element(By.XPATH, "//div[.='%s']/div" % variants)
+        wd.execute_script("arguments[0].scrollIntoView();", element)
+        time.sleep(2)
+        element.click()
+        wd.find_element(By.XPATH, "//div[.='%s']/following-sibling::button" % var_next).click()
+        sel = Select(wd.find_element(By.XPATH, "//select[@name='doctorID']"))
+        sel.select_by_visible_text(doctor)
+        service = wd.find_element(By.XPATH, "//table[@class='table']//label").text
+        print(service)
+        wd.find_element(By.XPATH, "//button[.='Создать приёмы']").click()
+        time.sleep(2)
+        assert wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service) != 0
+
+
