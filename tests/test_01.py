@@ -37,5 +37,5 @@ def test_schedule_edit(app):
         app.settings.add_user_step(Group(surname="Schedule", name="Name", secondname="Secondname",
                                          login='Schedule-test', mail='Schedulemail@mail.ru', phone='79041877825'))
     app.settings.open_employees_doctor()
-    app.settings.add_doctor(Group(surname="Schedule"))
-    app.settings.add_department(department="Терапевты")
+    app.settings.add_doctor(Group(surname="Schedule", department="Терапевты"))
+    # app.settings.add_department(department="Терапевты")

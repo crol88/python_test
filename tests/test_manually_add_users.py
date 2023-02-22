@@ -4,32 +4,40 @@ from model.group import Group
 from model.group import Chair
 
 
-@allure.description("Добавить кресло")
+@allure.epic("Настройка системы")
+@allure.tag("Предварительная настройка")
+@allure.title("Создание и настройка кресла")
 def test_add_chair(app):
     if app.settings.chair_availability(Chair(title="test-chair")) == 0:
         app.settings.add_chair(Chair(title="test-chair", sorting="9", department="Терапевты", filial="Филиал 1"))
     app.settings.check_chair(Chair(title="test-chair"))
 
 
-@allure.description("Удалить кресло")
+@allure.epic("Настройка системы")
+@allure.tag("Предварительная настройка")
+@allure.title("Удаление кресла")
+@allure.description("Сначала сгенерировать тестовые данные, добавить в настройки системы кресло")
 def test_delete_chair(app):
     app.settings.open_employees_chair()
-    old_list = app.settings.get_chair_list()
     app.settings.add_chair(Chair(title="del-chair", sorting="10", department="Терапевты", filial="Филиал 1"))
     app.settings.delete_chair(Chair(title="del-chair"))
-    new_list = app.settings.get_chair_list()
-    assert len(old_list) == len(new_list) - 1
 
 
-@allure.description("Добавить пользователя")
+@allure.epic("Настройка системы")
+@allure.tag("Предварительная настройка")
+@allure.title("Ручное добавление пользователя")
 def test_manual_add_user(app):
     if app.settings.user_availability(Group(login="new-user-test")) == 0:
         app.settings.add_user()
         app.settings.fill_new_user_form(Group(surname="Surname", name="Name", secondname="Secondname",
-                                              login="new-user-test", mail="newmail@mail.ru", phone="79041871637"))
+                                              login="new-user-test", mail="newmail@mail.ru",
+                                              phone="79041871637", user_group="Врач"))
 
 
-@allure.description("Удаление пользователя")
+@allure.epic("Настройка системы")
+@allure.tag("Предварительная настройка")
+@allure.title("Удаление пользователя")
+@allure.description("Сначала сгенерировать тестовые данные, добавить в пользователя в систему")
 def test_delete_user(app):
     if app.settings.user_availability(Group(login="del-user-test")) == 0:
         app.settings.add_user()
@@ -38,41 +46,49 @@ def test_delete_user(app):
     app.settings.delete_user(Group(login='del-user-test'))
 
 
-@allure.description("Добавить доктора")
+@allure.epic("Настройка системы")
+@allure.tag("Предварительная настройка")
+@allure.title("Добавление пользователя в список врачей")
 def test_add_doctor(app):
     if app.settings.doctor_availability(Group(surname="Surname")) == 0:
         app.settings.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
                                          login='new-user-test', mail='newmail@mail.ru', phone='79041871637'))
     app.settings.open_employees_doctor()
-    app.settings.add_doctor(Group(surname="Surname"))
-    app.settings.add_department(department="Терапевты")
-    # app.settings.add_department(department="Хирурги")
+    app.settings.add_doctor(Group(surname="Surname", department="Терапевты"))
+    # app.settings.add_department(department="Терапевты")
 
 
-@allure.step("Удалить доктора")
+@allure.epic("Настройка системы")
+@allure.tag("Предварительная настройка")
+@allure.title("Удалить пользователя из списка врачей")
 def test_delete_doc(app):
     if app.settings.doctor_availability(Group(surname="Удалить")) == 0:
         app.settings.add_user_step(Group(surname="Удалить", name="Name", secondname="Secondname",
                                          login='delusertest', mail='delmail@mail.ru', phone='79041871472'))
         app.settings.open_employees_doctor()
-        app.settings.add_doctor(Group(surname="Удалить"))
-        app.settings.add_department(department="Терапевты")
+        app.settings.add_doctor(Group(surname="Удалить", department="Терапевты"))
+        # app.settings.add_department(department="Терапевты")
     app.settings.delete_doctor(Group(surname="Удалить"))
 
 
-@allure.description("Добавить врача в график работы")
+@allure.epic("Настройка системы")
+@allure.tag("Настройка расписания")
+@allure.title("Настройка графика работы врача на день")
+@allure.description("Перед началом, проверить тестовые данные, при необходимости сгенерировать их")
 def test_add_doc_schedule(app):
     if app.settings.schedule_availability(Group(surname="Surname")) == 0:
         if app.settings.chair_availability(Chair(title="test-chair")) == 0:
             app.settings.add_chair(Chair(title="test-chair", sorting="9", department="Терапевты", filial="Филиал 1"))
         if app.settings.doctor_availability(Group(surname="Surname")) == 0:
             app.settings.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
-                                             login='new-user-test', mail='newmail@mail.ru', phone='79041871637'))
+                                             login='new-user-test', mail='newmail@mail.ru',
+                                             phone='79041871637', user_group="Врач"))
             app.settings.open_employees_doctor()
             # app.settings.add_doctor(Group(login="new-user-test"))
-            app.settings.add_doctor(Group(surname="Surname"))
-            app.settings.add_department(department="Терапевты")
-    app.settings.schedule_availability(Group(surname="Surname"))
+            app.settings.add_doctor(Group(surname="Surname", department="Терапевты"))
+            # app.settings.add_department(department="Терапевты")
+    # app.settings.schedule_availability(Group(surname="Surname"))
+    app.settings.open_schedule_set()
     app.settings.check_doc_schedule(Group(surname="Surname"))
 
 

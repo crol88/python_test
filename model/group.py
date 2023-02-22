@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 class Group:
     def __init__(self, surname=None, name=None, secondname=None, birthday=None, phone=None, fromwhere=None,
-                 filial=None, cbaseid=None, value=None, login=None, password=None, mail=None, s_time=None, title=None):
+                 filial=None, cbaseid=None, value=None, login=None, password=None, mail=None, s_time=None,
+                 title=None, user_group=None, department=None):
         self.name = name
         self.surname = surname
         self.secondname = secondname
@@ -16,6 +17,8 @@ class Group:
         self.mail = mail
         self.s_time = s_time
         self.title = title
+        self.user_group = user_group
+        self.department = department
 
     def __repr__(self):
         return f"{self.__class__}: {self.cbaseid, self.name, self.value}"

@@ -124,6 +124,3 @@ def test_cancel_approval(app):
                                            doctor="Гигиенистова2 Анна Андреевна")
             app.tplan.canban_approved(service="Профессиональная гигиена: дентикюр Norma")
     app.tplan.cancel_approval()
-
-
-
