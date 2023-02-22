@@ -168,14 +168,18 @@ class CbaseHelper:
             wd.find_element(By.XPATH, "//*[@id='second_name']//span[@class='input-basic_info-btn']").click()
         self.group_cache = None
 
+    @allure.step("Поиск по пациентам")
     def search_patient(self, search_name):
         wd = self.app.wd
         wd.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.HOME)
         time.sleep(2)
-        wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
+        with allure.step("Нажать 'Поиск по пациентам'"):
+            wd.find_element(By.XPATH, "//*[@class='headbarUserSearch headbarRightElement']").click()
+        with allure.step(f"Ввести данные пациента: {search_name}"):
+            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(search_name)
         time.sleep(2)
-        wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
+        with allure.step("Нажать ENTER"):
+            wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
         time.sleep(2)
 
     def check_basic_info(self):

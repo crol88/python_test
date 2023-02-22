@@ -1,6 +1,9 @@
 import time
 import random
+import allure
 from datetime import datetime
+
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
@@ -11,13 +14,17 @@ class TreatmentPlanHelper:
     def __init__(self, app):
         self.app = app
 
+    @allure.step("Открыть план лечения")
     def open_treatment_plan(self):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//button[@title='Пациент']").click()
+        with allure.step("Нажать кнопку 'Пациент'"):
+            wd.find_element(By.XPATH, "//button[@title='Пациент']").click()
         time.sleep(1)
-        wd.find_element(By.XPATH, "//a[.='План лечения']").click()
-        toothsmap = wd.find_element(By.XPATH, "//div[.='Зубная формула']")
-        assert toothsmap != 0
+        with allure.step("В выпадающем списке выбрать план лечения"):
+            wd.find_element(By.XPATH, "//a[.='План лечения']").click()
+        with allure.step("Проверить, что открылась зубная формула"):
+            toothsmap = wd.find_element(By.XPATH, "//div[.='Зубная формула']")
+            assert toothsmap != 0
 
     def add_plan(self):
         wd = self.app.wd
@@ -31,12 +38,14 @@ class TreatmentPlanHelper:
         new_plan = wd.find_element(By.XPATH, "//button[.='%s']" % plan_name)
         assert new_plan != 0
 
+    @allure.step("Выбрать все зубы")
     def select_all_teeth(self):
         wd = self.app.wd
-        wd.find_element(By.XPATH, "//button[.='Выбрать все зубы']").click()
+        with allure.step("Нажать кнопку 'Выбрать все зубы'"):
+            wd.find_element(By.XPATH, "//button[.='Выбрать все зубы']").click()
         all_teeth = wd.find_elements(By.XPATH, "//div[@class='jaws']//div[@class='tooth active']")
         assert len(all_teeth) == 32
-        print("Кол-во выбранных зубов:", len(all_teeth))
+        # print("Кол-во выбранных зубов:", len(all_teeth))
 
     def open_treatment_chains(self):
         wd = self.app.wd
@@ -199,31 +208,157 @@ class TreatmentPlanHelper:
         time.sleep(1)
         element.click()
 
+    @allure.step("Проверить приемы в черновике")
     def check_drafts(self, service):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service)) > 0:
-            print("Есть черновик приема")
+            with allure.step("В черновике присутствует прием"):
+                print("В черновике присутствует прием")
+        if len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service)) == 0:
+            with allure.step("В черновике отсутствуют приемы"):
+                print("В черновике отсутствуют приемы")
         return len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service))
 
+    @allure.step("Проверить утвержденные приемы")
+    def check_approved(self, service):
+        wd = self.app.wd
+        if len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_approved']//div[.='%s']" % service)) > 0:
+            with allure.step("Присутствует утвержденный прием"):
+                print("Есть утвержденный прием")
+        if len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_approved']"
+                                          "//div[.='%s']" % service)) == 0:
+            with allure.step("Утвержденные приемы отсутствуют"):
+                print("Утвержденные приемы отсутствуют")
+        return len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_approved']//div[.='%s']" % service))
+
+    @allure.step("Сформировать план лечения из вариантов предложенных системой")
     def select_optimal_tplan(self, variants, area, problem, var_next, doctor):
         wd = self.app.wd
         self.select_all_teeth()
-        wd.find_element(By.XPATH, "//button[.='%s']" % area).click()
-        act = wd.find_element(By.XPATH, "//button[.='%s']" % problem).get_attribute("class")
-        if act != "DentalPanel_problem active":
-            wd.find_element(By.XPATH, "//button[.='%s']" % problem).click()
+        with allure.step(f"Указать область зуба: {area}"):
+            wd.find_element(By.XPATH, "//button[.='%s']" % area).click()
+        with allure.step(f"Указать проблему: {problem}"):
+            act = wd.find_element(By.XPATH, "//button[.='%s']" % problem).get_attribute("class")
+            if act != "DentalPanel_problem active":
+                wd.find_element(By.XPATH, "//button[.='%s']" % problem).click()
         time.sleep(2)
-        element = wd.find_element(By.XPATH, "//div[.='%s']/div" % variants)
-        wd.execute_script("arguments[0].scrollIntoView();", element)
-        time.sleep(2)
-        element.click()
-        wd.find_element(By.XPATH, "//div[.='%s']/following-sibling::button" % var_next).click()
-        sel = Select(wd.find_element(By.XPATH, "//select[@name='doctorID']"))
-        sel.select_by_visible_text(doctor)
+        with allure.step(f"Выбрать варианты лечения: {variants}"):
+            element = wd.find_element(By.XPATH, "//div[.='%s']/div" % variants)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            time.sleep(2)
+            element.click()
+        with allure.step(f"Перенести выбранный прием в черновик: {var_next}"):
+            wd.find_element(By.XPATH, "//div[.='%s']/following-sibling::button" % var_next).click()
+        with allure.step(f"Выбрать врача, который будет выполнять приемы: {doctor}"):
+            sel = Select(wd.find_element(By.XPATH, "//select[@name='doctorID']"))
+            sel.select_by_visible_text(doctor)
         service = wd.find_element(By.XPATH, "//table[@class='table']//label").text
         print(service)
-        wd.find_element(By.XPATH, "//button[.='Создать приёмы']").click()
+        with allure.step("Нажать 'Создать прием'"):
+            wd.find_element(By.XPATH, "//button[.='Создать приёмы']").click()
         time.sleep(2)
-        assert wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service) != 0
+        with allure.step(f"Проверка. В черновик добавлен прием с выбранным вариантом лечения: {service}"):
+            assert wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service) != 0
 
+    @allure.step("Утвердить прием")
+    def canban_approved(self, service):
+        wd = self.app.wd
+        with allure.step(f"Прием в черновике: {service}"):
+            draft = wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//div[.='%s']" % service)
+            wd.execute_script("arguments[0].scrollIntoView();", draft)
+        time.sleep(5)
+        with allure.step(f"Нажать кнопку 'Утвердить прием' {service}"):
+            button = wd.find_element(By.XPATH, "//button[.='Утвердить приём']")
+            wd.execute_script("arguments[0].scrollIntoView();", button)
+            time.sleep(2)
+            wd.find_element(By.XPATH, "//button[.='Утвердить приём']").click()
+        time.sleep(1)
+        with allure.step("Подтвердить действие"):
+            wd.find_element(By.XPATH, "//button[@class='sweet-confirm styled']").click()
+        with allure.step(f"Проверка. Прием: {service} перенесен из колонки 'Черновик' в колонку 'Утвержденные'"):
+            approved = wd.find_element(By.XPATH,
+                                       "//div[@class='Canban_col Canban_col_approved']//div[.='%s']" % service)
+            assert approved != 0
+            try:
+                draft
+            except NoSuchElementException:
+                return False
+            print("Запись из черновика перенесена в утвержденные")
+            return True
 
+    @allure.step("Согласовать план лечения")
+    def approve_tplan(self):
+        wd = self.app.wd
+        with allure.step("Нажать кнопку 'Согласовать'"):
+            approve = wd.find_element(By.XPATH, "//button[.='Согласовать']")
+            wd.execute_script("arguments[0].scrollIntoView();", approve)
+            time.sleep(4)
+            approve.click()
+        time.sleep(1)
+        with allure.step("Подтвердить действие"):
+            wd.find_element(By.XPATH, "//button[@class='sweet-confirm styled']").click()
+        time.sleep(1)
+        with allure.step("Проверка. План лечения получил соответствующую отметку 'Согласованно'"):
+            assert wd.find_element(By.XPATH, "//i[@class='icon glyphicon glyphicon-ok']") != 0
+            assert wd.find_element(By.XPATH, "//div[@class='Canban_agreed text-success']") != 0
+
+    @allure.step("Отменить согласование")
+    def cancel_approval(self):
+        wd = self.app.wd
+        try:
+            wd.find_element(By.XPATH, "//div[@class='Canban_agreed text-success']")
+        except NoSuchElementException:
+            self.approve_tplan()
+        with allure.step("Нажать кнопку 'Отменить согласование'"):
+            cancel = wd.find_element(By.XPATH, "//button[.='Отменить согласование']")
+            wd.execute_script("arguments[0].scrollIntoView();", cancel)
+            time.sleep(4)
+            cancel.click()
+        time.sleep(1)
+        with allure.step("Подтвердить действие"):
+            wd.find_element(By.XPATH, "//button[@class='sweet-confirm styled']").click()
+        time.sleep(2)
+        with allure.step("Проверка. План лечения лишился соответствующей отметки 'Согласованно'"):
+            assert len(wd.find_elements(By.XPATH, "//div[@class='Canban_agreed text-success']")) == 0
+
+    @allure.step("Удалить прием из черновика")
+    def delete_canban_draft(self):
+        wd = self.app.wd
+        num = len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']"
+                                             "//div[@class='Canban_element_heading']"))
+        with allure.step("Нажать кнопку 'удалить' на приеме в черновике"):
+            delete = wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//button[4]")
+            time.sleep(1)
+            wd.execute_script("arguments[0].scrollIntoView();", delete)
+            time.sleep(6)
+            wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']//button[4]").click()
+        time.sleep(1)
+        with allure.step("Подтвердить удаление"):
+            wd.find_element(By.XPATH, "//button[@class='sweet-confirm styled']").click()
+        time.sleep(1)
+        num_d = len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_drafts']"
+                                               "//div[@class='Canban_element_heading']"))
+        with allure.step(f"Проверка. Кол-во приемов в черновике: {num}."
+                         f" Кол-во приемов в черновике после удаления: {num - 1}"):
+            assert num - 1 == num_d
+
+    @allure.step("Удалить утвержденный прием")
+    def delete_canban_approve(self):
+        wd = self.app.wd
+        num = len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_approved']"
+                                             "//div[@class='Canban_element_heading']"))
+        with allure.step("Нажать кнопку 'удалить' на утвержденном приеме"):
+            delete = wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_approved']//button[4]")
+            time.sleep(1)
+            wd.execute_script("arguments[0].scrollIntoView();", delete)
+            time.sleep(6)
+            wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_approved']//button[4]").click()
+        time.sleep(1)
+        with allure.step("Подтвердить удаление"):
+            wd.find_element(By.XPATH, "//button[@class='sweet-confirm styled']").click()
+        time.sleep(1)
+        num_d = len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_approved']"
+                                               "//div[@class='Canban_element_heading']"))
+        with allure.step(f"Проверка. Кол-во утвержденных приемов: {num}."
+                         f" Кол-во утвержденных приемов после удаления: {num - 1}"):
+            assert num - 1 == num_d
