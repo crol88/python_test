@@ -20,12 +20,12 @@ class Group:
         self.user_group = user_group
         self.department = department
 
-    def __repr__(self):
-        return f"{self.__class__}: {self.cbaseid, self.name, self.value}"
-
-    def __eq__(self, other):
-        return (self.cbaseid is None or other.cbaseid is None or self.cbaseid == other.cbaseid) \
-               and self.name == other.name
+    # def __repr__(self):
+    #     return f"{self.__class__}: {self.name, self.surname, self.secondname, self.birthday, self.phone, self.fromwhere, self.filial, self.cbaseid, self.value, self.login, self.password, self.mail, self.s_time, self.title, self.user_group, self.department} "
+    #
+    # def __eq__(self, other):
+    #     return (self.cbaseid is None or other.cbaseid is None or self.cbaseid == other.cbaseid) \
+    #            and self.name == other.name
 
 
 class Chair:

@@ -18,8 +18,9 @@ def test_add_chair(app):
 @allure.title("Удаление кресла")
 @allure.description("Сначала сгенерировать тестовые данные, добавить в настройки системы кресло")
 def test_delete_chair(app):
-    app.settings.open_employees_chair()
-    app.settings.add_chair(Chair(title="del-chair", sorting="10", department="Терапевты", filial="Филиал 1"))
+    # app.settings.open_employees_chair()
+    if app.settings.chair_availability(Chair(title="del-chair")) == 0:
+        app.settings.add_chair(Chair(title="del-chair", sorting="10", department="Терапевты", filial="Филиал 1"))
     app.settings.delete_chair(Chair(title="del-chair"))
 
 
@@ -51,9 +52,11 @@ def test_delete_user(app):
 @allure.title("Добавление пользователя в список врачей")
 def test_add_doctor(app):
     if app.settings.doctor_availability(Group(surname="Surname")) == 0:
-        app.settings.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
-                                         login='new-user-test', mail='newmail@mail.ru', phone='79041871637'))
-    app.settings.open_employees_doctor()
+        with allure.step("Если в системе нет пользователя"):
+            app.settings.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
+                                             login='new-user-test', mail='newmail@mail.ru',
+                                             phone='79041871637', user_group="Врач"))
+            app.settings.open_employees_doctor()
     app.settings.add_doctor(Group(surname="Surname", department="Терапевты"))
     # app.settings.add_department(department="Терапевты")
 
@@ -83,12 +86,12 @@ def test_add_doc_schedule(app):
             app.settings.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
                                              login='new-user-test', mail='newmail@mail.ru',
                                              phone='79041871637', user_group="Врач"))
-            app.settings.open_employees_doctor()
+            # app.settings.open_employees_doctor()
             # app.settings.add_doctor(Group(login="new-user-test"))
             app.settings.add_doctor(Group(surname="Surname", department="Терапевты"))
-            # app.settings.add_department(department="Терапевты")
+            app.settings.add_department(department="Терапевты")
     # app.settings.schedule_availability(Group(surname="Surname"))
-    app.settings.open_schedule_set()
+    # app.settings.open_schedule_set()
     app.settings.check_doc_schedule(Group(surname="Surname"))
 
 

@@ -31,7 +31,7 @@ class EmployeesHelper:
         if len(wd.find_elements(By.XPATH, "//div[.='Пользователи']/parent::div[@class='headbarLeft']")) == 0:
             wd.find_element(By.XPATH, "//*[.='Пользователи']/parent::a").click()
 
-    @allure.step("Открыть 'Настройки/Сотрудники/Кресла'")
+    @allure.step("Перейти в модуль «Сотрудники», в открывающемся списке выбираем пункт – «Кресла»")
     def open_employees_chair(self):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//div[.='Кресла']/parent::div[@class='headbarLeft']")) == 0:
@@ -46,7 +46,7 @@ class EmployeesHelper:
         if len(wd.find_elements(By.XPATH, "//div[.='Кресла']/parent::div[@class='headbarLeft']")) == 0:
             wd.find_element(By.XPATH, "//*[.='Кресла']/parent::a").click()
 
-    @allure.step("Открыть Настройки/Сотрудники/Врачи")
+    @allure.step("Перейти в раздел «Настройки» - «Сотрудники» - «Врачи»")
     def open_employees_doctor(self):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//div[.='Врачи']/parent::div[@class='headbarLeft']")) == 0:
@@ -61,7 +61,7 @@ class EmployeesHelper:
         if len(wd.find_elements(By.XPATH, "//div[.='Врачи']/parent::div[@class='headbarLeft']")) == 0:
             wd.find_element(By.XPATH, "//*[.='Врачи']/parent::a").click()
 
-    @allure.step("Открыть 'Настройки/Расписание/График работы врачей'")
+    @allure.step("Открыть настройки графика врачей")
     def open_schedule_set(self):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//*[@class='breadcrumb']//li[.='График работы врачей']")) == 0:
@@ -78,7 +78,7 @@ class EmployeesHelper:
                                     "//div[.='График работы врачей']/parent::div[@class='headbarLeft']")) == 0:
                 wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()
 
-    @allure.step("Нажать 'Добавить пользователя'")
+    @allure.step("Нажать «Добавить пользователя»")
     def add_user(self):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//*[@href='/boss/ajax.json?action=newUser']").click()
@@ -114,7 +114,7 @@ class EmployeesHelper:
         with allure.step("Подтвердить удаление"):
             wd.find_element(By.XPATH, "//button[.='Удалить']").click()
         time.sleep(2)
-        with allure.step(f"Проверка. Кресло {group.title} отсутствует в списке системы"):
+        with allure.step(f"Проверка. Кресло {group.title} отсутствует в системе"):
             assert len(wd.find_elements(By.XPATH, "//td[.='%s']" % group.title)) == 0
 
     def get_chair_list(self):
@@ -200,6 +200,7 @@ class EmployeesHelper:
     @allure.step("Добавить пользователю группу 'Врач'")
     def add_doctor(self, group):
         wd = self.app.wd
+        self.open_employees_doctor()
         with allure.step("Нажать 'Добавить'"):
             wd.find_element(By.XPATH, "//a[.='Добавить']").click()
         with allure.step(f"Выбрать пользователя: {group.surname}"):
@@ -256,7 +257,7 @@ class EmployeesHelper:
         self.open_employees_chair()
         self.add_chair(group)
 
-    @allure.step("Открыть 'Настройки/Сотрудники/Пользователи'")
+    @allure.step("Перейти в раздел «Настройки» - «Сотрудники» - «Пользователи»")
     def user_availability(self, group):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//div[.='Пользователи']/parent::div[@class='headbarLeft']")) == 0:
@@ -275,30 +276,30 @@ class EmployeesHelper:
                 print(f"Пользователь {group.login} уже присутствует в системе")
         return len(wd.find_elements(By.XPATH, "//td[.='%s']" % group.login))
 
-    @allure.step("Проверка тестовых данных. Проверить наличие кресла")
+    @allure.step("Перейти в модуль «Сотрудники», в открывающемся списке выбираем пункт – «Кресла»")
     def chair_availability(self, group):
         wd = self.app.wd
-        with allure.step(f"Проверить наличие кресла '{group.title}'"):
-            if len(wd.find_elements(By.XPATH, "//div[.='Кресла']/parent::div[@class='headbarLeft']")) == 0:
-                if len(wd.find_elements(By.XPATH, "//*[@class='btn btn-link js-sidebarSettingsOpen"
-                                                  " sidebarSpecialIcon active']")) == 0:
-                    wd.find_element(By.XPATH,
-                                    "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon']").click()
-            b = wd.find_element(By.XPATH, "//span[.='Сотрудники']/parent::div").get_attribute("aria-expanded")
-            if str(b) == "false":
-                wd.find_element(By.XPATH, "//*[.='Сотрудники']/parent::div").click()
-            time.sleep(1)
-            if len(wd.find_elements(By.XPATH, "//div[.='Кресла']/parent::div[@class='headbarLeft']")) == 0:
-                wd.find_element(By.XPATH, "//*[.='Кресла']/parent::a").click()
-            if len(wd.find_elements(By.XPATH, "//td[.='%s']" % group.title)) > 0:
-                with allure.step(f"Кресло {group.title} присутствует в системе"):
-                    print(f"Кресло {group.title} присутствует в системе")
-            if len(wd.find_elements(By.XPATH, "//td[.='%s']" % group.title)) == 0:
-                with allure.step(f"Кресло {group.title} отсутствует в системе"):
-                    print(f"Кресло {group.title} отсутствует в системе")
-            return len(wd.find_elements(By.XPATH, "//td[.='%s']" % group.title))
+        # with allure.step(f"Проверить наличие кресла '{group.title}'"):
+        if len(wd.find_elements(By.XPATH, "//div[.='Кресла']/parent::div[@class='headbarLeft']")) == 0:
+            if len(wd.find_elements(By.XPATH, "//*[@class='btn btn-link js-sidebarSettingsOpen"
+                                              " sidebarSpecialIcon active']")) == 0:
+                wd.find_element(By.XPATH,
+                                "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon']").click()
+        b = wd.find_element(By.XPATH, "//span[.='Сотрудники']/parent::div").get_attribute("aria-expanded")
+        if str(b) == "false":
+            wd.find_element(By.XPATH, "//*[.='Сотрудники']/parent::div").click()
+        time.sleep(1)
+        if len(wd.find_elements(By.XPATH, "//div[.='Кресла']/parent::div[@class='headbarLeft']")) == 0:
+            wd.find_element(By.XPATH, "//*[.='Кресла']/parent::a").click()
+        if len(wd.find_elements(By.XPATH, "//td[.='%s']" % group.title)) > 0:
+            with allure.step(f"Кресло {group.title} уже присутствует в системе"):
+                print(f"Кресло {group.title} уже присутствует в системе")
+            # if len(wd.find_elements(By.XPATH, "//td[.='%s']" % group.title)) == 0:
+            #     with allure.step(f"Кресло {group.title} отсутствует в системе"):
+            #         print(f"Кресло {group.title} отсутствует в системе")
+        return len(wd.find_elements(By.XPATH, "//td[.='%s']" % group.title))
 
-    @allure.step("Проверка тестовых данных. Проверить наличие врача в системе")
+    @allure.step("Перейти в раздел «Настройки» - «Сотрудники» - «Врачи»")
     def doctor_availability(self, group):
         wd = self.app.wd
         if len(wd.find_elements(By.XPATH, "//div[.='Врачи']/parent::div[@class='headbarLeft']")) == 0:
@@ -312,46 +313,47 @@ class EmployeesHelper:
         time.sleep(1)
         if len(wd.find_elements(By.XPATH, "//div[.='Врачи']/parent::div[@class='headbarLeft']")) == 0:
             wd.find_element(By.XPATH, "//*[.='Врачи']/parent::a").click()
-        if len(wd.find_elements(By.XPATH, "//td[contains(text(),'%s')]" % group.surname)) > 0:
-            with allure.step(f"Пользователь {group.surname} с ролью врача присутствует в системе"):
-                print(f"Пользователь {group.surname} с ролью врача присутствует в системе")
-        if len(wd.find_elements(By.XPATH, "//td[contains(text(),'%s')]" % group.surname)) == 0:
-            with allure.step(f"Пользователь {group.surname} с ролью врача отсутствует в системе"):
-                print(f"Пользователь {group.surname} с ролью врача отсутствует в системе")
+        # if len(wd.find_elements(By.XPATH, "//td[contains(text(),'%s')]" % group.surname)) > 0:
+        #     with allure.step(f"Пользователь {group.surname} уже присутствует в системе"):
+        #         print(f"Пользователь {group.surname} уже присутствует в системе")
+        # if len(wd.find_elements(By.XPATH, "//td[contains(text(),'%s')]" % group.surname)) == 0:
+        #     with allure.step(f"Пользователь {group.surname} с ролью врача отсутствует в системе"):
+        #         print(f"Пользователь {group.surname} с ролью врача отсутствует в системе")
         return len(wd.find_elements(By.XPATH, "//td[contains(text(),'%s')]" % group.surname))
 
-    @allure.step("Проверка тестовых данных. Проверить график работы врачей'")
+    # @allure.step("Генерация тестовых данных. График работы врачей'")
     def schedule_availability(self, group):
         wd = self.app.wd
-        with allure.step(f"Проверить в графике наличие врача: '{group.surname}'"):
-            if len(wd.find_elements(By.XPATH, "//*[@class='breadcrumb']//li[.='График работы врачей']")) == 0:
-                if len(wd.find_elements(By.XPATH, "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon "
-                                                  "active']")) == 0:
-                    wd.find_element(By.XPATH,
-                                    "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon']").click()
-                b = wd.find_element(By.XPATH,
-                                    "//span[.='Расписание']/parent::div[@role='button']").get_attribute("aria-expanded")
-                if str(b) == "false":
-                    wd.find_element(By.XPATH, "//span[.='Расписание']/parent::div[@role='button']").click()
-                time.sleep(1)
-                if len(wd.find_elements(By.XPATH,
-                                        "//div[.='График работы врачей']/parent::div[@class='headbarLeft']")) == 0:
-                    wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()
-                if len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname)) > 0:
-                    with allure.step(f"Врач {group.surname} уже добавлен в график работы"):
-                        print(f"Врач {group.surname} уже добавлен в график работы")
-                if len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname)) == 0:
-                    with allure.step(f"Врач {group.surname} отсутствует в графике работы"):
-                        print(f"Врач {group.surname} отсутствует в графике работы")
+        # with allure.step(f"Проверить в графике наличие врача: '{group.surname}'"):
+        if len(wd.find_elements(By.XPATH, "//*[@class='breadcrumb']//li[.='График работы врачей']")) == 0:
+            if len(wd.find_elements(By.XPATH, "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon "
+                                              "active']")) == 0:
+                wd.find_element(By.XPATH,
+                                "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon']").click()
+            b = wd.find_element(By.XPATH,
+                                "//span[.='Расписание']/parent::div[@role='button']").get_attribute("aria-expanded")
+            if str(b) == "false":
+                wd.find_element(By.XPATH, "//span[.='Расписание']/parent::div[@role='button']").click()
+            time.sleep(1)
+            if len(wd.find_elements(By.XPATH,
+                                    "//div[.='График работы врачей']/parent::div[@class='headbarLeft']")) == 0:
+                wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()
+            if len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname)) > 0:
+                with allure.step(f"Врач {group.surname} уже добавлен в график работы"):
+                    print(f"Врач {group.surname} уже добавлен в график работы")
+                # if len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname)) == 0:
+                #     with allure.step(f"Врач {group.surname} отсутствует в графике работы"):
+                #         print(f"Врач {group.surname} отсутствует в графике работы")
             return len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname))
 
-    @allure.step("Проверить добавление врача в расписание")
+    @allure.step("Проверка. Добавление врача в график работы")
     def check_doc_schedule(self, group):
         wd = self.app.wd
+        self.open_schedule_set()
         element = wd.find_element(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname)
         wd.execute_script("arguments[0].scrollIntoView();", element)
         time.sleep(1)
-        with allure.step(f"Врачу {group.surname} добавлен график работы"):
+        with allure.step(f"Врач {group.surname} добавлен в график работы"):
             doc = wd.find_element(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname).text
             print("Врач добавленный в расписание:", doc[:-5])
             assert group.surname == doc[:-5]
