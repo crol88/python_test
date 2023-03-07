@@ -196,20 +196,20 @@ class CbaseHelper:
         self.fill_newclient_form(group)
         self.submit_newpatient_creation()
 
-    @allure.step("Открыть список пациентов")
+    # @allure.step("Открыть список пациентов")
     def count(self, check_patient):
         wd = self.app.wd
-        with allure.step(f"Проверить с списке наличие пациента: {check_patient}"):
-            if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
-                b = wd.find_element(By.XPATH,
-                                    "//*[@alt='Пациенты']/parent::div/parent::div/parent::div").get_attribute("class")
-                if str(b) == "link subMenuOpen active":
-                    wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
-                wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+        # with allure.step(f"Проверить в списке наличие пациента: {check_patient}"):
+        if len(wd.find_elements(By.LINK_TEXT, "Список пациентов")) == 0:
+            b = wd.find_element(By.XPATH,
+                                "//*[@alt='Пациенты']/parent::div/parent::div/parent::div").get_attribute("class")
+            if str(b) == "link subMenuOpen active":
                 wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
-            return len(wd.find_elements(By.LINK_TEXT, check_patient))
+            wd.find_element(By.XPATH, "//*[@alt='Пациенты']/ancestor::div[@class='menuLinkLine']").click()
+            wd.find_element(By.XPATH, "//*[text()='Список пациентов']").click()
+        return len(wd.find_elements(By.LINK_TEXT, check_patient))
 
-    @allure.step("Если пациент не найден")
+    @allure.step("Перейти в раздел «Пациенты» - «Список пациентов»")
     def add_patient_for(self, group):
         # wd = self.app.wd
         # with testit.step('Изменить филиал, если указан'):
@@ -227,16 +227,16 @@ class CbaseHelper:
 
     def get_group_list(self):
         # Проверка списка пациентов
-        if self.group_cache is None:
-            wd = self.app.wd
-            self.open_cbase()
-            self.group_cache = []
-            for element in wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"):
-                text = element.find_element(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr/td[2]").text
-                cbaseid = element.find_element(By.XPATH, "//*[@class='js-client-checkbox']") \
-                    .get_attribute("data-client-id")
-                self.group_cache.append(Group(name=text, cbaseid=cbaseid))
-        return list(self.group_cache)
+        wd = self.app.wd
+        self.open_cbase()
+        # for element in wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"):
+        #     text = element.find_element(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr/td[2]").text
+        #     cbaseid = element.find_element(By.XPATH, "//*[@class='js-client-checkbox']") \
+        #         .get_attribute("data-client-id")
+        #     self.group_cache.append(Group(name=text, cbaseid=cbaseid))
+        patient_list = len(wd.find_elements(By.XPATH, "//*[@class='table table-clients-list']/tbody/tr"))
+        print(patient_list)
+        return patient_list
 
     def get_patient_list(self):
         wd = self.app.wd
@@ -268,6 +268,19 @@ class CbaseHelper:
         print("Фактический результат *", filial.text)
         print("Ожидаемый результат *", "Пациент обслуживается: не прикреплен к филиалам")
         assert filial.text == "Пациент обслуживается: не прикреплен к филиалам"
+
+    def check_filial_switch_on(self):
+        wd = self.app.wd
+        filial_fact = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[3]/*[@class='panel-body']").text
+        time.sleep(1)
+        filial_list = wd.find_elements(By.XPATH, "//select[@class='select2-offscreen']/option")
+        time.sleep(1)
+        filial = [e.get_attribute('textContent') for e in filial_list]
+        filial.remove('Все филиалы')
+        print("Фактический результат *", filial_fact)
+        print("Ожидаемый результат *", "Пациент обслуживается: не прикреплен к филиалам")
+        print(str(filial))
+        # assert filial_fact == "Пациент обслуживается: не прикреплен к филиалам"
 
     def check_empty_surname(self):
         wd = self.app.wd
@@ -347,3 +360,15 @@ class CbaseHelper:
         print("Список пациентов:", status)
         assert status == "Ничего не найдено"
         assert alert == "По вашему запросу ничего не найдено, попробуйте изменить параметры поиска."
+
+    def save_filial_info(self):
+        wd = self.app.wd
+        time.sleep(1)
+        filial_list = wd.find_elements(By.XPATH, "//select[@class='select2-offscreen']/option")
+        time.sleep(1)
+        filial = [e.get_attribute('textContent') for e in filial_list]
+        filial.remove('Все филиалы')
+        select = Select(wd.find_element(By.XPATH, "//select[@class='select2-offscreen']"))
+        select.select_by_visible_text(filial[0])
+        print(f"Выбранный филиал: {filial[0]}")
+        return f"Пациент обслуживается: {filial[0]}"

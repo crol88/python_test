@@ -131,12 +131,14 @@ def test_add_client_without_filial(app):
 
 
 def test_add_with_filial(app):
+    sel_fil = app.cbase.save_filial_info()
     if app.cbase.count("WITH-ONE") == 0:
         app.cbase.add_patient_for(
             Group(surname="WITH-ONE", name="FILIAL", secondname="ONE", birthday="18111996", phone="79051138596",
-                  fromwhere="2ГИС", filial=""))
+                  fromwhere="2ГИС"))
     app.cbase.search_patient(search_name="WITH-ONE FILIAL ONE")
-    app.infocard_mainpage.check_filial(enter_filial="Филиал 1")
+    fact_fil = app.infocard_mainpage.check_filial()
+    assert sel_fil == fact_fil
 
 
 def test_add_note(app):

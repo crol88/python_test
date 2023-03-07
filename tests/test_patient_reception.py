@@ -124,3 +124,48 @@ def test_cancel_approval(app):
                                            doctor="Гигиенистова2 Анна Андреевна")
             app.tplan.canban_approved(service="Профессиональная гигиена: дентикюр Norma")
     app.tplan.cancel_approval()
+
+
+def test_edit_approved_tplan(app):
+    app.settings.gen_treatment_plan_data()
+    if app.settings.graph_availability_today(Group(surname="Планлечения")) == 0:
+        app.settings.gen_treatment_plan_schedule()
+    if app.cbase.count("ПЛАН-ЛЕЧЕНИЯ") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="План-лечения", name="Тест", secondname="Тест", birthday="14082002",
+                  phone="79058881557",
+                  fromwhere="2ГИС", filial=""))
+    app.cbase.search_patient(search_name="ПЛАН-ЛЕЧЕНИЯ")
+    app.tplan.open_treatment_plan()
+    if app.tplan.check_drafts(service="Профессиональная гигиена: дентикюр Norma") == 0:
+        if app.tplan.check_approved(service="Профессиональная гигиена: дентикюр Norma") == 0:
+            app.tplan.select_optimal_tplan(area="Шейка зуба",
+                                           problem="Зубные отложения",
+                                           variants="Снятие зубных отложений/ Профессиональная гигиена",
+                                           var_next="Профессиональная гигиена Norma",
+                                           doctor="Гигиенистова2 Анна Андреевна")
+            app.tplan.canban_approved(service="Профессиональная гигиена: дентикюр Norma")
+    app.tplan.edit_approved_tplan(Group(surname="Планлечения", name="Name", secondname="Secondname"))
+
+
+def test_reg_approved_tplan(app):
+    app.settings.gen_treatment_plan_data()
+    if app.settings.graph_availability_today(Group(surname="Планлечения")) == 0:
+        app.settings.gen_treatment_plan_schedule()
+    if app.cbase.count("ПЛАН-ЛЕЧЕНИЯ") == 0:
+        app.cbase.add_patient_for(
+            Group(surname="План-лечения", name="Тест", secondname="Тест", birthday="14082002",
+                  phone="79058881557",
+                  fromwhere="2ГИС", filial=""))
+    app.cbase.search_patient(search_name="ПЛАН-ЛЕЧЕНИЯ")
+    app.tplan.open_treatment_plan()
+    if app.tplan.check_drafts(service="Профессиональная гигиена: дентикюр Norma") == 0:
+        if app.tplan.check_approved(service="Профессиональная гигиена: дентикюр Norma") == 0:
+            app.tplan.select_optimal_tplan(area="Шейка зуба",
+                                           problem="Зубные отложения",
+                                           variants="Снятие зубных отложений/ Профессиональная гигиена",
+                                           var_next="Профессиональная гигиена Norma",
+                                           doctor="Гигиенистова2 Анна Андреевна")
+            app.tplan.canban_approved(service="Профессиональная гигиена: дентикюр Norma")
+            app.tplan.edit_approved_tplan(Group(surname="Планлечения", name="Name", secondname="Secondname"))
+    app.tplan.reg_approved_tplan()

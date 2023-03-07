@@ -2,7 +2,7 @@
 class Group:
     def __init__(self, surname=None, name=None, secondname=None, birthday=None, phone=None, fromwhere=None,
                  filial=None, cbaseid=None, value=None, login=None, password=None, mail=None, s_time=None,
-                 title=None, user_group=None, department=None):
+                 title=None, user_group=None, department=None, e_time=None):
         self.name = name
         self.surname = surname
         self.secondname = secondname
@@ -16,6 +16,7 @@ class Group:
         self.password = password
         self.mail = mail
         self.s_time = s_time
+        self.e_time = e_time
         self.title = title
         self.user_group = user_group
         self.department = department

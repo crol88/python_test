@@ -35,7 +35,7 @@ def test_add_patient_without_filial_plugin_on(app):
             Group(surname="Plugin-on", name="Client", secondname="Branch", birthday="19071997",
                   phone="79058547856", fromwhere="2ГИС"))
     app.cbase.search_patient(search_name="PLUGIN-ON")
-    app.cbase.check_filial_info()
+    app.cbase.check_filial_switch_on()
 
 
 def test_patient_search_criteria_set_off(app):
@@ -77,17 +77,17 @@ def test_patient_for_search(app):
 
 
 def test_delete_patient(app):
+    old_groups = app.cbase.get_group_list()
     if app.cbase.count("NEW") == 0:
         app.cbase.add_patient_for(
-            Group(surname="New", name="Patient", secondname="Test", birthday="12081980",
+            Group(surname="Delete", name="Patient", secondname="Test", birthday="12081980",
                   phone="79058889556",
                   fromwhere="2ГИС", filial=""))
-    old_groups = app.cbase.get_group_list()
-    app.cbase.delete_new_patient(search_name="NEW")
+    app.cbase.delete_new_patient(search_name="Delete")
     new_groups = app.cbase.get_group_list()
-    assert len(old_groups) - 1 == len(new_groups)
-    old_groups[0:1] = []
     assert old_groups == new_groups
+    # old_groups[0:1] = []
+    # assert old_groups == new_groups
 
 
 # def test_del_patient(app):

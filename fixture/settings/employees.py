@@ -8,14 +8,14 @@ from model.group import Chair
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-
+from selenium.common.exceptions import NoSuchElementException
 
 class EmployeesHelper:
 
     def __init__(self, app):
         self.app = app
 
-    @allure.step("Открыть 'Настройки/Сотрудники/Пользователи'")
+    @allure.step("Перейти в раздел «Настройки» - «Сотрудники» - «Пользователи»")
     def open_employees_users(self):
         wd = self.app.wd
         # Настройки
@@ -185,10 +185,16 @@ class EmployeesHelper:
     @allure.step("Удалить пользователя")
     def delete_user(self, group):
         wd = self.app.wd
+        time.sleep(2)
         with allure.step(f"Нажать на кнопку 'Удалить' у пользователя с логином: {group.login}"):
+            element = wd.find_element(By.XPATH, "//*[.='%s']/following-sibling::*[@class='text-right']"
+                                                "//button[@title='']" % group.login)
+            time.sleep(2)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
             user = wd.find_element(By.XPATH, "//*[.='%s']" % group.login).text
-            wd.find_element(By.XPATH, "//*[.='%s']/following-sibling::*[@class='text-right']//button[@title='']"
-                            % group.login).click()
+            time.sleep(2)
+            wd.find_element(By.XPATH, "//*[.='%s']/following-sibling::*[@class='text-right']"
+                                      "//button[@data-original-title='Удалить']" % group.login).click()
         time.sleep(1)
         with allure.step("Подтвердить удаление"):
             wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
@@ -217,13 +223,14 @@ class EmployeesHelper:
         with allure.step("Нажать 'Сохранить'"):
             wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
         time.sleep(1)
+        print("//td[contains(text(),'" + group.surname + "')]/following-sibling::td/div[.='" + group.department + "']")
 
     @allure.step("Удалить врача")
     def delete_doctor(self, group):
         wd = self.app.wd
         wd.execute_script("window.scrollTo(0,1000)")
         time.sleep(3)
-        with allure.step(f"Нажать 'Удалить' врача {group.surname}"):
+        with allure.step(f"Нажать кнопку 'Удалить' врача {group.surname}"):
             wd.find_element(By.XPATH,
                             "//td[contains(text(),'%s')]/following-sibling::td//button" % group.surname).click()
         time.sleep(1)
@@ -234,10 +241,10 @@ class EmployeesHelper:
     def add_department(self, department):
         wd = self.app.wd
         with allure.step(f"Выбрать отделение: {department}"):
-            wd.find_element(By.XPATH, "//label[contains(text(),'Отделения врача')]/following-sibling::input").send_keys(
-                department)
-            wd.find_element(By.XPATH, "//label[contains(text(),'Отделения врача')]/following-sibling::input").send_keys(
-                Keys.ENTER)
+            loc = "//label[contains(text(),'Отделения врача')]/following-sibling::input"
+            wd.find_element(By.XPATH, loc).send_keys(department)
+            wd.find_element(By.XPATH, "//label[contains(text(),'Отделения врача')]/following-sibling::input")\
+                .send_keys(Keys.ENTER)
         with allure.step("Нажать 'Сохранить'"):
             wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
         time.sleep(1)
@@ -321,7 +328,7 @@ class EmployeesHelper:
         #         print(f"Пользователь {group.surname} с ролью врача отсутствует в системе")
         return len(wd.find_elements(By.XPATH, "//td[contains(text(),'%s')]" % group.surname))
 
-    # @allure.step("Генерация тестовых данных. График работы врачей'")
+    @allure.step("Перейти в раздел «Настройки» - «Расписание» - «График работы врачей»")
     def schedule_availability(self, group):
         wd = self.app.wd
         # with allure.step(f"Проверить в графике наличие врача: '{group.surname}'"):
@@ -341,10 +348,53 @@ class EmployeesHelper:
             if len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname)) > 0:
                 with allure.step(f"Врач {group.surname} уже добавлен в график работы"):
                     print(f"Врач {group.surname} уже добавлен в график работы")
-                # if len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname)) == 0:
-                #     with allure.step(f"Врач {group.surname} отсутствует в графике работы"):
-                #         print(f"Врач {group.surname} отсутствует в графике работы")
-            return len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname))
+            if len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname)) == 0:
+                with allure.step(f"Врач {group.surname} отсутствует в графике работы"):
+                    print(f"Врач {group.surname} отсутствует в графике работы")
+        return len(wd.find_elements(By.XPATH, "//strong[contains(text(),'%s')]" % group.surname))
+
+    def open_work_shift_setting(self):
+        wd = self.app.wd
+        wd.refresh()
+        if len(wd.find_elements(By.XPATH, "//*[@class='breadcrumb']//li[.='Настройка смен']")) == 0:
+            if len(wd.find_elements(By.XPATH, "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon "
+                                              "active']")) == 0:
+                wd.find_element(By.XPATH,
+                                "//*[@class='btn btn-link js-sidebarSettingsOpen sidebarSpecialIcon']").click()
+        time.sleep(2)
+        b = wd.find_element(By.XPATH,
+                            "//span[.='Расписание']/parent::div[@role='button']").get_attribute("aria-expanded")
+        if str(b) == "false":
+            wd.find_element(By.XPATH, "//span[.='Расписание']/parent::div[@role='button']").click()
+        time.sleep(1)
+        if len(wd.find_elements(By.XPATH, "//div[.='Настройка смен']/parent::div[@class='headbarLeft']")) == 0:
+            wd.find_element(By.XPATH, "//*[.='Настройка смен']/parent::a").click()
+
+    def add_work_shift_template(self, name, start, end):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//a[.='Добавить']").click()
+        wd.find_element(By.XPATH, "//input[@name='name']").send_keys(name)
+        select_s1 = Select(wd.find_element(By.XPATH, "//select[@name='start[1]']"))
+        select_s1.select_by_visible_text(start)
+        select_e1 = Select(wd.find_element(By.XPATH, "//select[@name='end[1]']"))
+        select_e1.select_by_visible_text(end)
+        add = wd.find_element(By.XPATH, "//div[@class='btn-group btn-group-xs']/a")
+        # wd.execute_script("arguments[0].scrollIntoView();", add)
+        add.click()
+        select_s1 = Select(wd.find_element(By.XPATH, "//select[@name='start[2]']"))
+        select_s1.select_by_visible_text(start)
+        select_e1 = Select(wd.find_element(By.XPATH, "//select[@name='end[2]']"))
+        select_e1.select_by_visible_text(end)
+        time.sleep(5)
+        add.click()
+        time.sleep(2)
+        add.click()
+        time.sleep(2)
+        add.click()
+        time.sleep(2)
+        add.click()
+        time.sleep(2)
+        add.click()
 
     @allure.step("Проверка. Добавление врача в график работы")
     def check_doc_schedule(self, group):
@@ -358,35 +408,67 @@ class EmployeesHelper:
             print("Врач добавленный в расписание:", doc[:-5])
             assert group.surname == doc[:-5]
 
-    @allure.step("Генерация тестовых данных")
+    @allure.step("Проверка тестовых данных")
     def add_schedule_step(self):
         if self.schedule_availability(Group(surname="Surname")) == 0:
-            if self.chair_availability(Chair(title="test-chair")) == 0:
+            if self.chair_availability(Chair(title="surname_chair")) == 0:
                 self.add_chair(
-                    Chair(title="test-chair", sorting="9", department="Терапевты", filial="Филиал 1"))
+                    Chair(title="surname_chair", sorting="9", department="Терапевты", filial="Филиал 1"))
             if self.doctor_availability(Group(surname="Surname")) == 0:
-                self.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
-                                         login='new-user-test', mail='newmail@mail.ru', phone='79041871637'))
-                self.open_employees_doctor()
-                self.add_doctor(Group(surname="Surname"))
-                # self.add_department(department="Терапевты")
+                with allure.step("Если в системе нет пользователя:"):
+                    self.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
+                                             login='new-user-test', mail='newmail@mail.ru',
+                                             phone='79041871637', user_group='Врач'))
+                    self.add_doctor(Group(surname="Surname", department="Терапевты"))
                 self.open_schedule_set()
-        # self.check_doc_schedule(Group(surname="Surname"))
+
+    def gen_treatment_plan_data(self):
+        if self.schedule_availability(Group(surname="Планлечения")) == 0:
+            if self.chair_availability(Chair(title="кресло-для-плана-лечения")) == 0:
+                self.add_chair(
+                    Chair(title="кресло-для-плана-лечения", sorting="15", department="Гигиенисты", filial="Филиал 1"))
+            if self.doctor_availability(Group(surname="Планлечения")) == 0:
+                with allure.step("Если в системе нет пользователя:"):
+                    self.add_user_step(Group(surname="Планлечения", name="Name", secondname="Secondname",
+                                             login='treatment-plan-test', mail='plannewmail@mail.ru',
+                                             phone='79041876666', user_group='Врач'))
+                    self.add_doctor(Group(surname="Планлечения", department="Гигиенисты"))
+                self.open_schedule_set()
+
+    def gen_treatment_plan_schedule(self):
+        self.fill_doc_schedule(Group(surname="Планлечения"))
+        self.fill_date_picker()
+        self.fill_chair_selection(Chair(title="кресло-для-плана-лечения"))
+        self.default_interval_selection(Group(s_time="9:00", e_time="21:00"))
+        self.default_schedule_correction()
+        self.schedule_confirm(Group(surname="Планлечения"))
 
     @allure.step("Генерация тестовых данных")
     def add_alt_schedule_step(self):
         if self.schedule_availability(Group(surname="Second")) == 0:
-            if self.chair_availability(Chair(title="second-test-chair")) == 0:
+            if self.chair_availability(Chair(title="test-chair-second")) == 0:
                 self.add_chair(
-                    Chair(title="second-test-chair", sorting="10", department="Терапевты", filial="Филиал 1"))
+                    Chair(title="test-chair-second", sorting="10", department="Терапевты", filial="Филиал 1"))
             if self.doctor_availability(Group(surname="Second")) == 0:
-                self.add_user_step(Group(surname="Second", name="Name", secondname="Secondname",
-                                         login='Second-user-test', mail='Secondmail@mail.ru', phone='79041871136'))
-                self.open_employees_doctor()
-                self.add_doctor(Group(surname="Second", department="Терапевты"))
-                # self.add_department(department="Терапевты")
+                with allure.step("Если в системе нет пользователя:"):
+                    self.add_user_step(Group(surname="Second", name="Name", secondname="Secondname",
+                                             login='Second-user-test', mail='Secondmail@mail.ru',
+                                             phone='79041871136', user_group='Врач'))
+                    self.add_doctor(Group(surname="Second", department="Терапевты"))
                 self.open_schedule_set()
-        # self.check_doc_schedule(Group(surname="Surname"))
+
+    def gen_interval_data(self):
+        if self.schedule_availability(Group(surname="Interval")) == 0:
+            if self.chair_availability(Chair(title="test-interval-chair")) == 0:
+                self.add_chair(
+                    Chair(title="test-interval-chair", sorting="13", department="Терапевты", filial="Филиал 1"))
+            if self.doctor_availability(Group(surname="Interval")) == 0:
+                with allure.step("Если в системе нет пользователя:"):
+                    self.add_user_step(Group(surname="Interval", name="Name", secondname="Secondname",
+                                             login='Interval-user-test', mail='Intervalnewmail@mail.ru',
+                                             phone='79041871644', user_group='Врач'))
+                    self.add_doctor(Group(surname="Interval", department="Терапевты"))
+                self.open_schedule_set()
 
     def alt_schedule_step(self):
         if self.schedule_availability(Group(surname="Surtest")) == 0:
@@ -395,7 +477,8 @@ class EmployeesHelper:
                     Chair(title="dnd-test-chair", sorting="11", department="Терапевты", filial="Филиал 1"))
             if self.doctor_availability(Group(surname="Surtest")) == 0:
                 self.add_user_step(Group(surname="Surtest", name="Name", secondname="Secondname",
-                                         login='Surtest-user-test', mail='Surtest@mail.ru', phone='79041874682'))
+                                         login='Surtest-user-test', mail='Surtest@mail.ru',
+                                         phone='79041874682', user_group='Врач'))
                 self.open_employees_doctor()
                 self.add_doctor(Group(surname="Surtest", department="Терапевты"))
                 # self.add_department(department="Терапевты")
@@ -409,18 +492,20 @@ class EmployeesHelper:
                     Chair(title="edit_sched-chair", sorting="14", department="Терапевты", filial="Филиал 1"))
             if self.doctor_availability(Group(surname="Surtest")) == 0:
                 self.add_user_step(Group(surname="Suredit", name="Sur", secondname="Edit",
-                                         login='Suredit-test', mail='Suredit@mail.ru', phone='79041871793'))
+                                         login='Suredit-test', mail='Suredit@mail.ru',
+                                         phone='79041871793', user_group='Врач'))
                 self.open_employees_doctor()
                 self.add_doctor(Group(surname="Suredit", department="Терапевты"))
                 # self.add_department(department="Терапевты")
                 self.open_schedule_set()
 
-    @allure.step("Открыть форму установки графика")
+    @allure.step("Выбрать ячейку с текущей датой для создания графика")
     def fill_doc_schedule(self, group):
         wd = self.app.wd
         sys_date = str(datetime.date.today().strftime('%d.%m.%y'))
         locator = f"{sys_date} / {group.surname}"
         print("//div[contains(@data-original-title,'%s')]" % locator)
+        time.sleep(1)
         element = wd.find_element(By.XPATH, "//div[contains(@data-original-title,'%s')]" % locator)
         time.sleep(2)
         wd.execute_script("arguments[0].scrollIntoView();", element)
@@ -428,11 +513,9 @@ class EmployeesHelper:
         doc = element.get_attribute("data-original-title")
         print("Открыто расписание врача:", doc)
         time.sleep(2)
-        # wd.find_element(By.XPATH, "//div[contains(@data-original-title,'%s')]" % locator).click()
         element.click()
         assert locator == doc[:-5]
         assert len(wd.find_elements(By.XPATH, "//h4[.='Установить график на день']")) != 0
-        # return len(wd.find_element(By.XPATH, "//div[contains(@data-original-title,'%s')]" % locator))
 
     @allure.step("Установить график работы на день")
     def fill_doc_schedule_tomorrow(self, group):
@@ -511,9 +594,13 @@ class EmployeesHelper:
     def default_interval_selection(self, group):
         wd = self.app.wd
         if group.s_time is not None:
-            with allure.step("Если интервал указан, то выбрать значения"):
+            with allure.step(f"Начало: {group.s_time}"):
                 wd.find_element(By.XPATH, "//div[@id='s2id_form_stompro_admin_dayGraphWizard_select_0_']").click()
                 wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(group.s_time)
+                wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(Keys.ENTER)
+            with allure.step(f"Окончание: {group.e_time}"):
+                wd.find_element(By.XPATH, "//div[@id='s2id_form_stompro_admin_dayGraphWizard_select_1_']").click()
+                wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(group.e_time)
                 wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(Keys.ENTER)
         with allure.step("Нажать 'Далее'"):
             wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
@@ -527,20 +614,27 @@ class EmployeesHelper:
             wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
 
     @allure.step("Сохранить график работы")
-    def schedule_confirm(self):
+    def schedule_confirm(self, group):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
         time.sleep(1)
-        result = wd.find_element(By.XPATH, "//div[.='График работы врача сохранен.']").text
-        assert result == "График работы врача сохранен."
-        wd.find_element(By.XPATH, "//a[@class='btn-default btn js-done-step']").click()
+        with allure.step("Проверка. График работы врача на день добавлен в расписание"):
+            result = wd.find_element(By.XPATH, "//div[.='График работы врача сохранен.']").text
+            assert result == "График работы врача сохранен."
+            wd.find_element(By.XPATH, "//a[@class='btn-default btn js-done-step']").click()
+            time.sleep(2)
+            assert len(wd.find_elements(By.XPATH,
+                                        "//div[contains(@data-original-title,'%s')]/small" % group.surname)) > 0
+
+    def set_schedule_for_day(self):
+        wd = self.app.wd
 
     @allure.step("Заполнить форму установки графика на день")
     def fill_graph_day_form(self, group):
         self.fill_chair_selection(group)
         self.default_interval_selection(group)
         self.default_schedule_correction()
-        self.schedule_confirm()
+        self.schedule_confirm(group)
 
     @allure.step("Проверить заполнение расписания")
     def day_graph_availability(self, group):
@@ -557,6 +651,20 @@ class EmployeesHelper:
             # print("Открыто расписание врача:", doc)
             # time.sleep(1)
             # wd.find_element(By.XPATH, "//div[contains(@data-original-title,'%s')]" % locator).click()
+        print("график:", "//div[contains(@data-original-title,'%s')]/small" % locator)
+        return len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator))
+
+    def graph_availability_today(self, group):
+        wd = self.app.wd
+        sys_date = (datetime.date.today().strftime('%d.%m.%y'))
+        locator = f"{sys_date} / {group.surname}"
+        time.sleep(2)
+        # print(locator)
+        if len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator)) != 0:
+            element = wd.find_element(By.XPATH, "//div[contains(@data-original-title,'%s')]" % locator)
+            wd.execute_script("arguments[0].scrollIntoView();", element)
+            time.sleep(2)
+        print("график:", "//div[contains(@data-original-title,'%s')]/small" % locator)
         return len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator))
 
     @allure.step("Удаление расписания врача на день")
@@ -606,10 +714,10 @@ class EmployeesHelper:
         self.add_alt_schedule_step()
         self.fill_doc_schedule(Group(surname="Second"))
         self.fill_date_picker()
-        self.fill_chair_selection(Chair(title="second-test-chair"))
-        self.default_interval_selection(Group(s_time="10:00"))
+        self.fill_chair_selection(Chair(title="test-chair-second"))
+        self.default_interval_selection(Group(s_time="9:00", e_time="21:00"))
         self.default_schedule_correction()
-        self.schedule_confirm()
+        self.schedule_confirm(Group(surname="Second"))
 
     @allure.step("Создать тестовые данные")
     def fill_edit_schedule(self):
@@ -617,6 +725,6 @@ class EmployeesHelper:
         self.fill_doc_schedule(Group(surname="Suredit"))
         self.fill_date_picker()
         self.fill_chair_selection(Chair(title="edit_sched-chair"))
-        self.default_interval_selection(Group(s_time="10:00"))
+        self.default_interval_selection(Group(s_time="10:00", e_time="20:00"))
         self.default_schedule_correction()
-        self.schedule_confirm()
+        self.schedule_confirm(Group(surname="Suredit"))

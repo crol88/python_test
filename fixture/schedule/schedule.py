@@ -7,6 +7,8 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from datetime import datetime
+from datetime import timedelta
 
 
 class ScheduleHelper:
@@ -123,9 +125,9 @@ class ScheduleHelper:
         wd = self.app.wd
         with allure.step(f"Ввести фамилию пациента: {group.surname}"):
             wd.find_element(By.XPATH, "//div[@class=' css-nsoqb2']/input").send_keys(group.surname)
-            time.sleep(4)
+            time.sleep(6)
         with allure.step(f"В результате поиска выбрать пациента {group.surname}"):
-            wd.find_element(By.XPATH, "//div[contains(@id,'option-0')]").click()
+            wd.find_element(By.XPATH, "//*[contains(@id,'option-0')]").click()
             time.sleep(1)
         # wd.find_element(By.ID, "react-select-3-option-0").click()
         # pick = wd.find_elements(By.XPATH, "//div[contains(@id,'option')]")
@@ -237,7 +239,9 @@ class ScheduleHelper:
     def check_fill_schedule(self, group):
         wd = self.app.wd
         with allure.step(f"Проверить график работы врача '{group.surname}' на текущую дату"):
-            sys_date = str(datetime.date.today().strftime('%d.%m.%y'))
+            now = datetime.now()
+            # sys_date = str(datetime.date.today().strftime('%d.%m.%y'))
+            sys_date = now.strftime('%d.%m.%y')
             locator = f"{sys_date} / {group.surname}"
             if len(wd.find_elements(By.XPATH, "//div[contains(@data-original-title,'%s')]/small" % locator)) != 0:
                 print("//div[contains(@data-original-title,'%s')]/small" % locator)
@@ -302,10 +306,12 @@ class ScheduleHelper:
     def tp_paticard(self, locator):
         wd = self.app.wd
         with allure.step(f"Нажать на ранее созданную запись в расписании {locator}"):
-            element = wd.find_element(By.XPATH,
-                                      "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator)
+            element = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]"
+                                                "/ancestor:: div[@class='taskDnD']" % locator)
             wd.execute_script("arguments[0].scrollIntoView();", element)
-            element.click()
+            # element.click()
+            time.sleep(2)
+            wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor:: div[@class='taskDnD']" % locator).click()
         with allure.step("В открывшемся окне нажать 'Амбулаторная карта'"):
             wd.find_element(By.XPATH, "//li[.='Амбулаторная карта']").click()
         time.sleep(2)
@@ -512,7 +518,7 @@ class ScheduleHelper:
                 wd.find_element(By.XPATH, "//*[.='График работы врачей']/parent::a").click()
 
     @allure.step("Добавить служебную запись")
-    def open_service_record_form(self, surname, t_start, t_end):
+    def open_service_record_form(self, surname):
         wd = self.app.wd
         with allure.step("Нажать 'Служебная запись'"):
             wd.find_element(By.XPATH, "//button[@title='Служебная запись']").click()
@@ -531,10 +537,19 @@ class ScheduleHelper:
             wd.find_element(By.XPATH, "//button[@class='modalClose']").click()
         with allure.step("Выбор места. Нажать 'Далее'"):
             wd.find_element(By.XPATH, "//button[@class='btn-default btn js-jump-step']").click()
+        # определить время начала
+        now = datetime.now()
+        time_1 = (now + timedelta(hours=1)).strftime("%H")
+        t_start = f"{time_1}:00"
         with allure.step(f"Выбор диапазона. Выбрать время начала: {t_start}"):
+            print("время:", t_start)
             time_start = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][timeStart]']"))
             time_start.select_by_visible_text(t_start)
+        # определить время окончания
+        time_2 = (now + timedelta(hours=2)).strftime("%H")
+        t_end = f"{time_2}:00"
         with allure.step(f"Выбор диапазона. Выбрать время окончания: {t_end}"):
+            print("время:", t_end)
             time_end = Select(wd.find_element(By.XPATH, "//select[@name='wizard[data][timeEnd]']"))
             time_end.select_by_visible_text(t_end)
         with allure.step("Выбор диапазона. Нажать 'Далее'"):

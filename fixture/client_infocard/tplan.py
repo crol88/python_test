@@ -361,4 +361,40 @@ class TreatmentPlanHelper:
                                                "//div[@class='Canban_element_heading']"))
         with allure.step(f"Проверка. Кол-во утвержденных приемов: {num}."
                          f" Кол-во утвержденных приемов после удаления: {num - 1}"):
+            print(num, "=", num_d)
             assert num - 1 == num_d
+
+    def edit_approved_tplan(self, group):
+        wd = self.app.wd
+        edit = wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_approved']//button[3]")
+        time.sleep(1)
+        wd.execute_script("arguments[0].scrollIntoView();", edit)
+        time.sleep(4)
+        wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_approved']//button[3]").click()
+        # Выбор врача
+        sel = Select(wd.find_element(By.XPATH, "//select[@name='id_doctor']"))
+        sel.select_by_visible_text(f"{group.surname} {group.name} {group.secondname}")
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//textarea[@name='comment']").send_keys("Причина смены врача")
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
+        doc_edit = str(f"{group.surname} {group.name[0]}.{group.secondname[0]}.")
+        print(doc_edit)
+        time.sleep(4)
+        canban_doc = wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_approved']"
+                                               "//div[@class='Canban_element_doctor']").text
+        print("text", canban_doc)
+        assert doc_edit == canban_doc
+
+    def reg_approved_tplan(self):
+        wd = self.app.wd
+        reg = wd.find_element(By.XPATH, "//button[.='Записать']")
+        time.sleep(1)
+        wd.execute_script("arguments[0].scrollIntoView();", reg)
+        time.sleep(4)
+        wd.find_element(By.XPATH, "//button[.='Записать']").click()
+        wd.find_element(By.XPATH, "//button[.='Развернуть']").click()
+        sel = Select(wd.find_element(By.XPATH, "//div[4]/select[@class='form-control']"))
+        sel.select_by_visible_text("20:00-21:00")
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//button[.='Сохранить']").click()

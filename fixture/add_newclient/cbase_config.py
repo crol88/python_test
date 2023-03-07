@@ -33,6 +33,9 @@ class CbaseConfigHelper:
         print("Прикреплять пациента ко всем филиалам автоматически:", active.text)
         assert active.text == status
         time.sleep(1)
+        switcher = wd.find_element(By.XPATH, "//*[@name='settings[cbase.client.branches.branchAll]']"
+                                             "/parent::label[contains(@class,'active')]").text
+        print(f"Прикреплять пациента ко всем филиалам автоматически: {switcher}")
         wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
 
     def search_criteria_set(self, status):

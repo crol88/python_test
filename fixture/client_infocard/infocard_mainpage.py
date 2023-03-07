@@ -47,13 +47,13 @@ class InfoCardHelper:
         print(filial)
         assert "Филиал" not in filial
 
-    def check_filial(self, enter_filial):
+    def check_filial(self):
         wd = self.app.wd
         element = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[3]/*[@class='panel-body']")
         wd.execute_script("arguments[0].scrollIntoView();", element)
         filial = wd.find_element(By.XPATH, "//*[@class='col-md-3']/div[3]/*[@class='panel-body']").text
         print(filial)
-        assert enter_filial in filial
+        return filial
 
     def add_note(self, enter_text):
         wd = self.app.wd
