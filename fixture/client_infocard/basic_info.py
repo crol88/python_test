@@ -669,13 +669,13 @@ class BasicInfoHelper:
         wd = self.app.wd
         wd.execute_script("window.scrollTo(0,600)")
         time.sleep(2)
-        wd.find_element(By.XPATH, "//*[@class='mb-10']//text()[contains(.,'VIP')]/preceding-sibling::span//*["
-                                  "@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@class='mb-10']"
+                                  "//text()[contains(.,'VIP')]/preceding-sibling::span//*[@type='button']").click()
         wd.find_element(By.XPATH, "//*[@class='sweet-confirm styled']").click()
         if len(wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")) != 0:
             marks = wd.find_elements(By.XPATH, "//*[@class='list-group-item_flex']")
             names = [e.text for e in marks]
-            print(names)
+            print(f"Список отметок пациента: {names}")
             assert "VIP" not in names
 
     def delete_blacklist_mark(self):

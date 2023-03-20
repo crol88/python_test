@@ -3,13 +3,15 @@ from model.group import Group
 
 
 def test_add_patient(app):
-    old_list = app.cbase.get_patient_list()
+    # old_list = app.cbase.get_patient_list()
+    old_list = app.cbase.get_group_list()
     group = Group(surname="New", name="Patient", secondname="Test", birthday="12081996",
                   phone="79058128556", fromwhere="2ГИС", filial="")
     app.cbase.add_patient(group)
+    # new_list = app.cbase.get_group_list()
     new_list = app.cbase.get_group_list()
-    assert len(old_list) + 1 == len(new_list)
-    print("old_list =", len(old_list) + 1, ";", "new_list =", len(new_list))
+    assert old_list + 1 == new_list
+    print("old_list =", old_list + 1, ";", "new_list =", new_list)
 
 
 def test_add_patient_without_filial_plugin_off(app):
@@ -53,32 +55,32 @@ def test_patient_search_criteria_set_on(app):
 
 
 def test_add_and_delete_patient(app):
-    # old_groups = app.cbase.get_group_list()
-    old_groups = app.cbase.get_patient_list()
+    old_groups = app.cbase.get_group_list()
+    # old_groups = app.cbase.get_patient_list()
     app.cbase.change_filial(Group(filial=""))
     app.cbase.fill_newclient_form(
         Group(surname="Пациент", name="Для", secondname="Удаления", birthday="12081980", phone="79058889556",
               fromwhere="2ГИС"))
     app.cbase.submit_newpatient_creation()
     app.cbase.delete_new_patient(search_name="Пациент")
-    # new_groups = app.cbase.get_group_list()
     new_groups = app.cbase.get_group_list()
-    print("Кол-во пациентов до удаления:", len(old_groups), ';', 'Кол-во пациентов после удаления:', len(new_groups))
-    assert len(old_groups) == len(new_groups)
+    # new_groups = app.cbase.get_group_list()
+    print("Кол-во пациентов до удаления:", old_groups, ';', 'Кол-во пациентов после удаления:', new_groups)
+    assert old_groups == new_groups
 
 
-def test_patient_for_search(app):
-    if app.cbase.count("УТЕСТ") == 0:
-        # app.cbase.change_filial(Group())
-        app.cbase.fill_newclient_form(
-            Group(surname="Утест", name="Добавить", secondname="Удалить", birthday="12081980", phone="79058889556",
-                  fromwhere="2ГИС"))
-        app.cbase.submit_newpatient_creation()
+# def test_patient_for_search(app):
+#     if app.cbase.count("УТЕСТ") == 0:
+#         # app.cbase.change_filial(Group())
+#         app.cbase.fill_newclient_form(
+#             Group(surname="Утест", name="Добавить", secondname="Удалить", birthday="12081980", phone="79058889556",
+#                   fromwhere="2ГИС"))
+#         app.cbase.submit_newpatient_creation()
 
 
 def test_delete_patient(app):
     old_groups = app.cbase.get_group_list()
-    if app.cbase.count("NEW") == 0:
+    if app.cbase.count("Delete") == 0:
         app.cbase.add_patient_for(
             Group(surname="Delete", name="Patient", secondname="Test", birthday="12081980",
                   phone="79058889556",

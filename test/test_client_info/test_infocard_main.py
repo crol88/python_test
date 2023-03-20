@@ -156,7 +156,7 @@ def test_choice_coordinator(app):
             Group(surname="ADD-VIP", name="name", secondname="secondname", birthday="12081980", phone="79058889556",
                   fromwhere="2ГИС", filial=""))
     app.cbase.search_patient(search_name="ADD-VIP")
-    app.infocard_mainpage.choice_coordinator(filial="Филиал 1", manager="Координатор: Супер Пользователь С.С.")
+    app.infocard_mainpage.choice_coordinator(manager="Координатор: Супер Пользователь С.С.")
 
 
 def test_choice_doctor(app):

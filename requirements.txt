@@ -1,8 +1,4 @@
 pytest
-testit-adapter-pytest
 selenium
-jsonpickle
-pony
-pymysql
-
+allure-pytest
 

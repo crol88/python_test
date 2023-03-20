@@ -139,19 +139,23 @@ class InfoCardHelper:
         new_photo = wd.find_element(By.XPATH, "//*[@class='thumbnail photo_sub_wrapper']/img").get_attribute("src")
         assert old_photo != new_photo
 
-    def choice_coordinator(self, filial, manager):
+    def choice_coordinator(self, manager):
         wd = self.app.wd
         wd.execute_script("window.scrollTo(0,1000)")
         time.sleep(1)
         wd.find_element(By.XPATH, "//*[@class='btn-group btn-block']/a").click()
+        time.sleep(1)
+        filial_list = wd.find_elements(By.XPATH, "//*[@id='form_cbase_addManager_select_0_']/option")
+        time.sleep(1)
+        filial = [e.get_attribute('textContent') for e in filial_list]
         select_filial = Select(wd.find_element(By.XPATH, "//*[@id='form_cbase_addManager_select_0_']"))
-        select_filial.select_by_visible_text(filial)
+        select_filial.select_by_visible_text(filial[0])
         select_manager = Select(wd.find_element(By.XPATH, "//*[@id='form_cbase_addManager_select_1_']"))
         select_manager.select_by_visible_text(manager)
         wd.find_element(By.XPATH, "//*[@class='btn-success btn']").click()
-        check_m = wd.find_element(By.XPATH, "//*[ @class ='list-group']")
-        print(check_m.text)
-        assert manager == check_m.text
+        check_m = wd.find_element(By.XPATH, "//*[ @class ='list-group']").text
+        print(check_m)
+        assert manager == check_m
 
     def select_doctor(self):
         wd = self.app.wd

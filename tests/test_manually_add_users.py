@@ -9,7 +9,7 @@ from model.group import Chair
 @allure.title("Создание и настройка кресла")
 def test_add_chair(app):
     if app.settings.chair_availability(Chair(title="surname_chair")) == 0:
-        app.settings.add_chair(Chair(title="surname_chair", sorting="9", department="Терапевты", filial="Филиал 1"))
+        app.settings.add_chair(Chair(title="surname_chair", sorting="9", department="Терапевты"))
     app.settings.check_chair(Chair(title="surname_chair"))
 
 
@@ -20,7 +20,7 @@ def test_add_chair(app):
 def test_delete_chair(app):
     # app.settings.open_employees_chair()
     if app.settings.chair_availability(Chair(title="del-chair")) == 0:
-        app.settings.add_chair(Chair(title="del-chair", sorting="10", department="Терапевты", filial="Филиал 1"))
+        app.settings.add_chair(Chair(title="del-chair", sorting="10", department="Терапевты"))
     app.settings.delete_chair(Chair(title="del-chair"))
 
 
@@ -83,7 +83,7 @@ def test_add_doctor(app):
 def test_add_doc_schedule(app):
     if app.settings.schedule_availability(Group(surname="Surname")) == 0:
         if app.settings.chair_availability(Chair(title="surname_chair")) == 0:
-            app.settings.add_chair(Chair(title="surname_chair", sorting="9", department="Терапевты", filial="Филиал 1"))
+            app.settings.add_chair(Chair(title="surname_chair", sorting="9", department="Терапевты"))
         if app.settings.doctor_availability(Group(surname="Surname")) == 0:
             app.settings.add_user_step(Group(surname="Surname", name="Name", secondname="Secondname",
                                              login='new-user-test', mail='newmail@mail.ru',
@@ -141,9 +141,11 @@ def test_delete_schedule_tomorrow(app):
 @allure.title("Запись нового пациента через расписание")
 @allure.description("Перед началом, проверить тестовые данные, при необходимости сгенерировать их")
 def test_open_record_form(app):
-    app.settings.fill_second_schedule()
+    app.schedule.open_schedule_set()
+    if app.schedule.check_fill_schedule(Group(surname="Second")) <= 0:
+        app.settings.fill_second_schedule()
     app.schedule.open_schedule()
-    app.schedule.open_new_record_form(timehelper="25")
+    app.schedule.open_new_record_form(timehelper="35")
     app.schedule.open_new_patient_form()
     app.schedule.fill_new_patient_form(Group(surname="Schedule"))
     app.schedule.fill_new_patient_record()
@@ -160,7 +162,7 @@ def test_select_patient(app):
                 Group(surname="Reactselect", name="Name", secondname="Patient", birthday="13101999",
                       phone="79058121458", fromwhere="2ГИС"))
     app.settings.schedule_availability(Group(surname="Second"))
-    if app.schedule.check_fill_schedule(Group(surname="Second")) == 0:
+    if app.schedule.check_fill_schedule(Group(surname="Second")) <= 0:
         app.settings.fill_second_schedule()
     app.schedule.open_schedule()
     app.schedule.open_new_record_form(timehelper="20")

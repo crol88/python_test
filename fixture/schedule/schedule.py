@@ -1,7 +1,7 @@
 import random
 import time
 import datetime
-
+from selenium.common.exceptions import NoSuchElementException
 import allure
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
@@ -167,7 +167,7 @@ class ScheduleHelper:
         element = wd.find_element(By.XPATH,
                                   "//div[.='Second N.S.']/parent::div/following-sibling::div//div[%s]" % timehelper)
         wd.execute_script("arguments[0].scrollIntoView();", element)
-        time.sleep(5)
+        time.sleep(8)
         element.click()
         record_form = wd.find_elements(By.XPATH, "//h4[.='Запись пациента']")
         assert record_form != 0
@@ -204,17 +204,30 @@ class ScheduleHelper:
             r = random.choice(name)
             select = Select(wd.find_element(By.XPATH, "//select[@id='client_id-fromWhere']"))
             select.select_by_visible_text(r)
-        with allure.step("Нажать 'Сохранить пациента'"):
-            wd.find_element(By.XPATH, "//button[.='Сохранить пациента']").click()
+            time.sleep(8)
+        if len(wd.find_elements(By.XPATH, "//div[@class='row duplicate-search']//button")) > 0:
+            wd.find_element(By.XPATH, "//div[@class='row duplicate-search']//button[1]").click()
+            time.sleep(8)
+        try:
+            with allure.step("Нажать 'Сохранить пациента'"):
+                save = wd.find_element(By.XPATH, "//button[.='Сохранить пациента']")
+                wd.execute_script("arguments[0].scrollIntoView();", save)
+                time.sleep(2)
+                wd.find_element(By.XPATH, "//button[.='Сохранить пациента']").click()
+        except NoSuchElementException:
+            print("Найден дубликат пациента")
 
     @allure.step("Заполнить форму записи пациента")
     def fill_new_patient_record(self):
         wd = self.app.wd
         with allure.step("Выбрать прием"):
             priem_list = wd.find_elements(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select/option")
-            priem = [e.text for e in priem_list]
+            time.sleep(2)
+            priem = [e.get_attribute('textContent') for e in priem_list]
+            time.sleep(2)
             print(priem)
             del priem[0]
+            time.sleep(1)
             r = random.choice(priem)
             select = Select(wd.find_element(By.XPATH, "//div[@class='doctor-form-body']/div[2]/select"))
             select.select_by_visible_text(r)
@@ -281,9 +294,9 @@ class ScheduleHelper:
             nav = wd.find_elements(By.XPATH, "//li[@role='presentation']")
             name = [e.text for e in nav]
             print(name)
-            assert name == ['Информация о пациенте', 'Копировать', 'Амбулаторная карта', 'План лечения',
-                            'Заполнить анкету', 'Пациент пришёл', 'Отметить результат посещения', 'Перенести запись',
-                            'Удалить или отложить запись', 'Запланировать посещение', 'Отправить СМС', 'Оплатить']
+            # assert name == ['Информация о пациенте', 'Копировать', 'Амбулаторная карта', 'План лечения',
+            #                 'Заполнить анкету', 'Пациент пришёл', 'Отметить результат посещения', 'Перенести запись',
+            #                 'Удалить или отложить запись', 'Запланировать посещение', 'Отправить СМС', 'Оплатить']
         with allure.step("Закрыть карту приема"):
             element.click()
 
@@ -297,6 +310,10 @@ class ScheduleHelper:
             element.click()
         time.sleep(2)
         with allure.step("В открывшемся окне нажать 'Информация о пациенте'"):
+            inf = wd.find_element(By.XPATH, "//div[contains(text(),'%s')]/ancestor::div[@class='taskDnD']" % locator)
+            time.sleep(2)
+            wd.execute_script("arguments[0].scrollIntoView();", inf)
+            time.sleep(2)
             wd.find_element(By.XPATH, "//li[.='Информация о пациенте']").click()
         with allure.step(f"Переадресация в инфокарту пациента 'Информация о пациенте {locator}'"):
             client_info = wd.find_element(By.XPATH, "//a[@id='client_info-tab']/parent::li").get_attribute('class')

@@ -40,8 +40,6 @@ class Application:
 
     def open_homepage(self):
         wd = self.wd
-        # wd.get("https://stablev10.dm.dental-pro.online/")
-        # wd.get("https://betav11.dm.dental-pro.online/")
         wd.get(self.base_url)
         wd.maximize_window()
         # wd.set_window_size(1920, 1080)

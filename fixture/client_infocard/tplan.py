@@ -231,6 +231,17 @@ class TreatmentPlanHelper:
                 print("Утвержденные приемы отсутствуют")
         return len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_approved']//div[.='%s']" % service))
 
+    def check_planned(self, service):
+        wd = self.app.wd
+        if len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_planned']//div[.='%s']" % service)) > 0:
+            with allure.step("Присутствует утвержденный прием"):
+                print("Есть утвержденный прием")
+        if len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_planned']"
+                                          "//div[.='%s']" % service)) == 0:
+            with allure.step("Утвержденные приемы отсутствуют"):
+                print("Запланированные приемы отсутствуют")
+        return len(wd.find_elements(By.XPATH, "//div[@class='Canban_col Canban_col_planned']//div[.='%s']" % service))
+
     @allure.step("Сформировать план лечения из вариантов предложенных системой")
     def select_optimal_tplan(self, variants, area, problem, var_next, doctor):
         wd = self.app.wd
@@ -373,17 +384,19 @@ class TreatmentPlanHelper:
         wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_approved']//button[3]").click()
         # Выбор врача
         sel = Select(wd.find_element(By.XPATH, "//select[@name='id_doctor']"))
-        sel.select_by_visible_text(f"{group.surname} {group.name} {group.secondname}")
+        doc = str(f"{group.surname} {group.name} {group.secondname}")
+        time.sleep(1)
+        sel.select_by_visible_text(doc)
         time.sleep(1)
         wd.find_element(By.XPATH, "//textarea[@name='comment']").send_keys("Причина смены врача")
         time.sleep(1)
         wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
         doc_edit = str(f"{group.surname} {group.name[0]}.{group.secondname[0]}.")
-        print(doc_edit)
+        # print(doc_edit)
         time.sleep(4)
         canban_doc = wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_approved']"
                                                "//div[@class='Canban_element_doctor']").text
-        print("text", canban_doc)
+        # print("text", canban_doc)
         assert doc_edit == canban_doc
 
     def reg_approved_tplan(self):
@@ -398,3 +411,19 @@ class TreatmentPlanHelper:
         sel.select_by_visible_text("20:00-21:00")
         time.sleep(1)
         wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
+
+    def create_fact_tplan(self):
+        wd = self.app.wd
+        fact = wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_planned']//button[.='Создать факт']")
+        time.sleep(1)
+        wd.execute_script("arguments[0].scrollIntoView();", fact)
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_planned']//button[.='Создать факт']").click()
+        sel = Select(wd.find_element(By.XPATH, "//select[@name='caredoc_stage_id']"))
+        sel.select_by_visible_text("З - Лечение закончено")
+        time.sleep(2)
+        code_list = wd.find_elements(By.XPATH, "//select[@name='caredoc_code_id']/option")
+        code_id = [e.text for e in code_list]
+        time.sleep(1)
+        code = Select(wd.find_element(By.XPATH, "//select[@name='caredoc_code_id']"))
+        code.select_by_visible_text(code_id[1])

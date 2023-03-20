@@ -95,11 +95,19 @@ class ParentHelper:
     def parent_passport_unit_code(self, enter_value):
         wd = self.app.wd
         self.open_parent_info()
-        wd.find_element(By.XPATH, "//*[@data-key='parent_passport_unit_code'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='parent_passport_unit_code']//input").clear()
-        wd.find_element(By.XPATH, "//*[@id='parent_passport_unit_code']//input").send_keys(enter_value)
-        wd.find_element(By.XPATH, "//*[@id='parent_passport_unit_code']//span[@class='input-group-btn']").click()
-        save_value = wd.find_element(By.XPATH, "//*[@id='parent_passport_unit_code']/p").text
+        edit = wd.find_element(By.XPATH, "//*[@data-key='passport_unit_code'][@type='button']")
+        time.sleep(1)
+        wd.execute_script("arguments[0].scrollIntoView();", edit)
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//*[@data-key='passport_unit_code'][@type='button']").click()
+        wd.find_element(By.XPATH, "//*[@id='passport_unit_code']//input").clear()
+        wd.find_element(By.XPATH, "//*[@id='passport_unit_code']//input").send_keys(enter_value)
+        save = wd.find_element(By.XPATH, "//*[@id='passport_unit_code']//span[@class='input-group-btn']")
+        time.sleep(1)
+        wd.execute_script("arguments[0].scrollIntoView();", save)
+        time.sleep(2)
+        wd.find_element(By.XPATH, "//*[@id='passport_unit_code']//span[@class='input-group-btn']").click()
+        save_value = wd.find_element(By.XPATH, "//*[@id='passport_unit_code']/p").text
         print("enter_value =", enter_value, ";", "save_value =", save_value)
         assert enter_value == save_value
 
@@ -107,10 +115,11 @@ class ParentHelper:
         wd = self.app.wd
         self.open_parent_info()
         time.sleep(1)
-        save_value = wd.find_element(By.XPATH, "//*[@id='parent_passport_unit_code']/p").text
-        wd.find_element(By.XPATH, "//*[@data-key='parent_passport_unit_code'][@type='button']").click()
-        wd.find_element(By.XPATH, "//*[@id='parent_passport_unit_code']//span[@class='input-group-btn']").click()
-        enter_value = wd.find_element(By.XPATH, "//*[@id='parent_passport_unit_code']/p").text
+        save_value = wd.find_element(By.XPATH, "//*[@id='passport_unit_code']/p").text
+        wd.find_element(By.XPATH, "//*[@data-key='passport_unit_code'][@type='button']").click()
+        time.sleep(1)
+        wd.find_element(By.XPATH, "//div[@id='passport_unit_code']//button").click()
+        enter_value = wd.find_element(By.XPATH, "//*[@id='passport_unit_code']/p").text
         print("enter_value =", enter_value, ";", "save_value =", save_value)
         assert enter_value == save_value
 
@@ -223,7 +232,7 @@ class ParentHelper:
         # wd.execute_script("arguments[0].scrollIntoView();", element)
         wd.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.PAGE_DOWN)
         wd.find_element(By.XPATH, "//*[@data-key='passport_sex'][@type='button']").click()
-        selected_value = wd.find_element(By.XPATH, "//*[@id='passport_sex']/div[1]/label").text
+        selected_value = wd.find_element(By.XPATH, "//*[@id='passport_sex']/div[2]/label").text
         wd.find_element(By.XPATH, "//*[@id='passport_sex']//input[@value=0]").click()
         time.sleep(2)
         if len(wd.find_elements(By.XPATH, "//*[@class='sweet-confirm styled']")) > 0:
@@ -239,7 +248,7 @@ class ParentHelper:
         wd.execute_script("arguments[0].scrollIntoView();", element)
         time.sleep(1)
         wd.find_element(By.XPATH, "//*[@data-key='passport_sex'][@type='button']").click()
-        selected_value = wd.find_element(By.XPATH, "//*[@id='passport_sex']/div[2]/label").text
+        selected_value = wd.find_element(By.XPATH, "//*[@id='passport_sex']/div[1]/label").text
         wd.find_element(By.XPATH, "//*[@id='passport_sex']//input[@value=1]").click()
         time.sleep(2)
         if len(wd.find_elements(By.XPATH, "//*[@class='sweet-confirm styled']")) > 0:

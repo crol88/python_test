@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
+
 class EmployeesHelper:
 
     def __init__(self, app):
@@ -98,9 +99,12 @@ class EmployeesHelper:
                 wd.find_element(By.ID, "s2id_form_boss_forms_chair_add_select_0_").click()
                 wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(group.department)
                 wd.find_element(By.XPATH, "//*[@id='select2-drop']//input").send_keys(Keys.ENTER)
-            with allure.step(f"Ввести филиал: {group.filial}"):
+            filial_list = wd.find_elements(By.XPATH, "//select[@name='company_id']/option")
+            time.sleep(1)
+            filial = [e.get_attribute('textContent') for e in filial_list]
+            with allure.step(f"Ввести филиал: {filial[0]}"):
                 wd.find_element(By.ID, "s2id_form_boss_forms_chair_add_select_1_").click()
-                wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(group.filial)
+                wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(filial[0])
                 wd.find_element(By.XPATH, "//div[@id='select2-drop']//input").send_keys(Keys.ENTER)
             with allure.step("Сохранить введенные данные"):
                 wd.find_element(By.XPATH, "//button[@class='btn-success btn']").click()
