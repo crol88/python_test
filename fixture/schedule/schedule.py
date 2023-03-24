@@ -29,7 +29,7 @@ class ScheduleHelper:
         wd = self.app.wd
         dp_date = wd.find_element(By.XPATH, "//*[@class='datetimepickerWrapper']/input").get_attribute('value')
         time.sleep(1)
-        sys_date = str(datetime.date.today().strftime('%d.%m.%Y'))
+        sys_date = str(datetime.now().strftime('%d.%m.%Y'))
         print("Дата DP:", dp_date, "*", "Дата системы:", sys_date)
         assert dp_date == sys_date
 

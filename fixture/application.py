@@ -18,8 +18,16 @@ from fixture.client_infocard.tplan import TreatmentPlanHelper
 
 
 class Application:
+
     def __init__(self, base_url):
-        self.wd = webdriver.Chrome()
+        capabilities = {
+            "browserName": "chrome",
+            "version": "110.0",
+            "platform": "LINUX"
+        }
+        self.wd = webdriver.Remote(command_executor='http://localhost:4444/wd/hub',
+                                   desired_capabilities=capabilities)
+        # self.wd = webdriver.Chrome()
         self.wd.implicitly_wait(5)
         self.session = SessionHelper(self)
         self.basic_info = BasicInfoHelper(self)

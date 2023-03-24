@@ -23,7 +23,9 @@ class SessionHelper:
 
     def logout(self):
         wd = self.app.wd
-        if len(wd.find_elements(By.XPATH, "//*[@class='modalClose']")) != 0:
+        time.sleep(2)
+        if len(wd.find_elements(By.XPATH, "//*[@class='modalClose']")) > 0:
+            print("Модалка:", len(wd.find_elements(By.XPATH, "//*[@class='modalClose']")))
             wd.find_element(By.XPATH, "//*[@class='modalClose']").click()
         wd.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.HOME)
         # wd.find_element(By.XPATH, "//*[@class='sidebar-content-container']").send_keys(Keys.HOME)
