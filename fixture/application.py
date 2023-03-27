@@ -53,8 +53,7 @@ class Application:
         # wd.set_window_size(1920, 1080)
 
     def destroy(self):
-        wd = self.wd
-        wd.quit()
+        self.wd.quit()
 
     def is_valid(self):
         try:

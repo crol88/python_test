@@ -1,6 +1,3 @@
-from model.group import Group
-from model.group import Chair
-import allure
 
 
 def test_set_interval_schedule(app):
