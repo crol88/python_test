@@ -126,6 +126,9 @@ def test_cancel_approval(app):
     app.tplan.cancel_approval()
 
 
+@allure.epic("Работа с приемом пациента")
+@allure.tag("План лечения")
+@allure.title("Согласовать утвержденный план лечения")
 def test_edit_approved_tplan(app):
     app.settings.gen_treatment_plan_data()
     if app.settings.graph_availability_today(Group(surname="Планлечения")) == 0:
@@ -148,6 +151,9 @@ def test_edit_approved_tplan(app):
     app.tplan.edit_approved_tplan(Group(surname="Планлечения", name="Name", secondname="Secondname"))
 
 
+@allure.epic("Работа с приемом пациента")
+@allure.tag("План лечения")
+@allure.title("Записать утвержденный план лечения")
 def test_reg_approved_tplan(app):
     app.settings.gen_treatment_plan_data()
     if app.settings.graph_availability_today(Group(surname="Планлечения")) == 0:
@@ -171,6 +177,9 @@ def test_reg_approved_tplan(app):
     app.tplan.reg_approved_tplan()
 
 
+@allure.epic("Работа с приемом пациента")
+@allure.tag("План лечения")
+@allure.title("Перевод в состояние «Факт»")
 def test_create_fact_tplan(app):
     app.settings.gen_treatment_plan_data()
     if app.settings.graph_availability_today(Group(surname="Планлечения")) == 0:
