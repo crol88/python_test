@@ -411,11 +411,12 @@ class TreatmentPlanHelper:
         sel.select_by_visible_text("20:00-21:00")
         time.sleep(1)
         wd.find_element(By.XPATH, "//button[.='Сохранить']").click()
+        time.sleep(4)
 
     def create_fact_tplan(self):
         wd = self.app.wd
         fact = wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_planned']//button[.='Создать факт']")
-        time.sleep(1)
+        time.sleep(2)
         wd.execute_script("arguments[0].scrollIntoView();", fact)
         time.sleep(2)
         wd.find_element(By.XPATH, "//div[@class='Canban_col Canban_col_planned']//button[.='Создать факт']").click()

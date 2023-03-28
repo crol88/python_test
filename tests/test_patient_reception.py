@@ -203,3 +203,9 @@ def test_create_fact_tplan(app):
         app.tplan.edit_approved_tplan(Group(surname="Планлечения", name="Name", secondname="Secondname"))
         app.tplan.reg_approved_tplan()
     app.tplan.create_fact_tplan()
+
+
+def test(app):
+    app.cbase.search_patient(search_name="ПЛАН-ЛЕЧЕНИЯ")
+    app.tplan.open_treatment_plan()
+    app.tplan.create_fact_tplan()
