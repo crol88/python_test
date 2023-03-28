@@ -3,11 +3,12 @@ pipeline {
   stages {
      stage("Build image") {
         steps {
-    	catchError {
-      	   script {
-        	      docker.build("python-web-tests", "-f Dockerfile .")
-          }
-       }
-    }
+            catchError {
+               script {
+                      docker.build("python-web-tests", "-f Dockerfile .")
+               }
+            }
+        }
+     }
   }
 }
