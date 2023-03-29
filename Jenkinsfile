@@ -10,5 +10,14 @@ pipeline {
             }
         }
      }
+     stage('Pull browser') {
+        steps {
+           catchError {
+              script {
+                      docker.image('selenium/standalone-chrome:4.8.1-20230306')
+      	      }
+      	   }
+        }
+     }
   }
 }
