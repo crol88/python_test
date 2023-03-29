@@ -14,7 +14,7 @@ pipeline {
         steps {
            catchError {
               script {
-                      docker.image('selenoid/chrome:110.0')
+                      docker.image('selenium/standalone-chrome:4.8.1-20230306')
       	      }
       	   }
         }
@@ -23,9 +23,9 @@ pipeline {
         steps {
            catchError {
               script {
-          	     docker.image('aerokube/selenoid:1.10.4').withRun('-p 4444:4444 -v /run/docker.sock:/var/run/docker.sock -v $PWD:/etc/selenoid/',
+          	     docker.image('selenium/standalone-chrome:110.0-chromedriver-110.0').withRun('-d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:4.8.3-20230328',
             	'-timeout 600s -limit 2') { c ->
-              	docker.image('python-web-tests').inside("--link ${c.id}:selenoid") {
+              	docker.image('python-web-tests') {
                     	sh "pytest -n 2 --reruns 1 ${CMD_PARAMS}"
                 	    }
                    }
