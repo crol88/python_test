@@ -14,9 +14,22 @@ pipeline {
         steps {
            catchError {
               script {
-                      docker.image('selenium/standalone-chrome:4.8.1-20230306')
+                      docker.image('selenoid/chrome:110.0')
       	      }
       	   }
+        }
+     }
+     stage('Run tests') {
+        steps {
+           catchError {
+              script {
+          	     docker.image('aerokube/selenoid:latest').withRun('-p 4444:4444 -v /run/docker.sock:/var/run/docker.sock -v $PWD:/etc/selenoid/',
+            	'-timeout 600s -limit 2') { c ->
+              	docker.image('python-web-tests').inside("--link ${c.id}:selenoid") {
+                    	sh "pytest -n 2 --reruns 1 ${CMD_PARAMS}"
+                }
+              }
+           }
         }
      }
   }
