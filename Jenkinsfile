@@ -23,7 +23,7 @@ pipeline {
         steps {
            catchError {
               script {
-          	     docker.image('selenium/standalone-chrome:4.8.1-20230306').withRun('-d -p 4444:4444 --shm-size="2g"') { c ->
+          	     docker.image('selenium/standalone-chrome:4.8.1-20230306').withRun('-p 4444:4444 --shm-size="2g"') { c ->
               	docker.image('python-web-tests') {
                     	sh "pytest -n 2 --reruns 1 ${CMD_PARAMS}"
                 	    }
