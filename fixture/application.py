@@ -20,11 +20,6 @@ from fixture.client_infocard.tplan import TreatmentPlanHelper
 class Application:
 
     def __init__(self, base_url):
-        # chrome_options = webdriver.ChromeOptions()
-        # self.wd = webdriver.Remote(command_executor='http://selenoid:4444/wd/hub',
-        #                            desired_capabilities={'browserName': 'chrome',
-        #                                                  'version': '110.0'},
-        #                            options=chrome_options)
         capabilities = {
             "browserName": "chrome",
             "version": "110.0",
